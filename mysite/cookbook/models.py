@@ -49,6 +49,14 @@ class CookbookPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel("body"),
     ]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        # Fetch the parent BlogIndexPage
+        cookbook_index = self.get_parent().specific
+        context['cookbook_index'] = cookbook_index
+        return context    
     
     def save(self, *args, **kwargs):
         if self.pk is None:  # Jen pokud se jedná o nový objekt
