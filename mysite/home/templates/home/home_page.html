@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block content %}   
+    <div class="intro content">
+        <h1>{{ page.title }}</h1>  
+        {{ page.body|richtext }}
+    </div>
+    {% if blog_index %}
+        <div class="intro content">
+            <a href="{{ blog_index.url }}">
+            <h3>{{ blog_index.title }}</h3>
+            </a>
+            <p>{{ blog_index.intro|richtext }}</p>                    
+                {% if blog_index.image %}
+                    <img src="{{ blog_index.image.file.url }}" alt="{{ blog_index.title }}" style="width:800px;height:auto;">
+                {% endif %}
+            </div>
+    {% endif %}
+    {% if cookbook_index %}
+        <div class="intro content">    
+            <a href="{{ cookbook_index.url }}">
+            <h3>{{ cookbook_index.title }}</h3>
+            </a>
+            <p>{{ cookbook_index.intro|richtext }}</p>                
+                {% if cookbook_index.image %}
+                    <img src="{{ cookbook_index.image.file.url }}" alt="{{ cookbook_index.title }}" style="width:800px;height:auto;">
+                {% endif %}
+            </div>
+        {% endif %}
+        <!-- Přidejte další sekce podle potřeby -->
+    </div>  
+{% endblock %}

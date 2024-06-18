@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-blogtagindexpage{% endblock %}
+
+{% block header %}
+    <img src="{% static 'images/header-image-blog.webp' %}" alt="Header Image - Divoká veterinářka" class="header-image">
+{% endblock %}   
+
+{% block content %}
+
+    {% if request.GET.tag %}
+        <h2>Zobrazeny blogy s tagem: "{{ request.GET.tag }}"</h2>
+    {% endif %}
+
+    <div class="content">
+    {% for blogpage in blogpages %}
+
+          <p>
+              <strong><a href="{% pageurl blogpage %}">{{ blogpage.title }}</a></strong><br />
+              <small>Revised: {{ blogpage.latest_revision_created_at }}</small><br />
+          </p>
+
+    {% empty %}
+        No pages found with that tag.
+    {% endfor %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-blogindexpage{% endblock %}
+
+{% block header %}
+    <div  class="header-background">
+        <img src="{% static 'images/header-image-cookbook4.webp' %}" alt="Header Image - Rozpálená kuchařka" class="header-image">
+    </div>
+{% endblock %}
+
+{% block content %}
+    <h1>{{ page.title }}</h1>
+    <div class="intro">{{ page.intro|richtext }}</div>
+
+    <div class="post-list">
+        {% for post in cookbookpages %}
+            <article>
+                {% with post=post.specific %}
+                    <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+                    <p>{{ post.blog_nr }}. blog</p>                    
+
+                    {% with post.main_image as main_image %}
+                        {% if main_image %}{% image main_image fill-320x240 %}{% endif %}
+                    {% endwith %}
+
+                    <p>{{ post.intro }}</p>
+                    <p>{{ post.date }}</p>
+                {% endwith %}
+            </article>
+        {% endfor %}
+    </div>
+{% endblock %}
