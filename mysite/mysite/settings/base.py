@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     "home",
     "search",
     "base",
-    "cookbook",
+    "recipes",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.contrib.settings",

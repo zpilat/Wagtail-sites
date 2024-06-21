@@ -16,12 +16,14 @@
 
 {% block content %}
     <div class="container my-4">
-        <h1 class="text-center">{{ page.title }}</h1>  
-        <div class="intro text-center mb-4">
-            {{ page.intro|richtext }}
+        <div class="row">
+            <div class="col-12 text-center bg-light py-2 mt-0 mb-3">
+                <p class="h1">{{ page.title }}</p>  
+                <p>{{ page.intro|richtext }}</p>
+            </div>
         </div>
         
-        <div class="row">
+        <div class="row bg-light pt-3">
             {% for post in blogpages %}
                 <div class="col-md-4 mb-4">
                     <div class="card text-center h-100">
@@ -34,11 +36,11 @@
                                 <h5 class="card-title">
                                     <a href="{% pageurl post %}" class="text-dark">{{ post.title }}</a>
                                 </h5>
-                                <p>{{ post.blog_nr }}. blog</p>                                
+                                <p class="text-muted">{{ post.blog_nr }}. blog</p>                                
                                 <p class="card-text">{{ post.intro }}</p>
                             </div>
-                            <div class="card-footer text-muted">
-                                <p>{{ post.date }}</p>
+                            <div class="card-footer bg-secondary text-white pt-3 pb-0">
+                                <p>Zveřejněno: {{ post.date }}</p>
                             </div>
                         {% endwith %}
                     </div>

@@ -4,9 +4,11 @@ from wagtail.fields import RichTextField
 from django.db import models
 
 from blog.models import BlogIndexPage
-from cookbook.models import CookbookIndexPage
+from recipes.models import RecipeIndexPage
 
 class HomePage(Page):
+    max_count = 1
+    
     body = RichTextField(null=True, blank=True)
 
     content_panels = Page.content_panels + [
@@ -20,9 +22,9 @@ class HomePage(Page):
         blog_index = self.get_children().type(BlogIndexPage).live().specific().first()
         context['blog_index'] = blog_index
 
-        # Fetch CookbookIndexPage
-        cookbook_index = self.get_children().type(CookbookIndexPage).live().specific().first()
-        context['cookbook_index'] = cookbook_index
+        # Fetch RecipeIndexPage
+        recipe_index = self.get_children().type(RecipeIndexPage).live().specific().first()
+        context['recipe_index'] = recipe_index
 
         # Další indexové stránky podle potřeby
         return context
