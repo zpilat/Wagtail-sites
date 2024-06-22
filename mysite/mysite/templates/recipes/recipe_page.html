@@ -5,21 +5,32 @@
 {% block body_class %}template-blogpage{% endblock %}
 
 {% block header %}
-    <div class="text-center">
-        {% if recipes_index.image %}
-            {% image recipes_index.image max-1280x1280 as img %}
-            <img src="{{ img.url }}" alt="{{ recipes_index.title }}" class="img-fluid mb-3 d-block mx-auto">
-        {% endif %}
+    <div class="container bg-dark">
+        <div class="row">
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <a class="navbar-brand" href="{% slugurl 'rozpalena-kucharka' %}">Rozpálená kuchařka</a>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                {% if recipes_index.image %}
+                    {% image recipes_index.image max-1280x1280 as img %}
+                    <img src="{{ img.url }}" alt="{{ recipes_index.title }}" class="img-fluid mb-3 d-block mx-auto">
+                {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock %}
 
 
 {% block content %}
-{% include "base/includes/header-blog.html" %}
-<div class="container">
+<div class="container my-0 py-0 bg-light">
+
+    {% include "base/includes/header-blog.html" %}
+    
     <div class="row mt-4">
         <div class="col">
-            <p class="h3 text-center">Příběh</p>
+            <p class="h3">Příběh</p>
             {% for block in page.backstory %}
                 {{ block }}
             {% endfor %}
@@ -28,7 +39,7 @@
 
     <div class="row mt-4">
         <div class="col">
-            <p class="h3 text-center">Recept</p>
+            <p class="h3">Recept</p>
             {% for block in page.body %}
                 <div class="my-3">{{ block }}</div>
             {% endfor %}

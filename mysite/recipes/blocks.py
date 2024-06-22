@@ -15,17 +15,6 @@ from wagtail.images.blocks import ImageChooserBlock
 
 from base.blocks import BlockQuote, HeadingBlock, ImageBlock
 
-
-class RecipeStepBlock(StructBlock):
-    order = IntegerBlock(label="Pořadí", required=False)
-    text = RichTextBlock(features=["bold", "italic", "link"], label="Text")
-   
-    class Meta:
-        template = "blocks/recipe_step_block.html"
-        icon = "tick"
-        label = "Krok receptu"
-
-
 class RecipeStreamBlock(StreamBlock):
     heading_block = HeadingBlock(group="Obsah", label="Nadpis")
     paragraph_block = RichTextBlock(
@@ -57,7 +46,7 @@ class RecipeStreamBlock(StreamBlock):
         label="Seznam ingrediencí",
     )
     steps_list = ListBlock(
-        RecipeStepBlock(),
+        RichTextBlock(features=["bold", "italic", "link"]),
         min_num=2,
         max_num=15,
         icon="tasks",

@@ -1,7 +1,3 @@
-<p>
-    <div class="row">
-        <div class="col">
-            {{ self.text }}</p>
-        </div>
-    </div>
-</p>
+{% load wagtailcore_tags %}
+
+<div>{{ self.text|richtext }}</div>

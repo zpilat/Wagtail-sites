@@ -123,16 +123,13 @@ class RecipePage(Page):
         # Fetch the parent RecipeIndexPage
         recipes_index = self.get_parent().specific
         context['recipes_index'] = recipes_index
-        return context    
+        return context
 
-    def save(self, *args, **kwargs):
-        # Automatické číslování kroků
-        body = self.body
-        for block in body:
-            if block.block_type == 'steps_list':
-                for index, step in enumerate(block.value):
-                    step['order'] = index + 1
+    def get_backstory_image(self):
+        for block in self.backstory:
+            if block.block_type == 'image_block':
+                return block.value['image']
+        return None
 
-        self.body = body  # Aktualizace pole body
-        super().save(*args, **kwargs)
+    
 

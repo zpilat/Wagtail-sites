@@ -5,14 +5,22 @@
 {% block body_class %}template-blogindexpage{% endblock %}
 
 {% block header %}
-    <div class="text-center">
-        {% if page.image %}
-            {% image page.image max-1280x1280 as img %}
-            <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid mb-3 d-block mx-auto">
-        {% endif %}
+    <div class="container bg-dark">
+        <div class="row">
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <a class="navbar-brand" href="{% slugurl 'blog' %}">Zdivočelá veterinářka</a>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                {% if page.image %}
+                    {% image page.image max-1280x1280 as img %}
+                    <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid mb-3 d-block mx-auto">
+                {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock %}
-
 
 {% block content %}
     <div class="container my-4">
