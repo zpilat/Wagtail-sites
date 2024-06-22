@@ -1,0 +1,46 @@
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+<div class="container bg-dark">
+    <div class="row">
+        <nav class="navbar navbar-expand-xl navbar-dark">
+            <div>
+                <span class="navbar-brand mb-0 h1">
+                    <img src="{% static 'images/logo-32x32.webp' %}" alt="Logo" width="32" height="32" class="d-inline-block align-text-top">
+                    Pilátovic
+                </span>     
+            </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{% slugurl 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% slugurl 'blog' %}">Blog</a>                
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="{% slugurl 'rozpalena-kucharka' %}">Recepty</a>
+                    </li>   
+                </ul>
+                <form action="{% url 'search' %}" method="get" class="row py-1">
+                    <div class="col-auto pe-0">
+                        <input type="text" id="search-query" name="query" class="form-control form-control-sm" placeholder="Vyhledávání na stránkách" {% if search_query %} value="{{ search_query }}"{% endif %}>
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-sm btn-light">Hledej</button>
+                    </div>
+                </form>      
+            </div>
+        </nav>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            {% if page.image %}
+                {% image page.image max-1280x1280 as img %}
+                <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid mb-3 d-block mx-auto">
+            {% endif %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block content %}
+    <div class="container mb-4">
+        <div class="row pb-4">
+            <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
+                <div>
+                    <span class="navbar-brand mb-0 h1">
+                        <img src="{% static 'images/logo-32x32.webp' %}" alt="Logo" width="32" height="32" class="d-inline-block align-text-top">
+                        Pilátovic
+                    </span> 
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% slugurl 'home' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% slugurl 'blog' %}">Blog</a>                
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" href="{% slugurl 'rozpalena-kucharka' %}">Recepty</a>
+                        </li>   
+                    </ul>
+                    <form action="{% url 'search' %}" method="get" class="row py-1">
+                        <div class="col-auto pe-0">
+                            <input type="text" id="search-query" name="query" class="form-control form-control-sm" placeholder="Vyhledávání na stránkách" {% if search_query %} value="{{ search_query }}"{% endif %}>
+                        </div>
+                        <div class="col">
+                            <button type="submit" class="btn btn-sm btn-light">Hledej</button>
+                        </div>
+                    </form>      
+                </div>
+            </nav>        
+            <div class="col text-center bg-light mt-4 py-2">
+                <p class="h1">{{ page.title }}</p>
+                <p>{{ page.body|richtext }}</p>
+             
+            </div>
+        </div>
+
+        <div class="row bg-light pt-2">
+            <div class="col-md-6 text-center">
+                <a href="{{ blog_index.url }}" class="text-dark text-decoration-none">            
+                    {% if blog_index %}
+                        <p class="h2">{{ blog_index.title }}</p>
+                        <div class="intro">{{ blog_index.intro|richtext }}</div>
+                        {% if blog_index.image %}
+                            {% image blog_index.image fill-800x400 as img %}
+                            <img src="{{ img.url }}" alt="{{ blog_index.title }}" class="img-fluid">
+                        {% endif %}
+                    {% endif %}
+                </a>
+            </div>
+            <div class="col-md-6 mb-4 text-center">
+                <a href="{{ recipe_index.url }}" class="text-dark text-decoration-none">            
+                    {% if recipe_index %}
+                        <h2>{{ recipe_index.title }}</h2>
+                        <div class="intro">{{ recipe_index.intro|richtext }}</div>
+                        {% if recipe_index.image %}
+                            {% image recipe_index.image fill-800x400 as img %}
+                            <img src="{{ img.url }}" alt="{{ recipe_index.title }}" class="img-fluid">  
+                        {% endif %}
+                    {% endif %}
+                </a>                    
+            </div>
+        </div>
+    </div>
+{% endblock %}

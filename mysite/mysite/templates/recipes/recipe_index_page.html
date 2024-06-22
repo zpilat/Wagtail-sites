@@ -5,21 +5,7 @@
 {% block body_class %}template-blogpage{% endblock %}
 
 {% block header %}
-    <div class="container bg-dark">
-        <div class="row">
-            <nav class="navbar navbar-expand-lg navbar-dark">
-                <a class="navbar-brand" href="{% slugurl 'rozpalena-kucharka' %}">Rozpálená kuchařka</a>
-            </nav>
-        </div>
-        <div class="row">
-            <div class="col text-center">
-                {% if page.image %}
-                    {% image page.image max-1280x1280 as img %}
-                    <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid mb-3 d-block mx-auto">
-                {% endif %}
-            </div>
-        </div>
-    </div>
+    {% include 'recipes/recipe_header.html' %}
 {% endblock %}
 
 {% block content %}
@@ -33,13 +19,13 @@
         
         <div class="row bg-light pt-3">
             {% for recipe in recipes %}
-                <div class="col-md-12 mb-4">
-                    <div class="card mb-3" style="flex-direction: row;">
+                <div class="col-12 mb-4">
+                    <div class="card mb-3 d-flex flex-column flex-md-row">
                         {% with recipe=recipe.specific %}
                             {% with backstory_image=recipe.get_backstory_image %}
                                 {% if backstory_image %}
                                     {% image backstory_image fill-320x240 as img %}
-                                    <img src="{{ img.url }}" alt="{{ recipe.title }}" class="card-img-left" style="width: 200px; height: auto;">
+                                    <img src="{{ img.url }}" alt="{{ recipe.title }}" class="card-img-top card-img-left" style="width: 267px; height: 200px;">
                                 {% endif %}
                             {% endwith %}
                             <div class="card-body">

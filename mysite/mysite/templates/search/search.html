@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block body_class %}template-searchresults{% endblock %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+    <div class="container text-center mt-4">
+        <form action="{% url 'search' %}" method="get" class="row justify-content-center my-4">
+            <div class="col-4">
+                <input type="text" id="search-query" name="query" class="form-control" placeholder="Vyhledávání" {% if search_query %} value="{{ search_query }}"{% endif %}>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-outline-dark">Hledej</button>
+            </div>
+        </form>
+        
+        {% if search_results %}
+            <ul>
+                {% for result in search_results %}
+                    <li>
+                        <h4><a href="{% pageurl result %}">{{ result }}</a></h4>
+                        {% if result.search_description %}
+                            {{ result.search_description }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+            {% if search_results.has_previous %}
+                <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">Předchozí</a>
+            {% endif %}
+
+            {% if search_results.has_next %}
+                <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Další</a>
+            {% endif %}
+        {% elif search_query %}
+            <p class="h5 my-4">Nic nebylo nenalezeno!</p>
+        {% endif %}       
+    </div>
+{% endblock %}

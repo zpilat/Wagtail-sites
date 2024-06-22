@@ -5,16 +5,11 @@
 {% block body_class %}template-blogpage{% endblock %}
 
 {% block header %}
-    <div class="text-center">
-        {% if blog_index.image %}
-            {% image blog_index.image max-1280x1280 as img %}
-            <img src="{{ img.url }}" alt="{{ blog_index.title }}" class="img-fluid mb-3 d-block mx-auto">
-        {% endif %}
-    </div>
+    {% include 'blog/blog_header.html' with page=blog_index %}
 {% endblock %}
 
 {% block content %}
-    <div class="container my-4">
+    <div class="container bg-light py-2 my-4">
         <div class="text-center">
             <p class="h1">{{ page.title }}</p>
             <p class="text-muted">{{ page.date }}</p>
