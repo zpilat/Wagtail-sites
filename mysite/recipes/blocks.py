@@ -17,7 +17,7 @@ from base.blocks import BlockQuote, HeadingBlock, ImageBlock
 
 
 class RecipeStepBlock(StructBlock):
-    order = IntegerBlock(label="Pořadí")
+    order = IntegerBlock(label="Pořadí", required=False)
     text = RichTextBlock(features=["bold", "italic", "link"], label="Text")
    
     class Meta:
@@ -42,8 +42,8 @@ class RecipeStreamBlock(StreamBlock):
     )
     difficulty = ChoiceBlock(
         widget=forms.RadioSelect,
-        choices=[("N", "Nízká"), ("S", "Střední"), ("V", "Vysoká")],
-        default="N",
+        choices=[("Nízká *", "Nízká"), ("Střední **", "Střední"), ("Vysoká ***", "Vysoká")],
+        default="Nízká obtížnost",
         icon="cogs",
         group="Vaření",
         label="Obtížnost",

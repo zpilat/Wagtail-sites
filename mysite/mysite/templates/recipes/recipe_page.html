@@ -1,29 +1,38 @@
 {% extends "base.html" %}
+{% load static %}
 {% load navigation_tags wagtailimages_tags wagtailcore_tags %}
 
+{% block body_class %}template-blogpage{% endblock %}
+
+{% block header %}
+    <div class="text-center">
+        {% if recipes_index.image %}
+            {% image recipes_index.image max-1280x1280 as img %}
+            <img src="{{ img.url }}" alt="{{ recipes_index.title }}" class="img-fluid mb-3 d-block mx-auto">
+        {% endif %}
+    </div>
+{% endblock %}
+
+
 {% block content %}
-
-    {% include "base/include/header-blog.html" %}
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8">
-
-                {% if page.backstory %}
-                    {{ page.backstory }}
-
-                    <hr>
-                {% endif %}
-
-                {# Give a label to the recipe section for screen reader users. #}
-                <div id="recipe-headline" class="sr-only">
-                    Recipe{% if page.recipe_headline %}: {{ page.recipe_headline|richtext }}{% endif %}
-                </div>
-
-                <section aria-labelledby="recipe-headline">
-                    {{ page.body }}
-                </section>
-            </div>
+{% include "base/includes/header-blog.html" %}
+<div class="container">
+    <div class="row mt-4">
+        <div class="col">
+            <p class="h3 text-center">Příběh</p>
+            {% for block in page.backstory %}
+                {{ block }}
+            {% endfor %}
         </div>
     </div>
-{% endblock content %}
+
+    <div class="row mt-4">
+        <div class="col">
+            <p class="h3 text-center">Recept</p>
+            {% for block in page.body %}
+                <div class="my-3">{{ block }}</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

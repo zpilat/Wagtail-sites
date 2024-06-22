@@ -14,6 +14,17 @@ from base.blocks import BaseStreamBlock
 from .blocks import RecipeStreamBlock
 
 
+class RecipeCategory(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Kategorie receptů"
+        
+
 class RecipeIndexPage(Page):
     """
     Index page for recipe.
@@ -42,9 +53,7 @@ class RecipeIndexPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        context["recipes"] = (
-            self.get_children().live().order_by('-first_published_at')
-        )
+        context["recipes"] = self.get_children().live().order_by('-first_published_at')
         return context
     
 
@@ -54,6 +63,7 @@ class RecipePage(Page):
     """
     parent_page_types = ["RecipeIndexPage"]
 
+    category = models.ForeignKey(RecipeCategory, null=True, blank=True, on_delete=models.SET_NULL, related_name='recipes')
     date_published = models.DateField("Datum publikace článku", blank=True, null=True)
     subtitle = models.CharField("Podtitul článku", blank=True, max_length=255)
     introduction = models.TextField("Úvod", blank=True, max_length=500)
@@ -67,7 +77,7 @@ class RecipePage(Page):
         },
         blank=True,
         use_json_field=True,
-        help_text="Použij co nejméně hlaviček a velkých bloků.",
+        help_text="Lze použít maximálně jednu hlavičku, obrázek a embed blok.",
     )
 
     # An example of using rich text for single-line content.
@@ -85,6 +95,7 @@ class RecipePage(Page):
     )
 
     content_panels = Page.content_panels + [
+        FieldPanel("category", heading="Kategorie receptů"),
         FieldPanel("date_published", heading="Datum publikace článku"),
         FieldPanel("subtitle", classname="title", heading="Podtitul článku"),
         MultiFieldPanel(
@@ -105,4 +116,23 @@ class RecipePage(Page):
         index.SearchField("backstory"),
         index.SearchField("body"),
     ]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        # Fetch the parent RecipeIndexPage
+        recipes_index = self.get_parent().specific
+        context['recipes_index'] = recipes_index
+        return context    
+
+    def save(self, *args, **kwargs):
+        # Automatické číslování kroků
+        body = self.body
+        for block in body:
+            if block.block_type == 'steps_list':
+                for index, step in enumerate(block.value):
+                    step['order'] = index + 1
+
+        self.body = body  # Aktualizace pole body
+        super().save(*args, **kwargs)
 

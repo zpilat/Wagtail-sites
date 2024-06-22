@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     "search",
     "base",
     "recipes",
-    "wagtail.contrib.forms",
+    "wagtail.contrib.forms",  
     "wagtail.contrib.redirects",
     "wagtail.contrib.settings",
     "wagtail.embeds",

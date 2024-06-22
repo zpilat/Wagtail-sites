@@ -1,0 +1,21 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="container">
+    <div class="row text-center">
+        <div class="col">
+            <p class="h1">{{ page.title }}</p>
+            {% if page.subtitle %}
+                <p class="h3 text-muted">{{ page.subtitle }}</p>
+            {% endif %}
+            {% if page.date_published %}
+                <p class="text-muted">{{ page.date_published }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col">
+            <p class="h3 text-center">Úvod</p>
+            <p>{{ page.introduction }}</p>
+        </div>
+    </div>
+</div>

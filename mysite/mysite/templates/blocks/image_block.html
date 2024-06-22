@@ -1,0 +1,8 @@
+{% load wagtailimages_tags %}
+
+<figure class="text-center">
+    {% image self.image width-800 as img %}
+    <img src="{{ img.url }}" class="img-fluid" alt="{{ self.caption }}">
+    <figcaption>{{ self.caption }} - {{ self.attribution }}</figcaption>
+</figure>
+
