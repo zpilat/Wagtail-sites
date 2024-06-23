@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags %}
+{% load static wagtailcore_tags wagtailimages_tags %}
 
 {% block body_class %}template-searchresults{% endblock %}
 
-{% block title %}Search{% endblock %}
+{% block title %}{% if search_results %}Výsledky vyhledávání{% endif %}{% if search_query %} pro “{{ search_query }}”{% endif %}{% endblock %}
 
 {% block content %}
-    <div class="container text-center mt-4">
-        <form action="{% url 'search' %}" method="get" class="row justify-content-center my-4">
+    <div class="container mt-4">
+        <form action="{% url 'search' %}" method="get" class="row text-center justify-content-center my-4">
             <div class="col-4">
                 <input type="text" id="search-query" name="query" class="form-control" placeholder="Vyhledávání" {% if search_query %} value="{{ search_query }}"{% endif %}>
             </div>
@@ -17,16 +17,32 @@
         </form>
         
         {% if search_results %}
-            <ul>
+            <p class="h1 text-center">Výsledky vyhledávání{% if search_query %} pro “{{ search_query }}”{% endif %}</p>
+            <ul class="list-unstyled">
                 {% for result in search_results %}
+                    <hr>
                     <li>
-                        <h4><a href="{% pageurl result %}">{{ result }}</a></h4>
-                        {% if result.search_description %}
-                            {{ result.search_description }}
+                        {% if result.specific.main_image %}
+                            {% image result.specific.main_image fill-320x240 as img %}
+                            <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid my-4 d-block">
+                        {% endif %}
+                        <h4><a href="{% pageurl result %}">{{ result.specific }}</a></h4>
+                        <p class="listing-card__content-type">
+                        {% if result.specific.content_type.model == "blogpage" %}
+                            Blog
+                        {% elif result.specific.content_type.model == "recipepage" %}
+                            Recepty
+                        {% else %}
+                            Ostatní
+                        {% endif %}
+                        </p>    
+                        {% if result.specific.search_description %}
+                            {{ result.specific.search_description }}
                         {% endif %}
                     </li>
                 {% endfor %}
             </ul>
+            
             {% if search_results.has_previous %}
                 <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">Předchozí</a>
             {% endif %}

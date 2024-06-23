@@ -8,10 +8,20 @@ from recipes.models import RecipeIndexPage
 
 class HomePage(Page):
     max_count = 1
+
+    image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        help_text="Landscape mode only; horizontal width between 1000px and 3000px.",
+    )     
     
     body = RichTextField(null=True, blank=True)
 
     content_panels = Page.content_panels + [
+        FieldPanel("image"),        
         FieldPanel('body'),
     ]
 
