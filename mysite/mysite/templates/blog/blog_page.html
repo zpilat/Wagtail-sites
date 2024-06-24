@@ -21,7 +21,7 @@
                     <hr>
                     <div class="col">
                         {% for tag in tags %}
-                            <a href="{% slugurl 'blog' %}?tag={{ tag }}" class="btn btn-sm btn-outline-secondary m-1">{{ tag }}</a>
+                            <a href="{% slugurl 'blog' %}?tag={{ tag }}" class="btn btn-sm btn-outline-secondary rounded-pill m-1">{{ tag }}</a>
                         {% endfor %}
                     </div>
                 {% endif %}

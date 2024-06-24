@@ -1,5 +1,7 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
+from taggit.models import Tag, TaggedItemBase
+from modelcluster.contrib.taggit import ClusterTaggableManager
 from wagtail.admin.panels import (
     FieldPanel,
     HelpPanel,
@@ -23,7 +25,15 @@ class RecipeCategory(models.Model):
 
     class Meta:
         verbose_name = "Kategorie receptů"
-        
+
+
+class RecipePageTag(TaggedItemBase):
+    content_object = ParentalKey(
+        'RecipePage',
+        related_name='tagged_items',
+        on_delete=models.CASCADE
+    )
+    
 
 class RecipeIndexPage(Page):
     """
@@ -51,10 +61,25 @@ class RecipeIndexPage(Page):
     parent_page_types = ["home.HomePage"]
     subpage_types = ['RecipePage']
 
+    def get_recipes(self, tag=None):
+        recipes = RecipePage.objects.descendant_of(self).live().order_by('-first_published_at')
+        if tag:
+            recipes = recipes.filter(tags__name=tag)
+        return recipes
+
+    def get_child_tags(self):
+        tags = []
+        for blogpage in self.get_recipes():
+            tags += blogpage.tags.all()
+        tags = sorted(set(tags), key=lambda tag: tag.name)
+        return tags    
+
     def get_context(self, request):
         context = super().get_context(request)
-        context["recipes"] = self.get_children().live().order_by('-first_published_at')
-        return context
+        tag = request.GET.get('tag')           
+        context['recipes'] = self.get_recipes(tag)
+        context['tags'] = self.get_child_tags()
+        return context  
     
 
 class RecipePage(Page):
@@ -69,7 +94,6 @@ class RecipePage(Page):
     introduction = models.TextField("Úvod", blank=True, max_length=500)
     backstory = StreamField(
         BaseStreamBlock(),
-        # Demonstrate block_counts to keep the backstory concise.
         block_counts={
             "heading_block": {"max_num": 1},
             "image_block": {"max_num": 1},
@@ -80,7 +104,6 @@ class RecipePage(Page):
         help_text="Lze použít maximálně jednu hlavičku, obrázek a embed blok.",
     )
 
-    # An example of using rich text for single-line content.
     recipe_headline = RichTextField(
         blank=True,
         max_length=120,
@@ -93,7 +116,8 @@ class RecipePage(Page):
         use_json_field=True,
         help_text="Pokyny k receptu krok za krokem a další důležité informace.",
     )
-
+    tags = ClusterTaggableManager(through=RecipePageTag, blank=True)
+    
     content_panels = Page.content_panels + [
         FieldPanel("category", heading="Kategorie receptů"),
         FieldPanel("date_published", heading="Datum publikace článku"),
@@ -110,6 +134,7 @@ class RecipePage(Page):
             heading="Předmluva",
         ),
         FieldPanel("body", heading="Tělo receptu"),
+        FieldPanel("tags", heading="Tagy"),
     ]
 
     search_fields = Page.search_fields + [
@@ -119,8 +144,6 @@ class RecipePage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-
-        # Fetch the parent RecipeIndexPage
         recipes_index = self.get_parent().specific
         context['recipes_index'] = recipes_index
         return context

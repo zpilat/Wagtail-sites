@@ -11,7 +11,9 @@
             <nav class="navbar navbar-sm navbar-expand-xl navbar-dark bg-dark">
                 <div>
                     <span class="navbar-brand mb-0 me-0">
-                        <img src="{% static 'images/logo-32x32.webp' %}" alt="Logo" width="32" height="32" class="d-inline-block align-text-top">
+                        <a href="{% slugurl 'home' %}">
+                            <img src="{% static 'images/logo-32x32.webp' %}" alt="Logo" width="32" height="32" class="d-inline-block align-text-top">
+                        </a>
                     </span>        
                 </div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,7 +28,7 @@
                             <a class="nav-link" href="{% slugurl 'blog' %}">Blog</a>                
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% slugurl 'rozpalena-kucharka' %}">Recepty</a>
+                            <a class="nav-link" href="{% slugurl 'recepty' %}">Recepty</a>
                         </li>   
                     </ul>
                     <form action="{% url 'search' %}" method="get" class="py-1">
@@ -51,6 +53,9 @@
                                 <div class="col-auto">
                                     {% if result.specific.main_image %}
                                         {% image result.specific.main_image fill-240x180 as img %}
+                                        <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid my-2 d-block">
+                                    {% elif result.specific.get_backstory_image %}
+                                        {% image result.specific.get_backstory_image fill-240x180 as img %}
                                         <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid my-2 d-block">
                                     {% endif %}
                                 </div>
