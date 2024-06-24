@@ -28,7 +28,7 @@
                                 <li><a class="dropdown-item" href="{% slugurl 'recepty' %}">Všechny recepty</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 {% for category in categories %}
-                                    <li><a class="dropdown-item" href="?category={{ category.slug }}">{{ category.name }}</a></li>
+                                    <li><a class="dropdown-item" href="?category={{ category.slug }}{% if request.GET.tag %}&tag={{ request.GET.tag }}{% endif %}">{{ category.name }}</a></li>
                                 {% endfor %}                        
                             </ul>
                         </li>   
