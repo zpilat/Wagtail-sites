@@ -5,15 +5,42 @@
 {% block body_class %}template-blogpage{% endblock %}
 
 {% block header %}
-    {% include 'recipes/recipe_navbar.html' with page=recipes_index %}
+    {% include 'includes/navbar.html' with page=recipes_index recepty_nav="active" %}
 {% endblock %}
 
 
 {% block content %}
 <div class="container pt-0 pb-4 bg-light">
 
-    {% include "base/includes/header-blog.html" %}
-    
+    <div class="row pb-2">
+        <div class="col">
+            <p class="h1 my-4">{{ page.title }}</p>
+            {% if page.date_published %}
+                <p class="text-muted">{{ page.date_published }}</p>
+            {% endif %}            
+            {% if page.subtitle %}
+                <p class="h4 text-muted">{{ page.subtitle }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row text-center">
+            {% with tags=page.tags.all %}
+            {% if tags %}
+                <hr>
+                <div class="col">
+                    {% for tag in tags %}
+                        <a href="{% slugurl 'recepty' %}?tag={{ tag.slug }}" class="btn btn-sm btn-outline-secondary rounded-pill m-1">{{ tag.name }}</a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+    <div class="row mt-4">
+        <div class="col">
+            <p class="h3">Úvod</p>
+            <p>{{ page.introduction }}</p>
+        </div>
+    </div>
     <div class="row mt-4">
         <div class="col">
             <p class="h3">Příběh</p>

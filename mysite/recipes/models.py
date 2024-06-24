@@ -61,10 +61,12 @@ class RecipeIndexPage(Page):
     parent_page_types = ["home.HomePage"]
     subpage_types = ['RecipePage']
 
-    def get_recipes(self, tag=None):
+    def get_recipes(self, tag_slug=None, category_slug=None):
         recipes = RecipePage.objects.descendant_of(self).live().order_by('-first_published_at')
-        if tag:
-            recipes = recipes.filter(tags__name=tag)
+        if tag_slug:
+            recipes = recipes.filter(tags__slug=tag_slug)
+        if category_slug:
+            recipes = recipes.filter(category__slug=category_slug)
         return recipes
 
     def get_child_tags(self):
@@ -76,9 +78,11 @@ class RecipeIndexPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        tag = request.GET.get('tag')           
-        context['recipes'] = self.get_recipes(tag)
+        tag_slug = request.GET.get('tag')
+        category_slug = request.GET.get('category')
+        context['recipes'] = self.get_recipes(tag_slug, category_slug)
         context['tags'] = self.get_child_tags()
+        context['categories'] = RecipeCategory.objects.all()
         return context  
     
 

@@ -5,7 +5,7 @@
 {% block body_class %}template-blogpage{% endblock %}
 
 {% block header %}
-    {% include 'blog/blog_navbar.html' with page=blog_index %}
+    {% include 'includes/navbar.html' with page=blog_index blog_nav="active" %}
 {% endblock %}
 
 {% block content %}

@@ -2,7 +2,7 @@
 
 <div class="container bg-dark">
     <div class="row">
-        <nav class="navbar navbar-sm navbar-expand-xl navbar-dark">
+        <nav class="navbar navbar-sm navbar-expand-xl navbar-dark bg-dark">
             <div>
                 <span class="navbar-brand mb-0 me-0">
                     <a href="{% slugurl 'home' %}">
@@ -11,19 +11,34 @@
                 </span>        
             </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{% slugurl 'home' %}">Home</a>
+                        <a class="nav-link {{ home_nav }}" {% if home_nav %} aria-current="page" {% endif %} href="{% slugurl 'home' %}">Home</a>  
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% slugurl 'blog' %}">Blog</a>                
+                        <a class="nav-link {{ blog_nav }}" {% if blog_nav %} aria-current="page" {% endif %}href="{% slugurl 'blog' %}">Blog</a>                
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% slugurl 'recepty' %}">Recepty</a>
-                    </li>   
+                    {% if categories %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link {{ recepty_nav }} dropdown-toggle" {% if recepty_nav %} aria-current="page" {% endif %} href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Recepty</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% slugurl 'recepty' %}">Všechny recepty</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                {% for category in categories %}
+                                    <li><a class="dropdown-item" href="?category={{ category.slug }}">{{ category.name }}</a></li>
+                                {% endfor %}                        
+                            </ul>
+                        </li>   
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link {{ recepty_nav }}" {% if recepty_nav %} aria-current="page" {% endif %}href="{% slugurl 'recepty' %}">
+                                Recepty
+                            </a>                
+                        </li>
+                    {% endif%}
                 </ul>
                 <form action="{% url 'search' %}" method="get" class="py-1">
                     <div class="input-group">

@@ -5,7 +5,7 @@
 {% block body_class %}template-blogpage{% endblock %}
 
 {% block header %}
-    {% include 'recipes/recipe_navbar.html' %}
+    {% include 'includes/navbar.html' with recepty_nav="active" %}
 {% endblock %}
 
 {% block content %}
@@ -22,7 +22,7 @@
                 <p>
                     <a href="{% slugurl 'recepty' %}" class="btn btn-sm rounded-pill m-1 {% if request.GET.tag %}btn-outline-secondary{% else %}btn-outline-primary{% endif %}">VŠE</a>
                     {% for tag in tags %}
-                        <a href="?tag={{ tag.name }}" class="btn btn-sm {% if tag.name == request.GET.tag %}btn-outline-primary{% else %}btn-outline-secondary{% endif %} rounded-pill m-1">{{ tag.name }}</a>
+                        <a href="?tag={{ tag.slug }}" class="btn btn-sm {% if tag.slug == request.GET.tag %}btn-outline-primary{% else %}btn-outline-secondary{% endif %} rounded-pill m-1">{{ tag.name }}</a>
                     {% endfor %}
                 </p>
             </div>
@@ -40,9 +40,12 @@
                                 {% endif %}
                             {% endwith %}
                             <div class="card-body">
-                                <h5 class="card-title">
+                                <p class="h4 card-title">
                                     <a href="{% pageurl recipe %}" class="text-dark">{{ recipe.title }}</a>
-                                </h5>                         
+                                </p>                         
+                                <p class="h6 card-subtitle my-1 ">
+                                    Kategorie: {{ recipe.category }}
+                                </p>
                                 <p class="card-text">{{ recipe.introduction }}</p>
                             </div>
                             <div class="card-footer bg-secondary text-white pt-3 pb-0">
