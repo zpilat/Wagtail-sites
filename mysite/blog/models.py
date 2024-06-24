@@ -3,7 +3,7 @@ from django import forms
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from modelcluster.contrib.taggit import ClusterTaggableManager
-from taggit.models import TaggedItemBase
+from taggit.models import Tag, TaggedItemBase
 from wagtail.models import Page, Orderable
 from wagtail.fields import RichTextField
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
@@ -11,6 +11,14 @@ from wagtail.images.models import Image
 from wagtail.search import index
 from django.utils import timezone
 from wagtail.snippets.models import register_snippet
+
+
+class BlogPageTag(TaggedItemBase):
+    content_object = ParentalKey(
+        'BlogPage',
+        related_name='tagged_items',
+        on_delete=models.CASCADE
+    )
 
 
 class BlogIndexPage(Page):
@@ -26,14 +34,6 @@ class BlogIndexPage(Page):
     ) 
     intro = RichTextField(blank=True)
     
-    # add the get_context method:
-    def get_context(self, request):
-        # Update context to include only published posts, ordered by reverse-chron
-        context = super().get_context(request)
-        blogpages = self.get_children().live().order_by('-first_published_at')
-        context['blogpages'] = blogpages
-        return context
-
     content_panels = Page.content_panels + [
         FieldPanel("image"),
         FieldPanel('intro'),
@@ -42,30 +42,28 @@ class BlogIndexPage(Page):
     parent_page_types = ["home.HomePage"]
     subpage_types = ['BlogPage']
 
-    
-class BlogTagIndexPage(Page):
-    max_count = 1
+    def get_blogpages(self, tag=None):
+        blogpages = BlogPage.objects.descendant_of(self).live().order_by('-first_published_at')
+        if tag:
+            blogpages = blogpages.filter(tags__name=tag)
+        return blogpages
+
+    def get_child_tags(self):
+        tags = []
+        for blogpage in self.get_blogpages():
+            tags += blogpage.tags.all()
+        tags = sorted(set(tags), key=lambda tag: tag.name)
+        return tags    
 
     def get_context(self, request):
-
-        # Filter by tag
-        tag = request.GET.get('tag')
-        blogpages = BlogPage.objects.filter(tags__name=tag)
-
-        # Update template context
         context = super().get_context(request)
-        context['blogpages'] = blogpages
-        return context  
+        tag = request.GET.get('tag')
+            
+        context['blogpages'] = self.get_blogpages(tag)
+        context['tags'] = self.get_child_tags()
+        return context
 
-
-class BlogPageTag(TaggedItemBase):
-    content_object = ParentalKey(
-        'BlogPage',
-        related_name='tagged_items',
-        on_delete=models.CASCADE
-    )
-
-
+    
 class BlogPage(Page):
     blog_nr = models.PositiveIntegerField("Číslo blogu", unique=True, null=True)
     date = models.DateField("Datum publikace", default=date.today)
@@ -74,7 +72,6 @@ class BlogPage(Page):
     authors = ParentalManyToManyField('blog.Author', blank=True, verbose_name='Autor')
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
 
-    # Add the main_image method:
     def main_image(self):
         gallery_item = self.gallery_images.first()
         if gallery_item:
@@ -102,8 +99,6 @@ class BlogPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-
-        # Fetch the parent BlogIndexPage
         blog_index = self.get_parent().specific
         context['blog_index'] = blog_index
         return context

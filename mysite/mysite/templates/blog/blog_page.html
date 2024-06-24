@@ -5,7 +5,7 @@
 {% block body_class %}template-blogpage{% endblock %}
 
 {% block header %}
-    {% include 'blog/blog_header.html' with page=blog_index %}
+    {% include 'blog/blog_navbar.html' with page=blog_index %}
 {% endblock %}
 
 {% block content %}
@@ -15,7 +15,18 @@
             <p class="text-muted">{{ page.date }}</p>
             <p class="h6">{{ page.intro|richtext }}</p>   
         </div>
-        
+        <div class="row text-center">
+            {% with tags=page.tags.all %}
+                {% if tags %}
+                    <hr>
+                    <div class="col">
+                        {% for tag in tags %}
+                            <a href="{% slugurl 'blog' %}?tag={{ tag }}" class="btn btn-sm btn-outline-secondary m-1">{{ tag }}</a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
         {% with page.main_image as main_image %}
             {% if main_image %}
                 {% image main_image fill-1024x768 as img %}
@@ -26,18 +37,6 @@
         <div>{{ page.body|richtext }}</div>
         
         <div class="text-center">
-            {% with tags=page.tags.all %}
-                {% if tags %}
-                    <hr>
-                    <div class="tags my-4">
-                        <p class="h3 mb-4">Tagy:</p>
-                        {% for tag in tags %}
-                            <a href="{% slugurl 'tags' %}?tag={{ tag }}" class="btn btn-outline-secondary m-1">{{ tag }}</a>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
-
             {% with gallery_items=page.gallery_images.all %}
                 {% if gallery_items %}
                     <hr>

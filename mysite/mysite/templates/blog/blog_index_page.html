@@ -5,36 +5,57 @@
 {% block body_class %}template-blogindexpage{% endblock %}
 
 {% block header %}
-    {% include 'blog/blog_header.html' %}
+    {% include 'blog/blog_navbar.html' %}
 {% endblock %}
 
 {% block content %}
     <div class="container my-4">
         <div class="row">
-            <div class="col-12 text-center bg-light py-2 mt-0 mb-3">
+            <div class="col-12 text-center bg-light py-2 mt-0">
                 <p class="h1">{{ page.title }}</p>  
                 <p>{{ page.intro|richtext }}</p>
             </div>
         </div>
+
+        {% if request.GET.tag %}
+            <div class="row text-center bg-light pt-2">
+                <p class="h6">
+                    Zobrazeny blogy s tagem:
+                    <a href="?tag={{ request.GET.tag }}" class="btn btn-sm btn-outline-secondary rounded-pill m-1">{{ request.GET.tag }}</a>
+                </p>
+                <hr>  
+            </div>          
+        {% endif %}
+        
+        {% if tags %}
+            <div class="row text-center bg-light mb-3">
+                <p class="h6">
+                    <a href="{% slugurl 'blog' %}" class="btn btn-sm btn-outline-secondary rounded-pill m-1">VŠE</a>
+                    {% for tag in tags %}
+                        <a href="?tag={{ tag.name }}" class="btn btn-sm btn-outline-secondary rounded-pill m-1">{{ tag.name }}</a>
+                    {% endfor %}
+                </p>
+            </div>
+        {% endif %}       
         
         <div class="row bg-light pt-3">
-            {% for post in blogpages %}
+            {% for blogpage in blogpages %}
                 <div class="col-md-4 mb-4">
                     <div class="card text-center h-100">
-                        {% with post=post.specific %}
-                            {% if post.main_image %}
-                                {% image post.main_image fill-320x240 as img %}
-                                <img src="{{ img.url }}" alt="{{ post.title }}" class="card-img-top">
+                        {% with blogpage=blogpage.specific %}
+                            {% if blogpage.main_image %}
+                                {% image blogpage.main_image fill-320x240 as img %}
+                                <img src="{{ img.url }}" alt="{{ blogpage.title }}" class="card-img-top">
                             {% endif %}
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <a href="{% pageurl post %}" class="text-dark">{{ post.title }}</a>
+                                    <a href="{% pageurl blogpage %}" class="text-dark">{{ blogpage.title }}</a>
                                 </h5>
-                                <p class="text-muted">{{ post.blog_nr }}. blog</p>                                
-                                <p class="card-text">{{ post.intro }}</p>
+                                <p class="text-muted">{{ blogpage.blog_nr }}. blog</p>                                
+                                <p class="card-text">{{ blogpage.intro }}</p>
                             </div>
                             <div class="card-footer bg-secondary text-white pt-3 pb-0">
-                                <p>Zveřejněno: {{ post.date }}</p>
+                                <p>Zveřejněno: {{ blogpage.date }}</p>
                             </div>
                         {% endwith %}
                     </div>
