@@ -49,9 +49,9 @@ class RecipeIndexPage(Page):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="+",
-        help_text="Pouze režim na šířku; horizontální šířka mezi 1000px a 3000px",
+        help_text="Pouze režim na šířku; šířka mezi 1000px a 3000px",
     )
-    intro = RichTextField(help_text="Text popisující stránku", blank=True)
+    intro = RichTextField(help_text="Úvodní text popisující stránku", blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel("image"),

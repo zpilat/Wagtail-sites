@@ -39,6 +39,9 @@
                             </a>                
                         </li>
                     {% endif%}
+                    <li class="nav-item">
+                        <a class="nav-link {{ coding_nav }}" {% if coding_nav %} aria-current="page" {% endif %} href="{% slugurl 'coding' %}">Programování</a>  
+                    </li>
                 </ul>
                 <form action="{% url 'search' %}" method="get" class="py-1">
                     <div class="input-group">

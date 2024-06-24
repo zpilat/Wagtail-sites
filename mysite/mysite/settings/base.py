@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "search",
     "base",
     "recipes",
+    "coding",
     "wagtail.contrib.forms",  
     "wagtail.contrib.redirects",
     "wagtail.contrib.settings",

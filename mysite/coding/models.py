@@ -12,16 +12,15 @@ from wagtail.search import index
 from django.utils import timezone
 from wagtail.snippets.models import register_snippet
 
-
-class BlogPageTag(TaggedItemBase):
+class CodingPageTag(TaggedItemBase):
     content_object = ParentalKey(
-        'BlogPage',
+        'CodingPage',
         related_name='tagged_items',
         on_delete=models.CASCADE
     )
 
 
-class BlogIndexPage(Page):
+class CodingIndexPage(Page):
     max_count = 1
     
     image = models.ForeignKey(
@@ -30,7 +29,7 @@ class BlogIndexPage(Page):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="+",
-        help_text="Pouze režim na šířku; šířka mezi 1000px a 3000px",
+        help_text="Pouze režim na šířku; šířka mezi 1000px a 3000px.",
     ) 
     intro = RichTextField(help_text="Úvodní text popisující stránku", blank=True)
     
@@ -40,7 +39,7 @@ class BlogIndexPage(Page):
     ]
 
     parent_page_types = ["home.HomePage"]
-    subpage_types = ['BlogPage']
+    subpage_types = ['CodingPage']
 
     def get_blogpages(self, tag=None):
         blogpages = BlogPage.objects.descendant_of(self).live().order_by('-first_published_at')
@@ -64,13 +63,13 @@ class BlogIndexPage(Page):
         return context
 
     
-class BlogPage(Page):
+class CodingPage(Page):
     blog_nr = models.PositiveIntegerField("Číslo blogu", unique=True, null=True)
     date = models.DateField("Datum publikace", default=date.today)
     intro = models.CharField("Úvod", max_length=250)
     body = RichTextField("Tělo blogu")
     authors = ParentalManyToManyField('blog.Author', blank=True, verbose_name='Autor')
-    tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
+    tags = ClusterTaggableManager(through=CodingPageTag, blank=True)
 
     def main_image(self):
         gallery_item = self.gallery_images.first()
@@ -95,23 +94,23 @@ class BlogPage(Page):
         InlinePanel('gallery_images', label="Galerie obrázků"),        
     ]
         
-    parent_page_types = ['BlogIndexPage']
+    parent_page_types = ['CodingIndexPage']
 
     def get_context(self, request):
         context = super().get_context(request)
-        blog_index = self.get_parent().specific
-        context['blog_index'] = blog_index
+        coding_index = self.get_parent().specific
+        context['coding_index'] = coding_index
         return context
 
     def save(self, *args, **kwargs):
         if self.pk is None:  # Jen pokud se jedná o nový objekt
-            last_blog = BlogPage.objects.order_by('blog_nr').last()
+            last_blog = CodingPage.objects.order_by('blog_nr').last()
             self.blog_nr = last_blog.blog_nr + 1 if last_blog else 1
         super().save(*args, **kwargs)
 
     
-class BlogPageGalleryImage(Orderable):
-    page = ParentalKey(BlogPage, on_delete=models.CASCADE, related_name='gallery_images')
+class CodingPageGalleryImage(Orderable):
+    page = ParentalKey(CodingPage, on_delete=models.CASCADE, related_name='gallery_images')
     image = models.ForeignKey(
         'wagtailimages.Image', on_delete=models.CASCADE, related_name='+'
     )
@@ -121,24 +120,3 @@ class BlogPageGalleryImage(Orderable):
         FieldPanel('image'),
         FieldPanel('caption'),
     ]
-
-
-@register_snippet
-class Author(models.Model):
-    name = models.CharField(max_length=255)
-    author_image = models.ForeignKey(
-        'wagtailimages.Image', null=True, blank=True,
-        on_delete=models.SET_NULL, related_name='+'
-    )
-
-    panels = [
-        FieldPanel('name'),
-        FieldPanel('author_image'),
-    ]
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name_plural = 'Autoři'
-        

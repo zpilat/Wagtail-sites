@@ -22,7 +22,7 @@
                 <p>
                     <a href="{% slugurl 'blog' %}" class="btn btn-sm rounded-pill m-1 {% if request.GET.tag %}btn-outline-secondary{% else %}btn-outline-primary{% endif %}">VŠE</a>
                     {% for tag in tags %}
-                        <a href="?tag={{ tag.slug }}" class="btn btn-sm {% if tag.slug == request.GET.tag %}btn-outline-primary{% else %}btn-outline-secondary{% endif %} rounded-pill m-1">{{ tag.name }}</a>
+                        <a href="?tag={{ tag.name }}" class="btn btn-sm {% if tag.name == request.GET.tag %}btn-outline-primary{% else %}btn-outline-secondary{% endif %} rounded-pill m-1">{{ tag.name }}</a>
                     {% endfor %}
                 </p>
             </div>
