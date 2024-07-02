@@ -10,6 +10,12 @@
 
 {% block content %}
     <div class="container mb-4">
+        <div class="row">
+            <div class="col text-center bg-light mt-2 py-2">
+                <p class="h1">{{ page.title }}</p>
+                <p>{{ page.body|richtext }}</p>
+            </div>
+        </div>
         <div class="row justify-content-center mt-2">
             <div id="customCarousel" class="carousel slide col-md-8" data-bs-ride="carousel">
                 <div class="carousel-indicators">
@@ -18,7 +24,7 @@
                     <button type="button" data-bs-target="#customCarousel" data-bs-slide-to="2" class="bg-light" aria-label="Slide 3"></button>
                 </div>            
                 <div class="carousel-inner">
-                    <div class="carousel-item active" data-bs-interval="4000">
+                    <div class="carousel-item active" data-bs-interval="5000">
                         <div class="text-center">
                             <a href="{{ blog_index.url }}" class="text-dark text-decoration-none">
                                 {% if blog_index %}
@@ -32,7 +38,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class="carousel-item" data-bs-interval="4000">
+                    <div class="carousel-item" data-bs-interval="5000">
                         <div class="text-center">
                             <a href="{{ recipe_index.url }}" class="text-dark text-decoration-none">
                                 {% if recipe_index %}
@@ -46,7 +52,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class="carousel-item" data-bs-interval="4000">
+                    <div class="carousel-item" data-bs-interval="5000">
                         <div class="text-center">
                             <a href="{{ coding_index.url }}" class="text-dark text-decoration-none">
                                 {% if coding_index %}

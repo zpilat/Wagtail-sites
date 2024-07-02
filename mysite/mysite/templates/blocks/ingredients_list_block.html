@@ -1,0 +1,7 @@
+{% load wagtailcore_tags %}
+
+<ul>
+    {% for step in self %}
+        <li class="px-2">{{ step|richtext }}</li>
+    {% endfor %}
+</ul>

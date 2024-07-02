@@ -42,7 +42,7 @@ class CodingIndexPage(Page):
     subpage_types = ['CodingPage']
 
     def get_blogpages(self, tag=None):
-        blogpages = BlogPage.objects.descendant_of(self).live().order_by('-first_published_at')
+        blogpages = CodingPage.objects.descendant_of(self).live().order_by('-first_published_at')
         if tag:
             blogpages = blogpages.filter(tags__slug=tag)
         return blogpages

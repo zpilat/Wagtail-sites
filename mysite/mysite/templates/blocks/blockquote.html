@@ -1,5 +1,10 @@
-{% load wagtailimages_tags %}
+{% load wagtailcore_tags %}
 
-<blockquote><p class="text">{{ self.text }}</p>
-    <p class="attribute-name">{{ self.attribute_name}}</p>
-</blockquote>
+<figure>
+  <blockquote class="blockquote">
+    <p>"{{ self.text }}"</p>
+  </blockquote>
+  <figcaption class="blockquote-footer">
+    <cite title="Source Title">{{ self.attribute_name }}</cite>
+  </figcaption>
+</figure>

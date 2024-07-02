@@ -53,7 +53,7 @@ class BlockQuote(StructBlock):
     """
 
     text = TextBlock()
-    attribute_name = CharBlock(blank=True, required=False, label="e.g. Mary Berry")
+    attribute_name = CharBlock(blank=True, required=False, label="např. Karel Čapek")
 
     class Meta:
         icon = "openquote"

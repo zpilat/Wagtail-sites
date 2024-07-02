@@ -31,9 +31,10 @@ class RecipeStreamBlock(StreamBlock):
     )
     difficulty = ChoiceBlock(
         widget=forms.RadioSelect,
-        choices=[("Nízká *", "Nízká"), ("Střední **", "Střední"), ("Vysoká ***", "Vysoká")],
-        default="Nízká obtížnost",
+        choices=[("* nízká", "Nízká"), ("** střední", "Střední"), ("*** vysoká", "Vysoká")],
+        default="* nízká",
         icon="cogs",
+        template="blocks/difficulty.html",        
         group="Vaření",
         label="Obtížnost",
     )
@@ -42,6 +43,7 @@ class RecipeStreamBlock(StreamBlock):
         min_num=2,
         max_num=15,
         icon="list-ol",
+        template="blocks/ingredients_list_block.html",         
         group="Vaření",
         label="Seznam ingrediencí",
     )
@@ -50,6 +52,7 @@ class RecipeStreamBlock(StreamBlock):
         min_num=2,
         max_num=15,
         icon="tasks",
+        template="blocks/steps_list_block.html",        
         group="Vaření",
         label="Seznam kroků",
     )
