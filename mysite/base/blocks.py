@@ -33,7 +33,7 @@ class HeadingBlock(StructBlock):
     heading_text = CharBlock(classname="title", required=True)
     size = ChoiceBlock(
         choices=[
-            ("", "Select a header size"),
+            ("", "Vyber velikost nadpisu"),
             ("h2", "H2"),
             ("h3", "H3"),
             ("h4", "H4"),
@@ -66,14 +66,16 @@ class BaseStreamBlock(StreamBlock):
     Define the custom blocks that `StreamField` will utilize
     """
 
-    heading_block = HeadingBlock()
+    heading_block = HeadingBlock(group="Obsah", label="Nadpis")
     paragraph_block = RichTextBlock(
-        icon="pilcrow", template="blocks/paragraph_block.html"
+        icon="pilcrow", template="blocks/paragraph_block.html", group="Obsah", label="Odstavec"
     )
-    image_block = ImageBlock()
-    block_quote = BlockQuote()
+    image_block = ImageBlock(group="Média", label="Obrázek")
+    block_quote = BlockQuote(group="Obsah", label="Citát")
     embed_block = EmbedBlock(
-        help_text="Insert an embed URL e.g https://www.youtube.com/watch?v=SGJFWirQ3ks",
+        help_text="Vložte URL média např. https://www.youtube.com/watch?v=SGJFWirQ3ks",
         icon="media",
         template="blocks/embed_block.html",
+        group="Média",
+        label="Média",        
     )

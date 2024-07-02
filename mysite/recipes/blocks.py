@@ -23,11 +23,11 @@ class RecipeStreamBlock(StreamBlock):
     block_quote = BlockQuote(group="Obsah", label="Citát")
     image_block = ImageBlock(group="Média", label="Obrázek")
     embed_block = EmbedBlock(
-        help_text="Vložte URL např. https://www.youtube.com/watch?v=SGJFWirQ3ks",
+        help_text="Vložte URL média např. https://www.youtube.com/watch?v=SGJFWirQ3ks",
         icon="media",
         template="blocks/embed_block.html",
         group="Média",
-        label="Embed",
+        label="Média",
     )
     difficulty = ChoiceBlock(
         widget=forms.RadioSelect,
@@ -42,7 +42,7 @@ class RecipeStreamBlock(StreamBlock):
         RichTextBlock(features=["bold", "italic", "link"]),
         min_num=2,
         max_num=15,
-        icon="list-ol",
+        icon="tasks",
         template="blocks/ingredients_list_block.html",         
         group="Vaření",
         label="Seznam ingrediencí",
@@ -51,7 +51,7 @@ class RecipeStreamBlock(StreamBlock):
         RichTextBlock(features=["bold", "italic", "link"]),
         min_num=2,
         max_num=15,
-        icon="tasks",
+        icon="list-ol",
         template="blocks/steps_list_block.html",        
         group="Vaření",
         label="Seznam kroků",

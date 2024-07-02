@@ -105,7 +105,7 @@ class RecipePage(Page):
         },
         blank=True,
         use_json_field=True,
-        help_text="Lze použít maximálně jednu hlavičku, obrázek a embed blok.",
+        help_text="Lze použít maximálně jeden nadpis, obrázek a médium.",
     )
 
     recipe_headline = RichTextField(
