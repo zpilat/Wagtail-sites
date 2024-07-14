@@ -57,7 +57,11 @@
     <div class="row">
         <div class="col text-center">
             {% if page.image %}
-                {% image page.image max-1280x1280 as img %}
+                {% if home_nav %}
+                    {% image page.image max-1280x1280 as img %}
+                {% else %}
+                    {% image page.image max-1024x1024 as img %}
+                {% endif %}
                 <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid mb-3 d-block mx-auto">
             {% endif %}
         </div>
