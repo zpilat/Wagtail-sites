@@ -1,11 +1,11 @@
 from .base import *
-import os
+from decouple import config
+
+SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 DEBUG = False
 
 ALLOWED_HOSTS = ['zpilat.pythonanywhere.com']
-
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 try:
     from .local import *
