@@ -1,1 +1,34 @@
+# Ignorování .pyc souborů
+*.pyc
+__pycache__/
+
+# Ignorování log souborů
+*.log
+
+# Ignorování virtuálního prostředí
 venv/
+ENV/
+env/
+
+# Ignorování nastavení editorů
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignorování souborů systému
+.DS_Store
+Thumbs.db
+
+# Ignorování databázového souboru
+db.sqlite3
+
+# Ignorování nahrávání zabezpečených dat
+.env
+
+# Ignorování statických souborů
+/static/
+/media/
+
+# Ignorování souboru s vývojovým nastavením
+mysite/settings/dev.py
