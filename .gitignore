@@ -31,4 +31,4 @@ Thumbs.db
 /media/
 
 # Ignorování souboru s vývojovým nastavením
-mysite/settings/dev.py
+settings/dev.py
