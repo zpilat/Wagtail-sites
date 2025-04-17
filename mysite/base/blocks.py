@@ -16,9 +16,9 @@ class ImageBlock(StructBlock):
     attribution data
     """
 
-    image = ImageChooserBlock(required=True)
-    caption = CharBlock(required=False)
-    attribution = CharBlock(required=False)
+    image = ImageChooserBlock(required=True, label="Obrázek")
+    caption = CharBlock(required=False, label="Popisek")
+    attribution = CharBlock(required=False, label="Zdroj")
 
     class Meta:
         icon = "image"
@@ -30,7 +30,7 @@ class HeadingBlock(StructBlock):
     Custom `StructBlock` that allows the user to select h2 - h4 sizes for headers
     """
 
-    heading_text = CharBlock(classname="title", required=True)
+    heading_text = CharBlock(classname="title", required=True, label="Text nadpisu")
     size = ChoiceBlock(
         choices=[
             ("", "Vyber velikost nadpisu"),
@@ -40,6 +40,7 @@ class HeadingBlock(StructBlock):
         ],
         blank=True,
         required=False,
+        label="Velikost nadpisu",
     )
 
     class Meta:
