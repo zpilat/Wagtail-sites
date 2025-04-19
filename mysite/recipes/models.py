@@ -92,7 +92,10 @@ class RecipeCategoryPage(Page):
     def get_recipes(self, tag_slug=None):
         recipes = RecipePage.objects.descendant_of(self).live().order_by('-first_published_at')
         if tag_slug:
-            recipes = recipes.filter(tags__slug=tag_slug)
+            if recipes.filter(tags__slug=tag_slug):
+                recipes = recipes.filter(tags__slug=tag_slug)
+            else:
+                recipes = RecipePage.objects.none()
         return recipes
 
     def get_categories(self):

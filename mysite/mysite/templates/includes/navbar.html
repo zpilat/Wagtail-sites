@@ -28,7 +28,7 @@
                                 <li><a class="dropdown-item {% if not active_category %}active{% endif %}" href="{% slugurl 'recepty' %}">Všechny recepty</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 {% for category in categories %}
-                                    <li><a class="dropdown-item {% if active_category %}{% if category == active_category %}active{% endif %}{% endif %}" href="{{ category.url }}{% if request.GET.tag %}&tag={{ request.GET.tag }}{% endif %}">{{ category.title }}</a></li>
+                                    <li><a class="dropdown-item {% if active_category %}{% if category == active_category %}active{% endif %}{% endif %}" href="{{ category.url }}{% if request.GET.tag %}?tag={{ request.GET.tag }}{% endif %}">{{ category.title }}</a></li>
                                 {% endfor %}                        
                             </ul>
                         </li>   

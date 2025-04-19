@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "recipes/recipe_index_page.html" %}
 {% load static %}
 {% load navigation_tags wagtailimages_tags wagtailcore_tags %}
 
@@ -6,55 +6,4 @@
 
 {% block header %}
     {% include 'includes/navbar.html' with page=recipe_index_page recepty_nav="active" %}
-{% endblock %}
-
-{% block content %}
-    <div class="container my-4">
-        <div class="row">
-            <div class="col-12 text-center bg-light py-2 mt-0">
-                <p class="h1">{{ page.title }}</p>  
-                <p>{{ page.intro|richtext }}</p>
-            </div>
-        </div>
-        
-        {% if tags %}
-            <div class="row text-center bg-light mb-3">
-                <p>
-                    <a href="{% slugurl 'recepty' %}" class="btn btn-sm rounded-pill m-1 {% if request.GET.tag %}btn-outline-secondary{% else %}btn-outline-primary{% endif %}">VŠE</a>
-                    {% for tag in tags %}
-                        <a href="?tag={{ tag.slug }}" class="btn btn-sm {% if tag.slug == request.GET.tag %}btn-outline-primary{% else %}btn-outline-secondary{% endif %} rounded-pill m-1">{{ tag.name }}</a>
-                    {% endfor %}
-                </p>
-            </div>
-        {% endif %}       
-        
-        <div class="row bg-light pt-3">
-            {% for recipe in recipes %}
-                <div class="col-12 mb-4">
-                    <div class="card mb-3 d-flex flex-column flex-md-row">
-                        {% with recipe=recipe.specific %}
-                            {% with backstory_image=recipe.get_backstory_image %}
-                                {% if backstory_image %}
-                                    {% image backstory_image fill-320x240 as img %}
-                                    <img src="{{ img.url }}" alt="{{ recipe.title }}" class="card-img-top card-img-left" style="width: 267px; height: 200px;">
-                                {% endif %}
-                            {% endwith %}
-                            <div class="card-body flex-grow-1">
-                                <p class="h4 card-title">
-                                    <a href="{% pageurl recipe %}" class="text-dark">{{ recipe.title }}</a>
-                                </p>                         
-                                <p class="h6 card-subtitle my-1 ">
-                                    Kategorie: {{ recipe.get_category.title }}
-                                </p>
-                                <p class="card-text">{{ recipe.introduction }}</p>
-                            </div>
-                            <div class="card-footer bg-secondary text-white text-center d-flex align-items-center justify-content-center" style="min-height: 100px;">
-                                <p class="m-0">Zveřejněno: <br> {{ recipe.date_published }}</p>
-                            </div>
-                        {% endwith %}
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
 {% endblock %}
