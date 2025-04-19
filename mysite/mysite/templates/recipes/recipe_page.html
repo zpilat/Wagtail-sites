@@ -2,10 +2,10 @@
 {% load static %}
 {% load navigation_tags wagtailimages_tags wagtailcore_tags %}
 
-{% block body_class %}template-blogpage{% endblock %}
+{% block body_class %}template-recipepage{% endblock %}
 
 {% block header %}
-    {% include 'includes/navbar.html' with page=recipes_index recepty_nav="active" %}
+    {% include 'includes/navbar.html' with page=recipe_index_page recepty_nav="active" %}
 {% endblock %}
 
 
@@ -14,13 +14,11 @@
 
     <div class="row pb-2">
         <div class="col">
-            <p class="h1 my-4">{{ page.title }}</p>
+            <p class="h1 my-4">{{ page.subtitle }}</p>
             {% if page.date_published %}
                 <p class="text-muted">{{ page.date_published }}</p>
             {% endif %}            
-            {% if page.subtitle %}
-                <p class="h4 text-muted">{{ page.subtitle }}</p>
-            {% endif %}
+            <p class="h4 text-muted">Kategorie: {{ active_category }}</p>
         </div>
     </div>
     <div class="row text-center">

@@ -16,17 +16,6 @@ from base.blocks import BaseStreamBlock
 from .blocks import RecipeStreamBlock
 
 
-class RecipeCategory(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "Kategorie receptů"
-
-
 class RecipePageTag(TaggedItemBase):
     content_object = ParentalKey(
         'RecipePage',
@@ -59,40 +48,85 @@ class RecipeIndexPage(Page):
     ]
 
     parent_page_types = ["home.HomePage"]
-    subpage_types = ['RecipePage']
+    subpage_types = ['RecipeCategoryPage']
 
-    def get_recipes(self, tag_slug=None, category_slug=None):
+    def get_recipes(self, tag_slug=None):
         recipes = RecipePage.objects.descendant_of(self).live().order_by('-first_published_at')
         if tag_slug:
             recipes = recipes.filter(tags__slug=tag_slug)
-        if category_slug:
-            recipes = recipes.filter(category__slug=category_slug)
         return recipes
+    
+    def get_categories(self):
+        categories = RecipeCategoryPage.objects.live().order_by('title').specific()
+        return categories    
 
     def get_child_tags(self):
         tags = []
-        for blogpage in self.get_recipes():
-            tags += blogpage.tags.all()
+        for recipe in self.get_recipes():
+            tags += recipe.tags.all()
         tags = sorted(set(tags), key=lambda tag: tag.name)
         return tags    
 
     def get_context(self, request):
         context = super().get_context(request)
         tag_slug = request.GET.get('tag')
-        category_slug = request.GET.get('category')
-        context['recipes'] = self.get_recipes(tag_slug, category_slug)
+        context['recipes'] = self.get_recipes(tag_slug)
         context['tags'] = self.get_child_tags()
-        context['categories'] = RecipeCategory.objects.all()
+        context['categories'] = self.get_categories()
         return context  
     
+
+class RecipeCategoryPage(Page):
+    """
+    Stránky pro jednotlivé kategorie receptů - např. Polévky, Hlavní jídla, Pomazánky ...
+    """
+    intro = RichTextField(help_text="Úvodní text popisující kategorii", blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel('intro'),
+    ]
+
+    parent_page_types = ["RecipeIndexPage"]
+    subpage_types = ['RecipePage']
+
+    def get_recipes(self, tag_slug=None):
+        recipes = RecipePage.objects.descendant_of(self).live().order_by('-first_published_at')
+        if tag_slug:
+            recipes = recipes.filter(tags__slug=tag_slug)
+        return recipes
+
+    def get_categories(self):
+        categories = RecipeCategoryPage.objects.live().order_by('title').specific()
+        return categories       
+    
+    def get_recipe_index_page(self):
+        return self.get_parent().specific    
+
+    def get_child_tags(self):
+        tags = []
+        for recipe in self.get_recipes():
+            tags += recipe.tags.all()
+        tags = sorted(set(tags), key=lambda tag: tag.name)
+        return tags    
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        tag_slug = request.GET.get('tag')
+        context['recipes'] = self.get_recipes(tag_slug)
+        context['tags'] = self.get_child_tags()
+        context['categories'] = self.get_categories()
+        context['recipe_index_page'] = self.get_recipe_index_page()
+        context['active_category'] = self
+        return context  
+
 
 class RecipePage(Page):
     """
     Recipe pages are more complex than blog pages, demonstrating more advanced StreamField patterns.
     """
-    parent_page_types = ["RecipeIndexPage"]
+    parent_page_types = ["RecipeCategoryPage"]
+    subpage_types = []
 
-    category = models.ForeignKey(RecipeCategory, null=True, blank=True, on_delete=models.SET_NULL, related_name='recipes')
     date_published = models.DateField("Datum publikace článku", blank=True, null=True)
     subtitle = models.CharField("Podtitul článku", blank=True, max_length=255)
     introduction = models.TextField("Úvod", blank=True, max_length=500)
@@ -123,7 +157,6 @@ class RecipePage(Page):
     tags = ClusterTaggableManager(through=RecipePageTag, blank=True)
     
     content_panels = Page.content_panels + [
-        FieldPanel("category", heading="Kategorie receptů"),
         FieldPanel("date_published", heading="Datum publikace článku"),
         FieldPanel("subtitle", classname="title", heading="Podtitul článku"),
         MultiFieldPanel(
@@ -146,10 +179,22 @@ class RecipePage(Page):
         index.SearchField("body"),
     ]
 
+    def get_category(self):
+        return self.get_parent().specific
+    
+    def get_categories(self):
+        categories = RecipeCategoryPage.objects.live().order_by('title').specific()
+        return categories   
+    
+    def get_recipe_index_page(self):
+        return self.get_ancestors().type(RecipeIndexPage).first().specific
+
     def get_context(self, request):
         context = super().get_context(request)
-        recipes_index = self.get_parent().specific
-        context['recipes_index'] = recipes_index
+        context['active_category'] = self.get_category()
+        context['siglings'] = self.get_siblings()
+        context['recipe_index_page'] = self.get_recipe_index_page()
+        context["categories"] = self.get_categories()
         return context
 
     def get_backstory_image(self):

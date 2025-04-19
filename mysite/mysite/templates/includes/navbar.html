@@ -25,10 +25,10 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link {{ recepty_nav }} dropdown-toggle" {% if recepty_nav %} aria-current="page" {% endif %} href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Recepty</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{% slugurl 'recepty' %}">Všechny recepty</a></li>
+                                <li><a class="dropdown-item {% if not active_category %}active{% endif %}" href="{% slugurl 'recepty' %}">Všechny recepty</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 {% for category in categories %}
-                                    <li><a class="dropdown-item" href="?category={{ category.slug }}{% if request.GET.tag %}&tag={{ request.GET.tag }}{% endif %}">{{ category.name }}</a></li>
+                                    <li><a class="dropdown-item {% if active_category %}{% if category == active_category %}active{% endif %}{% endif %}" href="{{ category.url }}{% if request.GET.tag %}&tag={{ request.GET.tag }}{% endif %}">{{ category.title }}</a></li>
                                 {% endfor %}                        
                             </ul>
                         </li>   
