@@ -56,5 +56,25 @@
             {% endfor %}
         </div>
     </div>
+
+    <div class="text-center">
+        {% with gallery_items=page.gallery_images.all %}
+            {% if gallery_items %}
+                <hr>
+                <div class="my-4">
+                    <p class="h3 mb-4">Galerie obrázků:</p>
+                    <div class="row">
+                        {% for item in gallery_items %}
+                            <div class="col-md-4 mb-4">
+                                {% image item.image fill-320x240 as img %}
+                                <img src="{{ img.url }}" alt="{{ item.caption }}" class="img-fluid">
+                                <p>{{ item.caption }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>         
 </div>
 {% endblock %}

@@ -1,9 +1,11 @@
+from datetime import date
 from django.db import models
 from modelcluster.fields import ParentalKey
 from taggit.models import Tag, TaggedItemBase
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from wagtail.admin.panels import (
     FieldPanel,
+    InlinePanel,
     HelpPanel,
     MultiFieldPanel,
     MultipleChooserPanel,
@@ -130,8 +132,8 @@ class RecipePage(Page):
     parent_page_types = ["RecipeCategoryPage"]
     subpage_types = []
 
-    date_published = models.DateField("Datum publikace článku", blank=True, null=True)
-    subtitle = models.CharField("Podtitul článku", blank=True, max_length=255)
+    date_published = models.DateField("Datum publikace receptu", default=date.today)
+    subtitle = models.CharField("Podtitul receptu, zobrazí se na stránce s receptem", blank=True, max_length=255)
     introduction = models.TextField("Úvod", blank=True, max_length=500)
     backstory = StreamField(
         BaseStreamBlock(),
@@ -175,6 +177,7 @@ class RecipePage(Page):
         ),
         FieldPanel("body", heading="Tělo receptu"),
         FieldPanel("tags", heading="Tagy"),
+        InlinePanel('gallery_images', label="Galerie obrázků"), 
     ]
 
     search_fields = Page.search_fields + [
@@ -207,4 +210,14 @@ class RecipePage(Page):
         return None
 
     
+class BlogPageGalleryImage(Orderable):
+    page = ParentalKey(RecipePage, on_delete=models.CASCADE, related_name='gallery_images')
+    image = models.ForeignKey(
+        'wagtailimages.Image', on_delete=models.CASCADE, related_name='+'
+    )
+    caption = models.CharField(blank=True, max_length=250)
 
+    panels = [
+        FieldPanel('image', heading="Obrázek"),
+        FieldPanel('caption', heading="Popisek obrázku"),
+    ]
