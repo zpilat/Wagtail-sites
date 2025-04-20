@@ -45,6 +45,12 @@
             {% for block in page.backstory %}
                 {{ block }}
             {% endfor %}
+            {% if page.get_main_image %}
+                <figure class="text-center">
+                    {% image page.get_main_image.image width-800 %}
+                    <figcaption>{{ page.get_main_image.caption }}</figcaption>
+                </figure>
+            {% endif %}
         </div>
     </div>
 

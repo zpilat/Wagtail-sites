@@ -158,10 +158,10 @@ class RecipePage(Page):
     )
     tags = ClusterTaggableManager(through=RecipePageTag, blank=True)
 
-    def main_image(self):
+    def get_main_image(self):
         gallery_last_item = self.gallery_images.last()
         if gallery_last_item:
-            return gallery_last_item.image
+            return gallery_last_item
         else:
             return None
     
@@ -209,12 +209,6 @@ class RecipePage(Page):
         context['recipe_index_page'] = self.get_recipe_index_page()
         context["categories"] = self.get_categories()
         return context
-
-    def get_backstory_image(self):
-        for block in self.backstory:
-            if block.block_type == 'image_block':
-                return block.value['image']
-        return None
 
     
 class BlogPageGalleryImage(Orderable):
