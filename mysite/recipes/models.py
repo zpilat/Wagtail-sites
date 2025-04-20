@@ -94,10 +94,7 @@ class RecipeCategoryPage(Page):
     def get_recipes(self, tag_slug=None):
         recipes = RecipePage.objects.descendant_of(self).live().order_by('-first_published_at')
         if tag_slug:
-            if recipes.filter(tags__slug=tag_slug):
-                recipes = recipes.filter(tags__slug=tag_slug)
-            else:
-                recipes = RecipePage.objects.none()
+            recipes = recipes.filter(tags__slug=tag_slug)
         return recipes
 
     def get_categories(self):
@@ -186,14 +183,17 @@ class RecipePage(Page):
     ]
 
     def get_category(self):
+        # specific je property – přetypuje jednu instanci stránky (bez závorek)
         return self.get_parent().specific
-    
+
     def get_categories(self):
-        categories = RecipeCategoryPage.objects.live().order_by('title').specific()
-        return categories   
-    
+        # specific() je metoda querysetu – přetypuje všechny položky v seznamu (s závorkami)
+        return RecipeCategoryPage.objects.live().order_by('title').specific()
+
     def get_recipe_index_page(self):
+        # specific je property – vrací konkrétní typ (např. RecipeIndexPage), ne jen obecný Page
         return self.get_ancestors().type(RecipeIndexPage).first().specific
+
 
     def get_context(self, request):
         context = super().get_context(request)
