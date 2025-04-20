@@ -21,6 +21,7 @@
             <p class="h4 text-muted">Kategorie: {{ active_category }}</p>
         </div>
     </div>
+
     <div class="row text-center">
             {% with tags=page.tags.all %}
             {% if tags %}
@@ -33,24 +34,27 @@
             {% endif %}
         {% endwith %}
     </div>
+
     <div class="row mt-4">
         <div class="col">
             <p class="h3">Úvod</p>
             <p>{{ page.introduction }}</p>
         </div>
     </div>
+
     <div class="row mt-4">
         <div class="col">
             <p class="h3">Příběh</p>
+            {% if page.get_main_image %}
+                <figure class="text-center">
+                    {% image page.get_main_image.image width-800 as img %}
+                    <img src="{{ img.url }}" class="img-fluid" alt="{{ page.get_main_image.caption}}">
+                    <figcaption>{{ page.get_main_image.caption }}</figcaption>
+                </figure>
+            {% endif %}            
             {% for block in page.backstory %}
                 {{ block }}
             {% endfor %}
-            {% if page.get_main_image %}
-                <figure class="text-center">
-                    {% image page.get_main_image.image width-800 %}
-                    <figcaption>{{ page.get_main_image.caption }}</figcaption>
-                </figure>
-            {% endif %}
         </div>
     </div>
 
@@ -86,13 +90,13 @@
     {% if prev_recipe != page or next_recipe != page %}
     <div class="d-flex justify-content-between my-2">
         {% if prev_recipe != page %}
-            <a class="btn btn-outline-secondary" href="{{ prev_recipe.url }}">&larr; Předchozí recept: {{ prev_recipe.title }}</a>
+            <a class="btn btn-outline-secondary" href="{{ prev_recipe.url }}">&larr; {{ prev_recipe.title }}</a>
         {% else %}
             <span></span>
         {% endif %}
     
         {% if next_recipe != page %}
-            <a class="btn btn-outline-secondary" href="{{ next_recipe.url }}">Následující recept: {{ next_recipe.title }} &rarr;</a>
+            <a class="btn btn-outline-secondary" href="{{ next_recipe.url }}">{{ next_recipe.title }} &rarr;</a>
         {% else %}
             <span></span>        
         {% endif %}

@@ -53,7 +53,7 @@ class BlockQuote(StructBlock):
     Custom `StructBlock` that allows the user to attribute a quote to the author
     """
 
-    text = TextBlock()
+    text = TextBlock(label="Citát")
     attribute_name = CharBlock(blank=True, required=False, label="např. Karel Čapek")
 
     class Meta:
