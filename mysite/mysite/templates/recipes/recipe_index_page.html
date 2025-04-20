@@ -33,7 +33,7 @@
                 <div class="col-12 mb-4">
                     <div class="card mb-3 d-flex flex-column flex-md-row">
                         {% with recipe=recipe.specific %}
-                            {% with backstory_image=recipe.get_backstory_image %}
+                            {% with backstory_image=recipe.main_image %}
                                 {% if backstory_image %}
                                     {% image backstory_image fill-320x240 as img %}
                                     <img src="{{ img.url }}" alt="{{ recipe.title }}" class="card-img-top card-img-left" style="width: 267px; height: 200px;">

@@ -157,6 +157,13 @@ class RecipePage(Page):
         help_text="Pokyny k receptu krok za krokem a další důležité informace.",
     )
     tags = ClusterTaggableManager(through=RecipePageTag, blank=True)
+
+    def main_image(self):
+        gallery_last_item = self.gallery_images.last()
+        if gallery_last_item:
+            return gallery_last_item.image
+        else:
+            return None
     
     content_panels = Page.content_panels + [
         FieldPanel("date_published", heading="Datum publikace článku"),
