@@ -80,13 +80,14 @@
                     <div class="row">
                         {% for item in gallery_items %}
                             <div class="col-md-4 mb-4">
-                                <a href="{{ item.image.file.url }}" data-lightbox="recipe-gallery" data-title="{{ item.caption }}">
-                                {% image item.image fill-320x240 as img %}
-                                <img src="{{ img.url }}" alt="{{ item.caption }}" class="img-fluid">
+                                {% image item.image width-1280 as full %}
+                                <a href="{{ full.url }}" data-lightbox="recipe-gallery" data-title="{{ item.caption }}">
+                                    {% image item.image fill-320x240 as thumb %}
+                                    <img src="{{ thumb.url }}" alt="{{ item.caption }}" class="img-fluid">
                                 </a>
                                 <p>{{ item.caption }}</p>
                             </div>
-                        {% endfor %}
+                        {% endfor %}                     
                     </div>
                 </div>
             {% endif %}
