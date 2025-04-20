@@ -200,12 +200,17 @@ class RecipePage(Page):
     def get_recipe_index_page(self):
         # specific je property – vrací konkrétní typ (např. RecipeIndexPage), ne jen obecný Page
         return self.get_ancestors().type(RecipeIndexPage).first().specific
-
-
+    
     def get_context(self, request):
         context = super().get_context(request)
+
+        siblings = self.get_siblings().live().order_by('path').specific()
+        siblings_list = list(siblings)
+        current_index = siblings_list.index(self)
+
+        context['prev_recipe'] = siblings_list[current_index - 1] if current_index > 0 else siblings_list[-1]
+        context['next_recipe'] = siblings_list[current_index + 1] if current_index < len(siblings_list) - 1 else siblings_list[0]
         context['active_category'] = self.get_category()
-        context['siglings'] = self.get_siblings()
         context['recipe_index_page'] = self.get_recipe_index_page()
         context["categories"] = self.get_categories()
         return context
