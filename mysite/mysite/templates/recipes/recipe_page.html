@@ -2,6 +2,10 @@
 {% load static %}
 {% load navigation_tags wagtailimages_tags wagtailcore_tags %}
 
+{% block extra_css %}
+    <link href="https://cdn.jsdelivr.net/npm/lightbox2@2/dist/css/lightbox.min.css" rel="stylesheet">
+{% endblock %}
+
 {% block body_class %}template-recipepage{% endblock %}
 
 {% block header %}
@@ -76,8 +80,10 @@
                     <div class="row">
                         {% for item in gallery_items %}
                             <div class="col-md-4 mb-4">
+                                <a href="{{ item.image.file.url }}" data-lightbox="recipe-gallery" data-title="{{ item.caption }}">
                                 {% image item.image fill-320x240 as img %}
                                 <img src="{{ img.url }}" alt="{{ item.caption }}" class="img-fluid">
+                                </a>
                                 <p>{{ item.caption }}</p>
                             </div>
                         {% endfor %}
@@ -104,4 +110,9 @@
     {% endif %}
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightbox2@2/dist/js/lightbox.min.js"></script>
 {% endblock %}
