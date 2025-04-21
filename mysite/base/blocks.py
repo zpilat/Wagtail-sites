@@ -81,6 +81,46 @@ class MultipleLinksBlock(StructBlock):
         template = "blocks/multiple_links.html"
 
 
+class IngedientsListBlock(StructBlock):
+    title = CharBlock(
+        required=False,
+        default = "Seznam ingrediencí:",
+        help_text="Tento nadpis se zobrazí nad seznamem ingrediencí",
+        label = "Nadpis bloku s ingrediencemi",
+    )
+    ingredients_list = ListBlock(
+        RichTextBlock(features=["bold", "italic", "link"]),
+        min_num=2,
+        max_num=15, 
+        label="Seznam ingrediencí",
+    )              
+
+    class Meta:
+        icon="tasks"        
+        label = "Blok s ingrediencemi"
+        template="blocks/ingredients_list_block.html"
+
+
+class StepsListBlock(StructBlock):
+    title = CharBlock(
+        required=False,
+        default = "Kroky receptu:",
+        help_text="Tento nadpis se zobrazí nad seznamem kroků",
+        label = "Nadpis bloku s kroky receptu",
+    )
+    steps_list = ListBlock(
+        RichTextBlock(features=["bold", "italic", "link"]),
+        min_num=2,
+        max_num=15,     
+        label="Seznam kroků",
+    )         
+
+    class Meta:
+        icon="list-ol"        
+        label = "Blok s kroky receptu"
+        template="blocks/steps_list_block.html"
+
+
 # StreamBlocks
 class BaseStreamBlock(StreamBlock):
     """

@@ -13,7 +13,7 @@ from wagtail.blocks import (
 from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
 
-from base.blocks import BlockQuote, HeadingBlock, ImageBlock, MultipleLinksBlock
+from base.blocks import BlockQuote, HeadingBlock, ImageBlock, MultipleLinksBlock, IngedientsListBlock, StepsListBlock
 
 class RecipeStreamBlock(StreamBlock):
     heading_block = HeadingBlock(group="Obsah", label="Nadpis")
@@ -38,23 +38,11 @@ class RecipeStreamBlock(StreamBlock):
         group="Vaření",
         label="Obtížnost",
     )
-    ingredients_list = ListBlock(
-        RichTextBlock(features=["bold", "italic", "link"]),
-        min_num=2,
-        max_num=15,
-        icon="tasks",
-        template="blocks/ingredients_list_block.html",         
+    ingredients_list = IngedientsListBlock(   
         group="Vaření",
-        label="Seznam ingrediencí",
     )
-    steps_list = ListBlock(
-        RichTextBlock(features=["bold", "italic", "link"]),
-        min_num=2,
-        max_num=15,
-        icon="list-ol",
-        template="blocks/steps_list_block.html",        
+    steps_list = StepsListBlock(    
         group="Vaření",
-        label="Seznam kroků",
     )
     links = MultipleLinksBlock(
         group = "Vaření"

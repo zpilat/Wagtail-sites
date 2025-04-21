@@ -1,7 +1,17 @@
 {% load wagtailcore_tags %}
 
-<ol>
-    {% for step in self %}
-        <li class="px-2">{{ step|richtext }}</li>
-    {% endfor %}
-</ol>
+{% if value.title %}
+    <div class="row mt-4">
+        <div class="col">
+            <p class="h4">{{ value.title }}</p>
+        </div>
+    </div>    
+{% endif %}
+
+{% with steps=value.steps_list %}
+    <ol>
+        {% for step in steps %}
+            <li class="px-2">{{ step|richtext }}</li>
+        {% endfor %}
+    </ol>
+{% endwith %}
