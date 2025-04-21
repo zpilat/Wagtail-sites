@@ -37,7 +37,7 @@ class HomePage(Page):
         recipe_index = self.get_children().type(RecipeIndexPage).live().specific().first()
         context['recipe_index'] = recipe_index
 
-        # Fetch RecipeIndexPage
+        # Fetch CodeIndexPage
         coding_index = self.get_children().type(CodingIndexPage).live().specific().first()
         context['coding_index'] = coding_index
 

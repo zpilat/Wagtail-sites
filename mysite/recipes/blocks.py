@@ -13,7 +13,7 @@ from wagtail.blocks import (
 from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
 
-from base.blocks import BlockQuote, HeadingBlock, ImageBlock
+from base.blocks import BlockQuote, HeadingBlock, ImageBlock, MultipleLinksBlock
 
 class RecipeStreamBlock(StreamBlock):
     heading_block = HeadingBlock(group="Obsah", label="Nadpis")
@@ -55,6 +55,9 @@ class RecipeStreamBlock(StreamBlock):
         template="blocks/steps_list_block.html",        
         group="Vaření",
         label="Seznam kroků",
+    )
+    links = MultipleLinksBlock(
+        group = "Vaření"
     )
 
     class Meta:

@@ -136,7 +136,7 @@ class RecipePage(Page):
         BaseStreamBlock(),
         block_counts={
             "heading_block": {"max_num": 1},
-            "image_block": {"max_num": 1},
+            "image_block": {"max_num": 0},
             "embed_block": {"max_num": 1},
         },
         blank=True,
@@ -154,15 +154,6 @@ class RecipePage(Page):
         blank=True,
         use_json_field=True,
         help_text="Pokyny k receptu krok za krokem a další důležité informace.",
-    )
-    linked_page = models.ForeignKey(
-        "wagtailcore.Page",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+",
-        verbose_name="Odkaz na stránku",
-        help_text="Vyber stránku na vytvoření odkazu",
     )
     tags = ClusterTaggableManager(through=RecipePageTag, blank=True)
 
@@ -188,7 +179,6 @@ class RecipePage(Page):
             heading="Předmluva",
         ),
         FieldPanel("body", heading="Tělo receptu"),
-        FieldPanel("linked_page", heading="Odkaz na stránku s přílohou jídla"),
         FieldPanel("tags", heading="Tagy"),
         InlinePanel('gallery_images', label="Galerie obrázků"), 
     ]

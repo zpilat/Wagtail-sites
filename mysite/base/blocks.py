@@ -1,6 +1,8 @@
 from wagtail.blocks import (
     CharBlock,
     ChoiceBlock,
+    ListBlock,
+    PageChooserBlock,
     RichTextBlock,
     StreamBlock,
     StructBlock,
@@ -59,6 +61,24 @@ class BlockQuote(StructBlock):
     class Meta:
         icon = "openquote"
         template = "blocks/blockquote.html"
+
+
+class MultipleLinksBlock(StructBlock):
+    title = CharBlock(
+        required=False,
+        default = "Přílohy:",
+        help_text="Tento nadpis se zobrazí nad interními odkazy stránek s přílohami",
+        label = "Nadpis bloku s přílohami",
+    )
+    links = ListBlock(
+        PageChooserBlock(),
+        label = "Odkazy"
+    )                 
+
+    class Meta:
+        icon = "link"
+        label = "Odkazy na přílohy"
+        template = "blocks/multiple_links.html"
 
 
 # StreamBlocks
