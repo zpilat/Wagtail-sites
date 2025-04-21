@@ -131,7 +131,7 @@ class RecipePage(Page):
 
     date_published = models.DateField("Datum publikace receptu", default=date.today)
     subtitle = models.CharField("Podtitul receptu, zobrazí se na stránce s receptem", blank=True, max_length=255)
-    introduction = models.TextField("Úvod", blank=True, max_length=50)
+    introduction = models.TextField("Úvod", blank=True, max_length=300)
     backstory = StreamField(
         BaseStreamBlock(),
         block_counts={
