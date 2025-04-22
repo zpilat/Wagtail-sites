@@ -1,48 +1,64 @@
-{% load static wagtailcore_tags wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags navigation_tags %}
 
+{% get_site_root as site_root %}
 <div class="container bg-dark">
     <div class="row">
         <nav class="navbar navbar-sm navbar-expand-xl navbar-dark bg-dark">
             <div>
                 <span class="navbar-brand mb-0 me-0">
-                    <a href="{% slugurl 'home' %}">
-                        <img src="{% static 'images/logo-32x32.webp' %}" alt="Logo" width="32" height="32" class="d-inline-block align-text-top">
+                    <a href="{% pageurl site_root %}">
+                        <img src="{% static 'images/logo-32x32.webp' %}" alt="Logo" width="32" height="32" class="d-inline-block align-text-top me-2">
                     </a>
                 </span>        
             </div>
+
+            {# Tlačítko pro rozbalení menu na mobilu #}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
+            {# Menu položky + vyhledávání #}
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link {{ home_nav }}" {% if home_nav %} aria-current="page" {% endif %} href="{% slugurl 'home' %}">Home</a>  
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ blog_nav }}" {% if blog_nav %} aria-current="page" {% endif %}href="{% slugurl 'blog' %}">Blog</a>                
-                    </li>
-                    {% if categories %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link {{ recepty_nav }} dropdown-toggle" {% if recepty_nav %} aria-current="page" {% endif %} href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Recepty</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item {% if not active_category %}active{% endif %}" href="{% slugurl 'recepty' %}{% if request.GET.tag %}?tag={{ request.GET.tag }}{% endif %}">Všechny recepty</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                {% for category in categories %}
-                                    <li><a class="dropdown-item {% if active_category %}{% if category == active_category %}active{% endif %}{% endif %}" href="{{ category.url }}">{{ category.title }}</a></li>
-                                {% endfor %}                        
-                            </ul>
-                        </li>   
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link {{ recepty_nav }}" {% if recepty_nav %} aria-current="page" {% endif %}href="{% slugurl 'recepty' %}">
-                                Recepty
-                            </a>                
-                        </li>
-                    {% endif%}
-                    <li class="nav-item">
-                        <a class="nav-link {{ coding_nav }}" {% if coding_nav %} aria-current="page" {% endif %} href="{% slugurl 'coding' %}">Programování</a>  
-                    </li>
-                </ul>
+
+                {# Dynamické menu #}                
+                {% with menu_items=site_root.get_children.live.in_menu.specific %}
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        {% for item in menu_items %}
+                            {% with children=item.get_children.live.in_menu %}
+                                {% if children %}
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle {% if request.path|startswith:item.url %}active{% endif %}" href="{{ item.url }}" data-bs-toggle="dropdown">
+                                            {{ item.subtitle }}
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a class="dropdown-item {% if request.path == item.url %}active{% endif %}"  href="{{ item.url }}">
+                                                    {{ item.subtitle }}
+                                                </a>
+                                            </li>                                            
+                                            <li><hr class="dropdown-divider"></li>                                            
+                                            {% for child in children %}
+                                                <li>
+                                                    <a class="dropdown-item {% if request.path|startswith:child.url %}active{% endif %}" href="{{ child.url }}">
+                                                        {{ child.title }}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% else %}
+                                    <li class="nav-item">
+                                        <a class="nav-link {% if request.path == item.url %}active{% endif %}" href="{{ item.url }}">
+                                            {{ item.subtitle }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endwith %}
+                        {% endfor %}
+                    </ul>
+                {% endwith %}
+
+                {# Vyhledávání napravo #}                
                 <form action="{% url 'search' %}" method="get" class="py-1">
                     <div class="input-group">
                         <input type="text" id="search-query" name="query" class="form-control form-control-sm" placeholder="Copak to tu máme?" {% if search_query %} value="{{ search_query }}"{% endif %}>
@@ -54,10 +70,12 @@
             </div>
         </nav>
     </div>
+
+    {# Hlavní obrázek menu #}
     <div class="row">
         <div class="col text-center">
             {% if page.image %}
-                {% if home_nav %}
+                {% if request.path == site_root.url %}
                     {% image page.image max-1280x1280 as img %}
                 {% else %}
                     {% image page.image max-1024x1024 as img %}

@@ -24,6 +24,7 @@ class BlogPageTag(TaggedItemBase):
 class BlogIndexPage(Page):
     max_count = 1
     
+    subtitle = models.CharField(help_text="Podtitulek zobrazující se v menu", max_length=20, default="Blog")
     image = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
@@ -35,6 +36,7 @@ class BlogIndexPage(Page):
     intro = RichTextField(help_text="Úvodní text popisující stránku", blank=True)
     
     content_panels = Page.content_panels + [
+        FieldPanel("subtitle"),
         FieldPanel("image"),
         FieldPanel('intro'),
     ]
