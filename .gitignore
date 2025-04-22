@@ -21,7 +21,7 @@ env/
 Thumbs.db
 
 # Ignorování databázového souboru
-#db.sqlite3
+db.sqlite3
 
 # Ignorování nahrávání zabezpečených dat
 .env
@@ -33,3 +33,6 @@ Thumbs.db
 # Ignorování souboru s vývojovým nastavením
 dev.py
 
+# Ignorování Django migrací
+*/migrations/*.py
+*/migrations/*.pyc
