@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% load static wagtailcore_tags wagtailimages_tags %}
+{% load static navigation_tags wagtailcore_tags wagtailimages_tags %}
 
 {% block body_class %}template-homepage{% endblock %}
 
 {% block header %}
-    {% include 'includes/navbar.html' with home_nav="active" %}
+    {% include 'includes/navbar.html' %}
 {% endblock %}
 
 {% block content %}
@@ -16,66 +16,53 @@
                 <p>{{ page.body|richtext }}</p>
             </div>
         </div>
-        <div class="row justify-content-center mt-2">
-            <div id="customCarousel" class="carousel slide col-md-8" data-bs-ride="carousel">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#customCarousel" data-bs-slide-to="0" class="active bg-light" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#customCarousel" data-bs-slide-to="1" class="bg-light" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#customCarousel" data-bs-slide-to="2" class="bg-light" aria-label="Slide 3"></button>
-                </div>            
-                <div class="carousel-inner">
-                    <div class="carousel-item active" data-bs-interval="5000">
-                        <div class="text-center">
-                            <a href="{{ blog_index.url }}" class="text-dark text-decoration-none">
-                                {% if blog_index %}
-                                <p class="h2">{{ blog_index.title }}</p>
-                                <div class="intro">{{ blog_index.intro|richtext }}</div>
-                                {% if blog_index.image %}
-                                    {% image blog_index.image fill-800x400 as img %}
-                                    <img src="{{ img.url }}" alt="{{ blog_index.title }}" class="img-fluid">
-                                {% endif %}
-                                {% endif %}
-                            </a>
-                        </div>
+
+        {% get_site_root as site_root %}
+        {% with carousel_items=site_root.get_children.live.in_menu.specific %}
+            {% if carousel_items %}
+                <div id="customCarousel" class="carousel slide" data-bs-ride="carousel">
+        
+                    <div class="carousel-indicators">
+                        {% for item in carousel_items %}
+                            <button type="button" data-bs-target="#customCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
+                                class="{% if forloop.first %}active{% endif %} bg-light"
+                                aria-current="{% if forloop.first %}true{% endif %}" 
+                                aria-label="Slide {{ forloop.counter }}">
+                            </button>
+                        {% endfor %}
                     </div>
-                    <div class="carousel-item" data-bs-interval="5000">
-                        <div class="text-center">
-                            <a href="{{ recipe_index.url }}" class="text-dark text-decoration-none">
-                                {% if recipe_index %}
-                                <h2>{{ recipe_index.title }}</h2>
-                                <div class="intro">{{ recipe_index.intro|richtext }}</div>
-                                {% if recipe_index.image %}
-                                    {% image recipe_index.image fill-800x400 as img %}
-                                    <img src="{{ img.url }}" alt="{{ recipe_index.title }}" class="img-fluid">
-                                {% endif %}
-                                {% endif %}
-                            </a>
-                        </div>
+        
+                    <div class="carousel-inner">
+                        {% for item in carousel_items %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-interval="5000">
+                                <div class="text-center">
+                                    <a href="{{ item.url }}" class="text-dark text-decoration-none">
+                                        <h2>{{ item.title }}</h2>
+                                        {% if item.intro %}
+                                            <div class="intro">{{ item.intro|richtext }}</div>
+                                        {% endif %}
+                                        {% if item.image %}
+                                            {% image item.image fill-800x400 as img %}
+                                            <img src="{{ img.url }}" alt="{{ item.title }}" class="img-fluid">
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
-                    <div class="carousel-item" data-bs-interval="5000">
-                        <div class="text-center">
-                            <a href="{{ coding_index.url }}" class="text-dark text-decoration-none">
-                                {% if coding_index %}
-                                <h2>{{ coding_index.title }}</h2>
-                                <div class="intro">{{ coding_index.intro|richtext }}</div>
-                                {% if coding_index.image %}
-                                    {% image coding_index.image fill-800x400 as img %}
-                                    <img src="{{ img.url }}" alt="{{ coding_index.title }}" class="img-fluid">
-                                {% endif %}
-                                {% endif %}
-                            </a>
-                        </div>
-                    </div>
+        
+                    <a class="carousel-control-prev" href="#customCarousel" role="button" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon bg-dark rounded-circle p-3 mt-3" aria-hidden="true"></span>
+                        <span class="visually-hidden">Předchozí</span>
+                    </a>
+                    <a class="carousel-control-next" href="#customCarousel" role="button" data-bs-slide="next">
+                        <span class="carousel-control-next-icon bg-dark rounded-circle p-3 mt-3" aria-hidden="true"></span>
+                        <span class="visually-hidden">Další</span>
+                    </a>
+        
                 </div>
-                <a class="carousel-control-prev" href="#customCarousel" role="button" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-3 align-self-start mt-3" aria-hidden="true"></span>
-                    <span class="visually-hidden">Předchozí</span>
-                </a>
-                <a class="carousel-control-next" href="#customCarousel" role="button" data-bs-slide="next">
-                    <span class="carousel-control-next-icon bg-dark rounded-circle p-3 align-self-start mt-3" aria-hidden="true"></span>
-                    <span class="visually-hidden">Další</span>
-                </a>
-            </div>
-        </div>
+            {% endif %}
+        {% endwith %}
+                
     </div>
 {% endblock %}
