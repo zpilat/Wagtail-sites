@@ -205,12 +205,16 @@ class RecipePage(Page):
     def get_context(self, request):
         context = super().get_context(request)
 
-        siblings = self.get_siblings().live().order_by('path').specific()
-        siblings_list = list(siblings)
-        current_index = siblings_list.index(self)
-
-        context['prev_recipe'] = siblings_list[current_index - 1] if current_index > 0 else siblings_list[-1]
-        context['next_recipe'] = siblings_list[current_index + 1] if current_index < len(siblings_list) - 1 else siblings_list[0]
+        if request.is_preview:
+            prev_recipe = next_recipe = self
+        else:
+            siblings_list = list(self.get_siblings().live().specific())
+            current_index = siblings_list.index(self)
+            prev_recipe = siblings_list[current_index - 1] if current_index > 0 else siblings_list[-1]
+            next_recipe = siblings_list[current_index + 1] if current_index < len(siblings_list) - 1 else siblings_list[0]            
+  
+        context['prev_recipe'] = prev_recipe
+        context['next_recipe'] = next_recipe
         context['active_category'] = self.get_category()
         context['recipe_index_page'] = self.get_recipe_index_page()
         context["categories"] = self.get_categories()
