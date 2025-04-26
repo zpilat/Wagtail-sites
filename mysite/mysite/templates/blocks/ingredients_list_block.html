@@ -9,9 +9,9 @@
 {% endif %}
 
 {% with ingredients=value.ingredients_list %}
-<ol>
+<ul>
     {% for ingredient in ingredients %}
         <li class="px-2">{{ ingredient|richtext }}</li>
     {% endfor %}
-</ol>
+</ul>
 {% endwith %}
