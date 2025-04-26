@@ -27,8 +27,8 @@ db.sqlite3
 .env
 
 # Ignorování statických souborů
-/static/
-/media/
+/mysite/static/
+/mysite/media/
 
 # Ignorování souboru s vývojovým nastavením
 dev.py
