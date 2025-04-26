@@ -35,4 +35,3 @@ dev.py
 
 # Ignorování Django migrací
 */migrations/*.py
-*/migrations/*.pyc
