@@ -36,7 +36,9 @@
                             {% with backstory_image=recipe.get_main_image.image %}
                                 {% if backstory_image %}
                                     {% image backstory_image fill-480x360 as img %}
-                                    <img src="{{ img.url }}" alt="{{ recipe.title }}" class="card-img-top img-fluid">
+                                    <a href="{% pageurl recipe %}">
+                                        <img src="{{ img.url }}" alt="{{ recipe.title }}" class="card-img-top img-fluid">
+                                    </a>
                                 {% endif %}
                             {% endwith %}
                             <div class="card-body flex-grow-1">
