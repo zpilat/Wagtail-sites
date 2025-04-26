@@ -35,7 +35,7 @@
                         {% with recipe=recipe.specific %}
                             {% with backstory_image=recipe.get_main_image.image %}
                                 {% if backstory_image %}
-                                    {% image backstory_image fill-640x480 as img %}
+                                    {% image backstory_image fill-480x360 as img %}
                                     <img src="{{ img.url }}" alt="{{ recipe.title }}" class="card-img-top img-fluid">
                                 {% endif %}
                             {% endwith %}

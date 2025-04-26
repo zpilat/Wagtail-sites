@@ -80,9 +80,9 @@
                     <div class="row">
                         {% for item in gallery_items %}
                             <div class="col-md-4 mb-4">
-                                {% image item.image width-1280 as full %}
+                                {% image item.image width-800 as full %}
                                 <a href="{{ full.url }}" data-lightbox="recipe-gallery" data-title="{{ item.caption }}">
-                                    {% image item.image fill-320x240 as thumb %}
+                                    {% image item.image fill-480x360 as thumb %}
                                     <img src="{{ thumb.url }}" alt="{{ item.caption }}" class="img-fluid">
                                 </a>
                                 <p>{{ item.caption }}</p>
