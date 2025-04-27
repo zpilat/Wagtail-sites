@@ -33,7 +33,7 @@
                                         <ul class="dropdown-menu">
                                             <li>
                                                 <a class="dropdown-item {% if request.path == item.url %}active{% endif %}"  href="{{ item.url }}">
-                                                    {{ item.subtitle }}
+                                                    {{ item.subtitle }} ({{ item|get_grandchildren }})
                                                 </a>
                                             </li>                                            
                                             <li><hr class="dropdown-divider"></li>                                            

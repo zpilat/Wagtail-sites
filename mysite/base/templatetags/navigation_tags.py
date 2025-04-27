@@ -27,3 +27,8 @@ def startswith(text, starts):
     if isinstance(text, str):
         return text.startswith(starts)
     return False
+
+@register.filter
+def get_grandchildren(page):
+    grandchildren = page.get_descendants().live().count() - page.get_children().live().count()
+    return grandchildren
