@@ -40,7 +40,7 @@
                                             {% for child in children %}
                                                 <li>
                                                     <a class="dropdown-item {% if request.path|startswith:child.url %}active{% endif %}" href="{{ child.url }}">
-                                                        {{ child.title }}
+                                                        {{ child.title }} ({{ child.get_children.live.count }})
                                                     </a>
                                                 </li>
                                             {% endfor %}
