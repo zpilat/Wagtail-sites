@@ -48,7 +48,6 @@
 
     <div class="row mt-4">
         <div class="col">
-            <p class="h3">Příběh</p>
             {% if page.get_main_image %}
                 <figure class="text-center">
                     {% image page.get_main_image.image width-800 as img %}
@@ -56,9 +55,12 @@
                     <figcaption>{{ page.get_main_image.caption }}</figcaption>
                 </figure>
             {% endif %}            
-            {% for block in page.backstory %}
-                {{ block }}
-            {% endfor %}
+            {% if page.backstory %}
+                <p class="h3">Příběh</p>            
+                {% for block in page.backstory %}
+                    {{ block }}
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 
