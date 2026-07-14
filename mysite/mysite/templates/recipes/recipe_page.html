@@ -58,7 +58,9 @@
             {% if page.backstory %}
                 <p class="h3">Příběh</p>            
                 {% for block in page.backstory %}
-                    {{ block }}
+                    {% if block.block_type != 'image_block' %}
+                        {{ block }}
+                    {% endif %}
                 {% endfor %}
             {% endif %}
         </div>

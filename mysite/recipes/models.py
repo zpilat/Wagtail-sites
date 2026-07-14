@@ -138,7 +138,7 @@ class RecipePage(Page):
         BaseStreamBlock(),
         block_counts={
             "heading_block": {"max_num": 1},
-            "image_block": {"max_num": 0},
+            "image_block": {"max_num": 1},
             "embed_block": {"max_num": 1},
         },
         blank=True,
@@ -160,11 +160,10 @@ class RecipePage(Page):
     tags = ClusterTaggableManager(through=RecipePageTag, blank=True)
 
     def get_main_image(self):
-        gallery_last_item = self.gallery_images.last()
-        if gallery_last_item:
-            return gallery_last_item
-        else:
-            return None
+        for block in self.backstory:
+            if block.block_type == "image_block":
+                return block.value
+        return None
     
     content_panels = Page.content_panels + [
         FieldPanel("date_published", heading="Datum publikace článku"),
