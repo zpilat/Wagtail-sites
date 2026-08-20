@@ -14,40 +14,18 @@
 
 
 {% block content %}
-<div class="container pt-0 pb-4 bg-light">
+<div class="container my-4">
 
-    <div class="row pb-2">
+    <div class="row bg-light border rounded py-3">
         <div class="col">
-            <p class="h1 my-4">{{ page.subtitle }}</p>
+            <p class="h1 mb-3">{{ page.subtitle }}</p>
             {% if page.date_published %}
                 <p class="text-muted">{{ page.date_published }}</p>
             {% endif %}            
             <p class="h4 text-muted">Kategorie: {{ active_category }}</p>
-        </div>
-    </div>
-
-    <div class="row text-center">
-            {% with tags=page.tags.all %}
-            {% if tags %}
-                <hr>
-                <div class="col">
-                    {% for tag in tags %}
-                        <a href="{% slugurl 'recepty' %}?tag={{ tag.slug }}" class="btn btn-sm btn-outline-secondary rounded-pill m-1">{{ tag.name }}</a>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-    </div>
-
-    <div class="row mt-4">
-        <div class="col">
+            <hr>
             <p class="h3">Úvod</p>
             <p>{{ page.introduction }}</p>
-        </div>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col">
             {% if page.get_main_image %}
                 <figure class="text-center">
                     {% image page.get_main_image.image width-800 as img %}
@@ -66,7 +44,7 @@
         </div>
     </div>
 
-    <div class="row mt-4">
+    <div class="row bg-light border rounded mt-2 py-3">
         <div class="col">
             <p class="h3">Recept</p>
             {% for block in page.body %}
@@ -75,11 +53,10 @@
         </div>
     </div>
 
-    <div class="text-center">
-        {% with gallery_items=page.gallery_images.all %}
-            {% if gallery_items %}
-                <hr>
-                <div class="my-4">
+    {% with gallery_items=page.gallery_images.all %}
+        {% if gallery_items %}
+            <div class="row bg-light border rounded text-center mt-2 py-3">
+                <div>
                     <p class="h3 mb-4">Galerie obrázků:</p>
                     <div class="row">
                         {% for item in gallery_items %}
@@ -94,9 +71,22 @@
                         {% endfor %}                     
                     </div>
                 </div>
-            {% endif %}
-        {% endwith %}
-    </div>     
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% with tags=page.tags.all %}
+        {% if tags %}
+            <div class="row bg-light border rounded text-center mt-2 py-3">
+                <div class="col">
+                    <p class="mb-2 fw-bold">Tagy receptu</p>
+                    {% for tag in tags %}
+                        <a href="{% slugurl 'recepty' %}?tag={{ tag.slug }}" class="btn btn-sm btn-outline-secondary rounded-pill m-1">{{ tag.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% endwith %}
     
     {% if prev_recipe != page or next_recipe != page %}
     <div class="d-flex justify-content-between my-2">
