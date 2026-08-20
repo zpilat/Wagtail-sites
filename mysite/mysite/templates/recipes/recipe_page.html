@@ -23,7 +23,7 @@
                 <p class="text-muted">{{ page.date_published }}</p>
             {% endif %}            
             <p class="h4 text-muted">Kategorie: {{ active_category }}</p>
-            <hr>
+            <hr class="my-3 border-secondary opacity-100">
             <p class="h3">Úvod</p>
             <p>{{ page.introduction }}</p>
             {% if page.get_main_image %}
@@ -33,7 +33,7 @@
                     <figcaption>{{ page.get_main_image.caption }}</figcaption>
                 </figure>
             {% endif %}            
-            {% if page.backstory %}
+            {% if page.has_backstory_content %}
                 <p class="h3">Příběh</p>            
                 {% for block in page.backstory %}
                     {% if block.block_type != 'image_block' %}

@@ -164,6 +164,9 @@ class RecipePage(Page):
             if block.block_type == "image_block":
                 return block.value
         return None
+
+    def has_backstory_content(self):
+        return any(block.block_type != "image_block" for block in self.backstory)
     
     content_panels = Page.content_panels + [
         FieldPanel("date_published", heading="Datum publikace článku"),
