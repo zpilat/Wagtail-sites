@@ -83,6 +83,17 @@ class RoadTripPageTests(TestCase):
         cls.road_trip.add_child(instance=cls.day)
         cls.day.save_revision().publish()
 
+        cls.second_day = RoadTripDayPage(
+            title="Přes horský průsmyk",
+            slug="den-2",
+            day_number=2,
+            date=date(2026, 7, 2),
+            intro="Pokračujeme na sever",
+            content=[("text", "Druhý den na cestě.")],
+        )
+        cls.road_trip.add_child(instance=cls.second_day)
+        cls.second_day.save_revision().publish()
+
     def test_index_lists_road_trips(self):
         response = self.client.get(self.index.url)
         self.assertEqual(response.status_code, 200)
@@ -93,6 +104,7 @@ class RoadTripPageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Den 1: Cesta na sever")
         self.assertContains(response, "Výhled z cesty")
+        self.assertContains(response, "Autoři na Mapy.com")
         self.assertContains(response, 'rel="noopener noreferrer"')
         self.assertContains(response, 'src="https://mapy.com/s/hodepofuza"')
         self.assertContains(response, "Mapa trasy – Norsko 2026")
@@ -119,6 +131,26 @@ class RoadTripPageTests(TestCase):
         self.assertContains(response, 'src="https://mapy.com/s/hodepofuza"')
         self.assertContains(response, "Mapa trasy – Den 1: Cesta na sever")
         self.assertContains(response, "Večer jsme dorazili do cíle.")
+        self.assertContains(
+            response,
+            'class="d-none d-md-inline">2. den – Přes horský průsmyk</span>',
+        )
+        self.assertContains(response, 'class="d-md-none">2. den</span>')
+        self.assertContains(
+            response,
+            'aria-label="Následující: 2. den – Přes horský průsmyk"',
+        )
+
+        second_day_response = self.client.get(self.second_day.url)
+        self.assertEqual(second_day_response.status_code, 200)
+        self.assertContains(
+            second_day_response,
+            'class="d-none d-md-inline">1. den – Den 1: Cesta na sever</span>',
+        )
+        self.assertContains(
+            second_day_response,
+            'class="d-md-none">1. den</span>',
+        )
 
     def test_content_supports_text_photos_images_and_video(self):
         content_blocks = RoadTripPage._meta.get_field("content").stream_block.child_blocks
