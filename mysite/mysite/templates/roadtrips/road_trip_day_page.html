@@ -21,15 +21,7 @@
 
             {% include "blocks/mapy_route.html" with mapy_url=page.mapy_route_url map_title=page.title %}
 
-            {% with main_image=page.main_image %}
-                {% if main_image %}
-                    {% image main_image width-1200 as hero_image %}
-                    <img src="{{ hero_image.url }}"
-                         alt="{{ page.title }}"
-                         class="img-fluid my-4 d-block mx-auto"
-                         style="width: 100%; max-width: 1200px;">
-                {% endif %}
-            {% endwith %}
+            {% include "blocks/road_trip_hero_image.html" with image=page.image heading=page.image_heading heading_id="road-trip-day-image-heading" alt_text=page.title %}
 
             <div class="roadtrip-content mx-auto" style="max-width: 1200px;">
                 {% for block in page.content %}

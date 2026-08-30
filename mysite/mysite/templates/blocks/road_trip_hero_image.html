@@ -1,0 +1,17 @@
+{% load wagtailimages_tags %}
+
+{% if image %}
+    <section class="mx-auto my-4 p-3 bg-white border rounded"
+             style="max-width: 1200px;"
+             {% if heading %}aria-labelledby="{{ heading_id }}"{% else %}aria-label="Titulní fotografie – {{ alt_text }}"{% endif %}>
+        {% if heading %}
+            <h2 id="{{ heading_id }}" class="h4 text-center mb-3">{{ heading }}</h2>
+        {% endif %}
+
+        {% image image width-1200 as hero_image %}
+        <img src="{{ hero_image.url }}"
+             alt="{{ heading|default:alt_text }}"
+             class="img-fluid d-block mx-auto"
+             style="width: 100%; max-width: 1200px;">
+    </section>
+{% endif %}

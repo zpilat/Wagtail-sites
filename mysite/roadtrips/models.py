@@ -120,6 +120,12 @@ class RoadTripPage(Page):
         related_name="+",
         verbose_name="Titulní obrázek cesty",
     )
+    image_heading = models.CharField(
+        "Nadpis titulní fotografie",
+        max_length=150,
+        blank=True,
+        help_text="Volitelný nadpis zobrazený nad titulní fotografií.",
+    )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -129,6 +135,7 @@ class RoadTripPage(Page):
         FieldPanel("mapy_route_url"),
         FieldPanel("intro"),
         FieldPanel("image"),
+        FieldPanel("image_heading"),
         FieldPanel("content"),
     ]
 
@@ -201,6 +208,12 @@ class RoadTripDayPage(Page):
         related_name="+",
         verbose_name="Titulní obrázek dne",
     )
+    image_heading = models.CharField(
+        "Nadpis titulní fotografie",
+        max_length=150,
+        blank=True,
+        help_text="Volitelný nadpis zobrazený nad titulní fotografií.",
+    )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -210,6 +223,7 @@ class RoadTripDayPage(Page):
         FieldPanel("mapy_route_url"),
         FieldPanel("intro"),
         FieldPanel("image"),
+        FieldPanel("image_heading"),
         FieldPanel("content"),
     ]
 

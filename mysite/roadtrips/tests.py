@@ -1,6 +1,8 @@
 from datetime import date
+from unittest.mock import Mock
 
 from django.core.exceptions import ValidationError
+from django.template.loader import render_to_string
 from django.test import TestCase
 from wagtail.documents import get_document_model
 from wagtail.models import Site
@@ -159,6 +161,30 @@ class RoadTripPageTests(TestCase):
         self.assertEqual(
             list(content_blocks), ["text", "mapy_photo", "image", "video"]
         )
+
+    def test_title_image_uses_separate_card_and_optional_heading(self):
+        image = Mock()
+        image.get_rendition.return_value.url = "/media/hero.jpg"
+
+        html = render_to_string(
+            "blocks/road_trip_hero_image.html",
+            {
+                "image": image,
+                "heading": "Fotografie z Nordkappu",
+                "heading_id": "test-image-heading",
+                "alt_text": "Norsko 2026",
+            },
+        )
+
+        self.assertIn('class="mx-auto my-4 p-3 bg-white border rounded"', html)
+        self.assertIn('style="max-width: 1200px;"', html)
+        self.assertIn('aria-labelledby="test-image-heading"', html)
+        self.assertIn(
+            '<h2 id="test-image-heading" class="h4 text-center mb-3">'
+            "Fotografie z Nordkappu</h2>",
+            html,
+        )
+        self.assertIn('src="/media/hero.jpg"', html)
 
     def test_end_date_cannot_precede_start_date(self):
         invalid_trip = RoadTripPage(
