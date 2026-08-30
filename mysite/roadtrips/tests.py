@@ -74,6 +74,8 @@ class RoadTripPageTests(TestCase):
         self.assertContains(response, 'rel="noopener noreferrer"')
         self.assertContains(response, 'src="https://mapy.com/s/hodepofuza"')
         self.assertContains(response, "Mapa trasy – Norsko 2026")
+        self.assertContains(response, 'width="1200"')
+        self.assertContains(response, 'height="768"')
 
     def test_day_page_links_back_to_road_trip(self):
         response = self.client.get(self.day.url)
