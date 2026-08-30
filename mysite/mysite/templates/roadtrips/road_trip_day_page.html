@@ -43,7 +43,7 @@
                        aria-label="Předchozí: {{ previous_day.day_number }}. den – {{ previous_day.title }}">
                         ←
                         <span class="d-md-none">{{ previous_day.day_number }}. den</span>
-                        <span class="d-none d-md-inline">{{ previous_day.day_number }}. den – {{ previous_day.title }}</span>
+                        <span class="d-none d-md-inline">{{ previous_day.day_number }}. den {{ previous_day.title }}</span>
                     </a>
                 {% endif %}
             </div>
@@ -56,7 +56,7 @@
                        class="btn btn-outline-dark text-wrap"
                        aria-label="Následující: {{ next_day.day_number }}. den – {{ next_day.title }}">
                         <span class="d-md-none">{{ next_day.day_number }}. den</span>
-                        <span class="d-none d-md-inline">{{ next_day.day_number }}. den – {{ next_day.title }}</span>
+                        <span class="d-none d-md-inline">{{ next_day.day_number }}. den {{ next_day.title }}</span>
                         →
                     </a>
                 {% endif %}
