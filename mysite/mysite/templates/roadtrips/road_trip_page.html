@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container bg-light py-3 my-4" style="max-width: 1200px;">
+    <div class="container bg-light py-3 my-4">
         <article>
             <header class="text-center">
                 <p class="mb-2">
@@ -24,11 +24,14 @@
             {% include "blocks/mapy_route.html" with mapy_url=page.mapy_route_url map_title=page.title %}
 
             {% if page.image %}
-                {% image page.image fill-1024x640 as hero_image %}
-                <img src="{{ hero_image.url }}" alt="{{ page.title }}" class="img-fluid my-4 d-block mx-auto">
+                {% image page.image width-1200 as hero_image %}
+                <img src="{{ hero_image.url }}"
+                     alt="{{ page.title }}"
+                     class="img-fluid my-4 d-block mx-auto"
+                     style="width: 100%; max-width: 1200px;">
             {% endif %}
 
-            <div class="roadtrip-content">
+            <div class="roadtrip-content mx-auto" style="max-width: 1200px;">
                 {% for block in page.content %}
                     {% include_block block %}
                 {% endfor %}

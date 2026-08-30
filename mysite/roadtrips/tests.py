@@ -104,10 +104,12 @@ class RoadTripPageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Den 1: Cesta na sever")
         self.assertContains(response, "Výhled z cesty")
-        self.assertContains(response, "Autoři na Mapy.com")
+        self.assertContains(response, "Foto autorů na Mapy.com")
         self.assertContains(response, 'rel="noopener noreferrer"')
         self.assertContains(response, 'src="https://mapy.com/s/hodepofuza"')
         self.assertContains(response, "Mapa trasy – Norsko 2026")
+        self.assertContains(response, '>Mapa trasy</h2>')
+        self.assertContains(response, 'aria-labelledby="mapy-route-heading"')
         self.assertContains(response, 'width="1200"')
         self.assertContains(response, 'height="768"')
         self.assertContains(response, "Pokračujeme dál na sever.")
@@ -133,7 +135,7 @@ class RoadTripPageTests(TestCase):
         self.assertContains(response, "Večer jsme dorazili do cíle.")
         self.assertContains(
             response,
-            'class="d-none d-md-inline">2. den – Přes horský průsmyk</span>',
+            'class="d-none d-md-inline">2. den Přes horský průsmyk</span>',
         )
         self.assertContains(response, 'class="d-md-none">2. den</span>')
         self.assertContains(
@@ -145,7 +147,7 @@ class RoadTripPageTests(TestCase):
         self.assertEqual(second_day_response.status_code, 200)
         self.assertContains(
             second_day_response,
-            'class="d-none d-md-inline">1. den – Den 1: Cesta na sever</span>',
+            'class="d-none d-md-inline">1. den Den 1: Cesta na sever</span>',
         )
         self.assertContains(
             second_day_response,

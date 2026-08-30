@@ -1,12 +1,17 @@
 {% if mapy_url %}
-    <div class="ratio mx-auto my-4"
-         style="--bs-aspect-ratio: 64%; max-width: 1200px;">
-        <iframe src="{{ mapy_url }}"
-                title="Mapa trasy – {{ map_title }}"
-                width="1200"
-                height="768"
-                style="border: none;"
-                frameborder="0"
-                loading="lazy"></iframe>
-    </div>
+    <section class="mx-auto my-4 p-3 bg-white border rounded"
+             style="max-width: 1200px;"
+             aria-labelledby="mapy-route-heading">
+        <h2 id="mapy-route-heading" class="h4 text-center mb-3">Mapa trasy</h2>
+        <div class="ratio mx-auto"
+             style="--bs-aspect-ratio: 64%; max-width: 1200px;">
+            <iframe src="{{ mapy_url }}"
+                    title="Mapa trasy – {{ map_title }}"
+                    width="1200"
+                    height="768"
+                    style="border: none;"
+                    frameborder="0"
+                    loading="lazy"></iframe>
+        </div>
+    </section>
 {% endif %}

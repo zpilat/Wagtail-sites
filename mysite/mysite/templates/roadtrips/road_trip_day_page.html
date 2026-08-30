@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container bg-light py-3 my-4" style="max-width: 1200px;">
+    <div class="container bg-light py-3 my-4">
         <article>
             <header class="text-center">
                 <p class="mb-2">
@@ -23,12 +23,15 @@
 
             {% with main_image=page.main_image %}
                 {% if main_image %}
-                    {% image main_image fill-1024x768 as hero_image %}
-                    <img src="{{ hero_image.url }}" alt="{{ page.title }}" class="img-fluid my-4 d-block mx-auto">
+                    {% image main_image width-1200 as hero_image %}
+                    <img src="{{ hero_image.url }}"
+                         alt="{{ page.title }}"
+                         class="img-fluid my-4 d-block mx-auto"
+                         style="width: 100%; max-width: 1200px;">
                 {% endif %}
             {% endwith %}
 
-            <div class="roadtrip-content">
+            <div class="roadtrip-content mx-auto" style="max-width: 1200px;">
                 {% for block in page.content %}
                     {% include_block block %}
                 {% endfor %}
