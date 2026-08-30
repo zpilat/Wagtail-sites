@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-roadtripindexpage{% endblock %}
+
+{% block header %}
+    {% include "includes/navbar.html" %}
+{% endblock %}
+
+{% block content %}
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-12 text-center bg-light py-3">
+                <h1>{{ page.title }}</h1>
+                {% if page.intro %}<div>{{ page.intro|richtext }}</div>{% endif %}
+            </div>
+        </div>
+
+        <div class="row bg-light pt-3">
+            {% for road_trip in road_trips %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <article class="card text-center h-100">
+                        {% if road_trip.image %}
+                            {% image road_trip.image fill-640x400 as trip_image %}
+                            <img src="{{ trip_image.url }}" alt="{{ road_trip.title }}" class="card-img-top">
+                        {% endif %}
+                        <div class="card-body">
+                            <h2 class="h5 card-title">
+                                <a href="{% pageurl road_trip %}" class="text-dark">{{ road_trip.title }}</a>
+                            </h2>
+                            <p class="text-muted">
+                                {{ road_trip.start_date|date:"j. n. Y" }}–{{ road_trip.end_date|date:"j. n. Y" }}
+                            </p>
+                            <p class="card-text">{{ road_trip.intro }}</p>
+                        </div>
+                        <div class="card-footer bg-secondary text-white">
+                            {{ road_trip.get_days.count }}
+                            {% if road_trip.get_days.count == 1 %}den{% else %}dní{% endif %} v deníku
+                        </div>
+                    </article>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center py-4">
+                    <p>Zatím tu není žádný autovandr.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

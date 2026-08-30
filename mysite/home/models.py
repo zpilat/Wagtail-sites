@@ -6,6 +6,7 @@ from django.db import models
 from blog.models import BlogIndexPage
 from recipes.models import RecipeIndexPage
 from coding.models import CodingIndexPage
+from roadtrips.models import RoadTripIndexPage
 
 class HomePage(Page):
     max_count = 1
@@ -41,6 +42,9 @@ class HomePage(Page):
         coding_index = self.get_children().type(CodingIndexPage).live().specific().first()
         context['coding_index'] = coding_index
 
+        # Fetch RoadTripIndexPage
+        roadtrips_index = self.get_children().type(RoadTripIndexPage).live().specific().first()
+        context['roadtrips_index'] = roadtrips_index
+
         # Další indexové stránky podle potřeby
         return context
-

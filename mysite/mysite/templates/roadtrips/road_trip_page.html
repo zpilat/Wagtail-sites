@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-roadtrippage{% endblock %}
+
+{% block header %}
+    {% include "includes/navbar.html" with page=road_trip_index %}
+{% endblock %}
+
+{% block content %}
+    <div class="container bg-light py-3 my-4">
+        <article>
+            <header class="text-center">
+                <p class="mb-2">
+                    <a href="{% pageurl road_trip_index %}" class="text-secondary text-decoration-none">Autovandry</a>
+                </p>
+                <h1>{{ page.title }}</h1>
+                <p class="text-muted">
+                    {{ page.start_date|date:"j. n. Y" }}–{{ page.end_date|date:"j. n. Y" }}
+                </p>
+                <p class="h6">{{ page.intro }}</p>
+            </header>
+
+            {% include "blocks/mapy_route.html" with mapy_url=page.mapy_route_url map_title=page.title %}
+
+            {% if page.image %}
+                {% image page.image fill-1024x640 as hero_image %}
+                <img src="{{ hero_image.url }}" alt="{{ page.title }}" class="img-fluid my-4 d-block mx-auto">
+            {% endif %}
+
+            <div>{{ page.body|richtext }}</div>
+
+            {% if page.mapy_photos %}
+                <section class="my-4" aria-label="Fotografie z Mapy.com">
+                    {% for block in page.mapy_photos %}
+                        {% include_block block %}
+                    {% endfor %}
+                </section>
+            {% endif %}
+
+            {% with gallery_items=page.gallery_images.all %}
+                {% if gallery_items %}
+                    <hr>
+                    <section class="my-4 text-center">
+                        <h2 class="h3 mb-4">Galerie celé cesty</h2>
+                        <div class="row">
+                            {% for item in gallery_items %}
+                                <figure class="col-md-4 mb-4">
+                                    {% image item.image fill-640x480 as gallery_image %}
+                                    <img src="{{ gallery_image.url }}" alt="{{ item.caption|default:page.title }}" class="img-fluid">
+                                    {% if item.caption %}<figcaption>{{ item.caption }}</figcaption>{% endif %}
+                                </figure>
+                            {% endfor %}
+                        </div>
+                    </section>
+                {% endif %}
+            {% endwith %}
+        </article>
+
+        <hr>
+        <section class="my-4">
+            <h2 class="h3 text-center mb-4">Deník cesty</h2>
+            <div class="row">
+                {% for day in days %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <article class="card h-100">
+                            {% with main_image=day.main_image %}
+                                {% if main_image %}
+                                    {% image main_image fill-640x400 as day_image %}
+                                    <img src="{{ day_image.url }}" alt="{{ day.title }}" class="card-img-top">
+                                {% endif %}
+                            {% endwith %}
+                            <div class="card-body">
+                                <p class="text-muted mb-1">{{ day.day_number }}. den · {{ day.date|date:"j. n. Y" }}</p>
+                                <h3 class="h5 card-title">
+                                    <a href="{% pageurl day %}" class="text-dark">{{ day.title }}</a>
+                                </h3>
+                                <p class="card-text">{{ day.intro }}</p>
+                            </div>
+                        </article>
+                    </div>
+                {% empty %}
+                    <div class="col-12 text-center">
+                        <p>Jednotlivé dny této cesty zatím nejsou zveřejněné.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+{% endblock %}
