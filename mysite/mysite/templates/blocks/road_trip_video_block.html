@@ -1,0 +1,11 @@
+<figure class="my-4 text-center">
+    <video controls
+           preload="metadata"
+           class="w-100 rounded">
+        <source src="{{ value.video.url }}">
+        Váš prohlížeč nepodporuje přehrávání videa.
+    </video>
+    {% if value.caption %}
+        <figcaption class="text-muted small mt-1">{{ value.caption }}</figcaption>
+    {% endif %}
+</figure>

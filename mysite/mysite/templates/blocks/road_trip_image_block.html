@@ -1,0 +1,14 @@
+{% load wagtailimages_tags %}
+
+<figure class="my-4 text-center">
+    {% image value.image width-1200 as image %}
+    <img src="{{ image.url }}"
+         alt="{{ value.caption|default:'Fotografie z autovandru' }}"
+         class="img-fluid rounded"
+         loading="lazy">
+    {% if value.caption or value.attribution %}
+        <figcaption class="text-muted small mt-1">
+            {{ value.caption }}{% if value.caption and value.attribution %} – {% endif %}{{ value.attribution }}
+        </figcaption>
+    {% endif %}
+</figure>

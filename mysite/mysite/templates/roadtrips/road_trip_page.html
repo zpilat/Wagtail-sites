@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container bg-light py-3 my-4">
+    <div class="container bg-light py-3 my-4" style="max-width: 1200px;">
         <article>
             <header class="text-center">
                 <p class="mb-2">
@@ -28,33 +28,11 @@
                 <img src="{{ hero_image.url }}" alt="{{ page.title }}" class="img-fluid my-4 d-block mx-auto">
             {% endif %}
 
-            <div>{{ page.body|richtext }}</div>
-
-            {% if page.mapy_photos %}
-                <section class="my-4" aria-label="Fotografie z Mapy.com">
-                    {% for block in page.mapy_photos %}
-                        {% include_block block %}
-                    {% endfor %}
-                </section>
-            {% endif %}
-
-            {% with gallery_items=page.gallery_images.all %}
-                {% if gallery_items %}
-                    <hr>
-                    <section class="my-4 text-center">
-                        <h2 class="h3 mb-4">Galerie celé cesty</h2>
-                        <div class="row">
-                            {% for item in gallery_items %}
-                                <figure class="col-md-4 mb-4">
-                                    {% image item.image fill-640x480 as gallery_image %}
-                                    <img src="{{ gallery_image.url }}" alt="{{ item.caption|default:page.title }}" class="img-fluid">
-                                    {% if item.caption %}<figcaption>{{ item.caption }}</figcaption>{% endif %}
-                                </figure>
-                            {% endfor %}
-                        </div>
-                    </section>
-                {% endif %}
-            {% endwith %}
+            <div class="roadtrip-content">
+                {% for block in page.content %}
+                    {% include_block block %}
+                {% endfor %}
+            </div>
         </article>
 
         <hr>

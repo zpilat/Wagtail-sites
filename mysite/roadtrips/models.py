@@ -3,14 +3,13 @@ from datetime import date
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
-from modelcluster.fields import ParentalKey
-from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
-from wagtail.models import Orderable, Page
+from wagtail.models import Page
 from wagtail.search import index
 from wagtail.admin.forms import WagtailAdminPageForm
 
-from .blocks import MapyPhotoBlock
+from .blocks import RoadTripContentBlock
 
 
 class RoadTripDayPageForm(WagtailAdminPageForm):
@@ -104,12 +103,14 @@ class RoadTripPage(Page):
         ),
     )
     intro = models.CharField("Krátký úvod", max_length=300)
-    body = RichTextField("Popis celé cesty")
-    mapy_photos = StreamField(
-        [("mapy_photo", MapyPhotoBlock())],
+    content = StreamField(
+        RoadTripContentBlock(),
         blank=True,
         use_json_field=True,
-        verbose_name="Fotografie z Mapy.com",
+        verbose_name="Řaditelný obsah",
+        help_text=(
+            "Libovolně střídejte texty, fotografie z Mapy.com a vlastní obrázky."
+        ),
     )
     image = models.ForeignKey(
         "wagtailimages.Image",
@@ -128,14 +129,12 @@ class RoadTripPage(Page):
         FieldPanel("mapy_route_url"),
         FieldPanel("intro"),
         FieldPanel("image"),
-        FieldPanel("body"),
-        FieldPanel("mapy_photos"),
-        InlinePanel("gallery_images", label="Galerie celé cesty"),
+        FieldPanel("content"),
     ]
 
     search_fields = Page.search_fields + [
         index.SearchField("intro"),
-        index.SearchField("body"),
+        index.SearchField("content"),
     ]
 
     parent_page_types = ["roadtrips.RoadTripIndexPage"]
@@ -185,12 +184,22 @@ class RoadTripDayPage(Page):
         ),
     )
     intro = models.CharField("Krátký úvod", max_length=300)
-    body = RichTextField("Zápis z cesty")
-    mapy_photos = StreamField(
-        [("mapy_photo", MapyPhotoBlock())],
+    content = StreamField(
+        RoadTripContentBlock(),
         blank=True,
         use_json_field=True,
-        verbose_name="Fotografie z Mapy.com",
+        verbose_name="Řaditelný obsah",
+        help_text=(
+            "Libovolně střídejte texty, fotografie z Mapy.com a vlastní obrázky."
+        ),
+    )
+    image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name="Titulní obrázek dne",
     )
 
     content_panels = Page.content_panels + [
@@ -200,14 +209,13 @@ class RoadTripDayPage(Page):
         ),
         FieldPanel("mapy_route_url"),
         FieldPanel("intro"),
-        FieldPanel("body"),
-        FieldPanel("mapy_photos"),
-        InlinePanel("gallery_images", label="Galerie dne"),
+        FieldPanel("image"),
+        FieldPanel("content"),
     ]
 
     search_fields = Page.search_fields + [
         index.SearchField("intro"),
-        index.SearchField("body"),
+        index.SearchField("content"),
     ]
 
     parent_page_types = ["roadtrips.RoadTripPage"]
@@ -218,8 +226,7 @@ class RoadTripDayPage(Page):
         verbose_name = "Den autovandru"
 
     def main_image(self):
-        gallery_item = self.gallery_images.first()
-        return gallery_item.image if gallery_item else None
+        return self.image
 
     def get_road_trip(self):
         return self.get_parent().specific
@@ -271,35 +278,3 @@ class RoadTripDayPage(Page):
             }
         )
         return context
-
-
-class RoadTripGalleryImage(Orderable):
-    page = ParentalKey(
-        RoadTripPage,
-        on_delete=models.CASCADE,
-        related_name="gallery_images",
-    )
-    image = models.ForeignKey(
-        "wagtailimages.Image",
-        on_delete=models.CASCADE,
-        related_name="+",
-    )
-    caption = models.CharField("Popisek", blank=True, max_length=250)
-
-    panels = [FieldPanel("image"), FieldPanel("caption")]
-
-
-class RoadTripDayGalleryImage(Orderable):
-    page = ParentalKey(
-        RoadTripDayPage,
-        on_delete=models.CASCADE,
-        related_name="gallery_images",
-    )
-    image = models.ForeignKey(
-        "wagtailimages.Image",
-        on_delete=models.CASCADE,
-        related_name="+",
-    )
-    caption = models.CharField("Popisek", blank=True, max_length=250)
-
-    panels = [FieldPanel("image"), FieldPanel("caption")]
