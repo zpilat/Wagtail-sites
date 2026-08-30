@@ -106,7 +106,7 @@ class RoadTripPageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Den 1: Cesta na sever")
         self.assertContains(response, "Výhled z cesty")
-        self.assertContains(response, "Foto autorů na Mapy.com")
+        self.assertContains(response, "Foto autorů na&nbsp;")
         self.assertContains(response, 'rel="noopener noreferrer"')
         self.assertContains(response, 'src="https://mapy.com/s/hodepofuza"')
         self.assertContains(response, "Mapa trasy – Norsko 2026")
@@ -144,6 +144,11 @@ class RoadTripPageTests(TestCase):
             response,
             'aria-label="Následující: 2. den – Přes horský průsmyk"',
         )
+        self.assertContains(
+            response,
+            'class="mx-auto my-4 p-3 bg-white border rounded"',
+        )
+        self.assertContains(response, 'aria-label="Navigace mezi dny cesty"')
 
         second_day_response = self.client.get(self.second_day.url)
         self.assertEqual(second_day_response.status_code, 200)

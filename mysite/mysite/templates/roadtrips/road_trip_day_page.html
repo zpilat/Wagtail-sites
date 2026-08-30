@@ -30,31 +30,35 @@
             </div>
         </article>
 
-        <nav class="row align-items-center my-4" aria-label="Navigace mezi dny cesty">
-            <div class="col-4 text-start">
-                {% if previous_day %}
-                    <a href="{% pageurl previous_day %}"
-                       class="btn btn-outline-dark text-wrap"
-                       aria-label="Předchozí: {{ previous_day.day_number }}. den – {{ previous_day.title }}">
-                        ←
-                        <span class="d-md-none">{{ previous_day.day_number }}. den</span>
-                        <span class="d-none d-md-inline">{{ previous_day.day_number }}. den {{ previous_day.title }}</span>
-                    </a>
-                {% endif %}
-            </div>
-            <div class="col-4 text-center">
-                <a href="{% pageurl road_trip %}" class="btn btn-dark">Celá cesta</a>
-            </div>
-            <div class="col-4 text-end">
-                {% if next_day %}
-                    <a href="{% pageurl next_day %}"
-                       class="btn btn-outline-dark text-wrap"
-                       aria-label="Následující: {{ next_day.day_number }}. den – {{ next_day.title }}">
-                        <span class="d-md-none">{{ next_day.day_number }}. den</span>
-                        <span class="d-none d-md-inline">{{ next_day.day_number }}. den {{ next_day.title }}</span>
-                        →
-                    </a>
-                {% endif %}
+        <nav class="mx-auto my-4 p-3 bg-white border rounded"
+             style="max-width: 1200px;"
+             aria-label="Navigace mezi dny cesty">
+            <div class="row align-items-center">
+                <div class="col-4 text-start">
+                    {% if previous_day %}
+                        <a href="{% pageurl previous_day %}"
+                           class="btn btn-outline-dark text-wrap"
+                           aria-label="Předchozí: {{ previous_day.day_number }}. den – {{ previous_day.title }}">
+                            ←
+                            <span class="d-md-none">{{ previous_day.day_number }}. den</span>
+                            <span class="d-none d-md-inline">{{ previous_day.day_number }}. den {{ previous_day.title }}</span>
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="col-4 text-center">
+                    <a href="{% pageurl road_trip %}" class="btn btn-dark">Celá cesta</a>
+                </div>
+                <div class="col-4 text-end">
+                    {% if next_day %}
+                        <a href="{% pageurl next_day %}"
+                           class="btn btn-outline-dark text-wrap"
+                           aria-label="Následující: {{ next_day.day_number }}. den – {{ next_day.title }}">
+                            <span class="d-md-none">{{ next_day.day_number }}. den</span>
+                            <span class="d-none d-md-inline">{{ next_day.day_number }}. den {{ next_day.title }}</span>
+                            →
+                        </a>
+                    {% endif %}
+                </div>
             </div>
         </nav>
     </div>
