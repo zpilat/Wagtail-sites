@@ -789,15 +789,22 @@ hr {
 /* Maps, media and embedded content */
 .map-surface,
 .media-surface {
+    overflow: hidden;
     max-width: 72rem;
     margin: 2rem auto;
-    padding: clamp(1rem, 3vw, 1.75rem);
+    padding: 0;
 }
 
 .map-surface iframe,
 .media-surface img,
 .media-surface video {
-    border-radius: var(--site-radius);
+    border-radius: 0;
+}
+
+.map-surface > h2,
+.media-surface > h2 {
+    margin: 0 !important;
+    padding: 1.25rem clamp(1rem, 3vw, 1.75rem);
 }
 
 .responsive-object iframe,
