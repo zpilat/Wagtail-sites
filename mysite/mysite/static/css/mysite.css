@@ -669,6 +669,83 @@ figcaption {
     margin-block: 2rem;
 }
 
+.difficulty-card {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin: 2.25rem 0;
+    padding: 1.15rem 1.25rem;
+    border: 1px solid color-mix(in srgb, var(--site-accent) 28%, var(--site-border));
+    border-radius: var(--site-radius);
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--site-accent) 8%, var(--site-surface)),
+        var(--site-surface)
+    );
+    box-shadow: var(--site-shadow-sm);
+}
+
+.difficulty-card__icon {
+    width: 3rem;
+    height: 3rem;
+    flex: 0 0 3rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: #fff;
+    background: var(--site-accent);
+    font-size: 1.15rem;
+}
+
+.difficulty-card__content {
+    min-width: 0;
+    flex: 1;
+}
+
+.difficulty-card__eyebrow {
+    margin: 0 0 0.15rem;
+    color: var(--site-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+}
+
+.difficulty-card__rating {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.difficulty-card__rating strong {
+    color: var(--site-text);
+    font-family: Georgia, "Times New Roman", ui-serif, serif;
+    font-size: 1.35rem;
+    line-height: 1.2;
+}
+
+.difficulty-stars {
+    display: inline-flex;
+    gap: 0.2rem;
+    color: color-mix(in srgb, var(--site-muted) 24%, transparent);
+    font-size: 1.65rem;
+    line-height: 1;
+    letter-spacing: 0.02em;
+}
+
+.difficulty-stars .is-active {
+    color: #d58a28;
+    filter: drop-shadow(0 0.12rem 0.12rem rgba(116, 70, 12, 0.18));
+}
+
+.difficulty-card__description {
+    margin: 0.3rem 0 0;
+    color: var(--site-muted);
+    font-size: 0.88rem;
+    line-height: 1.45;
+}
+
 .ingredients-list,
 .steps-list {
     margin: 1rem 0 2rem;
@@ -1023,6 +1100,16 @@ hr {
 
     .article-pagination .btn {
         width: 100%;
+    }
+
+    .difficulty-card {
+        align-items: flex-start;
+    }
+
+    .difficulty-card__rating {
+        gap: 0.4rem;
+        align-items: flex-start;
+        flex-direction: column;
     }
 
     .site-footer__inner {

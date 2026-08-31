@@ -1,5 +1,35 @@
-{% load wagtailcore_tags %}
+<section class="difficulty-card" aria-label="Obtížnost přípravy">
+    <div class="difficulty-card__icon" aria-hidden="true">
+        <i class="fa-solid fa-gauge-high"></i>
+    </div>
 
-<hr class="my-4">
-<h3 class="h4 mb-3">Obtížnost přípravy</h3>
-<div class="difficulty">{{ self }}</div>
+    <div class="difficulty-card__content">
+        <p class="difficulty-card__eyebrow">Obtížnost přípravy</p>
+
+        {% if self == "* nízká" %}
+            <div class="difficulty-card__rating" aria-label="Nízká obtížnost, jedna hvězda ze tří">
+                <strong>Nízká</strong>
+                <span class="difficulty-stars" aria-hidden="true">
+                    <span class="is-active">★</span><span>★</span><span>★</span>
+                </span>
+            </div>
+            <p class="difficulty-card__description">Jednoduchý recept vhodný i pro méně zkušené.</p>
+        {% elif self == "** střední" %}
+            <div class="difficulty-card__rating" aria-label="Střední obtížnost, dvě hvězdy ze tří">
+                <strong>Střední</strong>
+                <span class="difficulty-stars" aria-hidden="true">
+                    <span class="is-active">★</span><span class="is-active">★</span><span>★</span>
+                </span>
+            </div>
+            <p class="difficulty-card__description">Vyžaduje trochu více času nebo kuchařské jistoty.</p>
+        {% else %}
+            <div class="difficulty-card__rating" aria-label="Vysoká obtížnost, tři hvězdy ze tří">
+                <strong>Vysoká</strong>
+                <span class="difficulty-stars" aria-hidden="true">
+                    <span class="is-active">★</span><span class="is-active">★</span><span class="is-active">★</span>
+                </span>
+            </div>
+            <p class="difficulty-card__description">Náročnější recept pro zkušenější kuchaře.</p>
+        {% endif %}
+    </div>
+</section>
