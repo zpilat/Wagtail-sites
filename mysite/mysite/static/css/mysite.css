@@ -284,7 +284,7 @@ figcaption {
 .site-hero {
     position: relative;
     overflow: hidden;
-    aspect-ratio: 40 / 13;
+    aspect-ratio: 28 / 11;
     border-radius: var(--site-radius-lg);
     background: var(--site-surface-soft);
     box-shadow: var(--site-shadow-md);
