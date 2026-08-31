@@ -2,41 +2,33 @@
 {% load wagtailimages_tags wagtailcore_tags %}
 <div class="link-block">
     {% if value.title %}
-        <div class="row mt-4">
-            <div class="col">
-                <p class="h4">{{ value.title }}</p>
-            </div>
-        </div>    
+        <h3 class="mt-5 mb-4">{{ value.title }}</h3>
     {% endif %}
 
-    <div class="row bg-light pt-3">
+    <div class="row listing-grid">
         {% for page in value.links %}
-            <div class="col-md-6 col-lg-4 mb-4 d-flex">
-                <div class="card h-100 d-flex flex-column">
-                    {% with recipe=page.specific %}
+            {% with recipe=page.specific %}
+                <div class="col-md-6 col-xl-4">
+                    <article class="listing-card">
+                        <a href="{% pageurl recipe %}" class="listing-card__link">
                         {% with backstory_image=recipe.get_main_image.image %}
                             {% if backstory_image %}
-                                {% image backstory_image fill-480x360 as img %}
-                                <a href="{% pageurl recipe %}">
-                                    <img src="{{ img.url }}" alt="{{ recipe.title }}" class="card-img-top img-fluid">
-                                </a>
+                                <figure class="listing-card__media">
+                                    {% image backstory_image fill-640x400 as img %}
+                                    <img src="{{ img.url }}" alt="" width="640" height="400" loading="lazy">
+                                </figure>
                             {% endif %}
                         {% endwith %}
-                        <div class="card-body flex-grow-1">
-                            <p class="h4 card-title">
-                                <a href="{% pageurl recipe %}" class="text-dark">{{ recipe.title }}</a>
-                            </p>                         
-                            <p class="h6 card-subtitle my-1 ">
-                                Kategorie: {{ recipe.get_category.title }}
-                            </p>
+                        <div class="listing-card__body">
+                            <p class="eyebrow">{{ recipe.get_category.title }}</p>
+                            <h4>{{ recipe.title }}</h4>
                             <p class="card-text">{{ recipe.introduction }}</p>
+                            <p class="card-meta mt-auto mb-0 pt-3">{{ recipe.date_published|date:"j. n. Y" }}</p>
                         </div>
-                        <div class="card-footer bg-secondary text-white text-center d-flex align-items-center justify-content-center">
-                            <p class="m-0">Zveřejněno: {{ recipe.date_published }}</p>
-                        </div>
-                    {% endwith %}
+                        </a>
+                    </article>
                 </div>
-            </div>
+            {% endwith %}
         {% endfor %}
     </div>
 

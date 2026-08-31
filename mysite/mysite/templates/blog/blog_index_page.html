@@ -9,47 +9,47 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container my-4">
-        <div class="row">
-            <div class="col-12 text-center bg-light py-2 mt-0">
-                <p class="h1">{{ page.title }}</p>  
-                <p>{{ page.intro|richtext }}</p>
-            </div>
-        </div>
+    <div class="container page-shell">
+        <header class="page-intro">
+            <h1>{{ page.title }}</h1>
+            <div>{{ page.intro|richtext }}</div>
+        </header>
        
         {% if tags %}
-            <div class="row text-center bg-light mb-3">
-                <p>
-                    <a href="{% slugurl 'blog' %}" class="btn btn-sm rounded-pill m-1 {% if request.GET.tag %}btn-outline-secondary{% else %}btn-outline-primary{% endif %}">VŠE</a>
+            <nav class="filter-panel" aria-label="Filtrování blogů podle tagu">
+                <div class="tag-list">
+                    <a href="{% slugurl 'blog' %}" class="tag-chip {% if not request.GET.tag %}active{% endif %}">Vše</a>
                     {% for tag in tags %}
-                        <a href="?tag={{ tag.slug }}" class="btn btn-sm {% if tag.slug == request.GET.tag %}btn-outline-primary{% else %}btn-outline-secondary{% endif %} rounded-pill m-1">{{ tag.name }}</a>
+                        <a href="?tag={{ tag.slug }}" class="tag-chip {% if tag.slug == request.GET.tag %}active{% endif %}">{{ tag.name }}</a>
                     {% endfor %}
-                </p>
-            </div>
+                </div>
+            </nav>
         {% endif %}       
         
-        <div class="row bg-light pt-3">
+        <div class="row listing-grid">
             {% for blogpage in blogpages %}
-                <div class="col-md-4 mb-4">
-                    <div class="card text-center h-100">
-                        {% with blogpage=blogpage.specific %}
+                {% with blogpage=blogpage.specific %}
+                    <div class="col-md-6 col-xl-4">
+                        <article class="listing-card">
+                            <a href="{% pageurl blogpage %}" class="listing-card__link">
                             {% if blogpage.main_image %}
-                                {% image blogpage.main_image fill-320x240 as img %}
-                                <img src="{{ img.url }}" alt="{{ blogpage.title }}" class="card-img-top">
+                                <figure class="listing-card__media">
+                                    {% image blogpage.main_image fill-640x400 as img %}
+                                    <img src="{{ img.url }}" alt="" width="640" height="400" loading="lazy">
+                                </figure>
                             {% endif %}
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <a href="{% pageurl blogpage %}" class="text-dark">{{ blogpage.title }}</a>
-                                </h5>
-                                <p class="text-muted">{{ blogpage.blog_nr }}. blog</p>                                
+                            <div class="listing-card__body">
+                                <p class="eyebrow">{{ blogpage.blog_nr }}. blog</p>
+                                <h2 class="h3">{{ blogpage.title }}</h2>
                                 <p class="card-text">{{ blogpage.intro }}</p>
+                                <p class="card-meta mt-auto mb-0 pt-3">{{ blogpage.date|date:"j. n. Y" }}</p>
                             </div>
-                            <div class="card-footer bg-secondary text-white pt-3 pb-0">
-                                <p>Zveřejněno: {{ blogpage.date }}</p>
-                            </div>
-                        {% endwith %}
+                            </a>
+                        </article>
                     </div>
-                </div>
+                {% endwith %}
+            {% empty %}
+                <p class="text-center text-muted py-5">Pro tento filtr tu zatím nic není.</p>
             {% endfor %}
         </div>
     </div>

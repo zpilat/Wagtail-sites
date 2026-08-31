@@ -1,17 +1,13 @@
 {% load wagtailcore_tags %}
 
 {% if value.title %}
-    <div class="row mt-4">
-        <div class="col">
-            <p class="h4">{{ value.title }}</p>
-        </div>
-    </div>    
+    <h3 class="h4 mt-4">{{ value.title }}</h3>
 {% endif %}
 
 {% with ingredients=value.ingredients_list %}
-<ul>
+<ul class="ingredients-list">
     {% for ingredient in ingredients %}
-        <li class="px-2">{{ ingredient|richtext }}</li>
+        <li>{{ ingredient|richtext }}</li>
     {% endfor %}
 </ul>
 {% endwith %}

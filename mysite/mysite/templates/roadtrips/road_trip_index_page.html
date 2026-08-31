@@ -8,35 +8,35 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container my-4">
-        <div class="row">
-            <div class="col-12 text-center bg-light py-3">
-                <h1>{{ page.title }}</h1>
-                {% if page.intro %}<div>{{ page.intro|richtext }}</div>{% endif %}
-            </div>
-        </div>
+    <div class="container page-shell">
+        <header class="page-intro">
+            <h1>{{ page.title }}</h1>
+            {% if page.intro %}<div>{{ page.intro|richtext }}</div>{% endif %}
+        </header>
 
-        <div class="row bg-light pt-3">
+        <div class="row listing-grid">
             {% for road_trip in road_trips %}
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <article class="card text-center h-100">
+                <div class="col-md-6 col-xl-4">
+                    <article class="listing-card">
+                        <a href="{% pageurl road_trip %}" class="listing-card__link">
                         {% if road_trip.image %}
-                            {% image road_trip.image fill-640x400 as trip_image %}
-                            <img src="{{ trip_image.url }}" alt="{{ road_trip.title }}" class="card-img-top">
+                            <figure class="listing-card__media">
+                                {% image road_trip.image fill-640x400 as trip_image %}
+                                <img src="{{ trip_image.url }}" alt="" width="640" height="400" loading="lazy">
+                            </figure>
                         {% endif %}
-                        <div class="card-body">
-                            <h2 class="h5 card-title">
-                                <a href="{% pageurl road_trip %}" class="text-dark">{{ road_trip.title }}</a>
-                            </h2>
-                            <p class="text-muted">
+                        <div class="listing-card__body">
+                            <p class="eyebrow">
                                 {{ road_trip.start_date|date:"j. n. Y" }}–{{ road_trip.end_date|date:"j. n. Y" }}
                             </p>
+                            <h2 class="h3">{{ road_trip.title }}</h2>
                             <p class="card-text">{{ road_trip.intro }}</p>
+                            <p class="card-meta mt-auto mb-0 pt-3">
+                                {{ road_trip.get_days.count }}
+                                {% if road_trip.get_days.count == 1 %}den{% else %}dní{% endif %} v deníku
+                            </p>
                         </div>
-                        <div class="card-footer bg-secondary text-white">
-                            {{ road_trip.get_days.count }}
-                            {% if road_trip.get_days.count == 1 %}den{% else %}dní{% endif %} v deníku
-                        </div>
+                        </a>
                     </article>
                 </div>
             {% empty %}

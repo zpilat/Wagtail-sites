@@ -2,62 +2,88 @@
 {% load static wagtailcore_tags wagtailimages_tags %}
 
 {% block body_class %}template-searchresults{% endblock %}
-
-{% block title %}Výsledky vyhledávání{% if search_query %} pro rětězec: “{{ search_query }}”{% endif %}{% endblock %}
+{% block title %}Vyhledávání{% if search_query %}: {{ search_query }}{% endif %}{% endblock %}
 
 {% block header %}
     {% include 'includes/navbar.html' %}
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <p class="h2 bg-light text-center py-2">Výsledky vyhledávání pro řetězec: “{{ search_query }}”</p>        
+    <div class="container page-shell">
+        <header class="page-intro mb-4">
+            <p class="eyebrow">Vyhledávání</p>
+            <h1>{% if search_query %}Výsledky pro „{{ search_query }}“{% else %}Co hledáte?{% endif %}</h1>
+        </header>
+
+        <form action="{% url 'search' %}" method="get" class="search-form-large" role="search">
+            <div class="input-group">
+                <label class="visually-hidden" for="search-query-large">Hledat na webu</label>
+                <input type="search" id="search-query-large" name="query" class="form-control" placeholder="Zadejte hledaný výraz…" value="{{ search_query|default:'' }}">
+                <button class="btn" type="submit">Hledat</button>
+            </div>
+        </form>
+
+        <div class="content-surface mx-auto" style="max-width: 58rem;">
             {% if search_results %}
-                <ul class="list-unstyled">
+                <p class="text-muted mb-3">Nalezeno {{ search_results.paginator.count }} výsledků</p>
+                <div>
                     {% for result in search_results %}
-                        <hr>
-                        <li>
-                            <div class="row align-items-center">
-                                <div class="col-auto">
-                                    {% if result.specific.main_image %}
-                                        {% image result.specific.main_image fill-240x180 as img %}
-                                        <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid my-2 d-block">
-                                    {% elif result.specific.get_backstory_image %}
-                                        {% image result.specific.get_backstory_image fill-240x180 as img %}
-                                        <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid my-2 d-block">
-                                    {% endif %}
-                                </div>
-                                <div class="col-auto">
-                                    <h4><a href="{% pageurl result %}">{{ result.specific }}</a></h4>
-                                    <p class="listing-card__content-type">
+                        <article class="search-result">
+                            <div>
+                                {% if result.specific.main_image %}
+                                    {% image result.specific.main_image fill-480x360 as img %}
+                                    <img src="{{ img.url }}" alt="" width="480" height="360" loading="lazy">
+                                {% elif result.specific.get_main_image %}
+                                    {% image result.specific.get_main_image.image fill-480x360 as img %}
+                                    <img src="{{ img.url }}" alt="" width="480" height="360" loading="lazy">
+                                {% endif %}
+                            </div>
+                            <div>
+                                <p class="eyebrow mb-2">
                                     {% if result.specific.content_type.model == "blogpage" %}
                                         Blog
                                     {% elif result.specific.content_type.model == "recipepage" %}
-                                        Recepty
+                                        Recept
+                                    {% elif result.specific.content_type.model == "codingpage" %}
+                                        Programování
+                                    {% elif result.specific.content_type.model == "roadtrippage" or result.specific.content_type.model == "roadtripdaypage" %}
+                                        Autovandr
                                     {% else %}
                                         Ostatní
                                     {% endif %}
-                                    </p>    
-                                    {% if result.specific.search_description %}
-                                        {{ result.specific.search_description }}
-                                    {% endif %}
-                                </div>
+                                </p>
+                                <h2 class="h3"><a href="{% pageurl result %}">{{ result.title }}</a></h2>
+                                {% if result.specific.search_description %}
+                                    <p class="mb-0 text-muted">{{ result.specific.search_description }}</p>
+                                {% endif %}
                             </div>
-                        </li>
+                        </article>
                     {% endfor %}
-                </ul>
-                
-                {% if search_results.has_previous %}
-                    <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">Předchozí</a>
-                {% endif %}
+                </div>
 
-                {% if search_results.has_next %}
-                    <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Další</a>
+                {% if search_results.has_previous or search_results.has_next %}
+                    <nav class="article-pagination mt-4" aria-label="Stránkování výsledků">
+                        <div>
+                            {% if search_results.has_previous %}
+                                <a class="btn btn-outline-dark" href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">← Předchozí</a>
+                            {% endif %}
+                        </div>
+                        <span class="text-muted">{{ search_results.number }} / {{ search_results.paginator.num_pages }}</span>
+                        <div>
+                            {% if search_results.has_next %}
+                                <a class="btn btn-outline-dark" href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Další →</a>
+                            {% endif %}
+                        </div>
+                    </nav>
                 {% endif %}
             {% elif search_query %}
-                <p class="h5 text-center my-4">Pro hledaný řetězec nebylo na našich stránkách nic nenalezeno!</p>
-            {% endif %}       
+                <div class="text-center py-4">
+                    <h2 class="h3">Nic jsme nenašli</h2>
+                    <p class="text-muted mb-0">Zkuste kratší nebo obecnější výraz.</p>
+                </div>
+            {% else %}
+                <p class="text-center text-muted mb-0 py-4">Výsledky se zobrazí po zadání hledaného výrazu.</p>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

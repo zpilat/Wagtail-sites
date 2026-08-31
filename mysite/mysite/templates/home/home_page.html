@@ -9,60 +9,43 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container mb-4">
-        <div class="row">
-            <div class="col text-center bg-light mt-2 py-2">
-                <p class="h1">{{ page.title }}</p>
-                <p>{{ page.body|richtext }}</p>
-            </div>
-        </div>
+    <div class="container page-shell">
+        <header class="page-intro page-intro--home">
+            <h1>{{ page.title }}</h1>
+            <div class="page-intro__text">{{ page.body|richtext }}</div>
+        </header>
 
         {% get_site_root as site_root %}
-        {% with carousel_items=site_root.get_children.live.in_menu.specific %}
-            {% if carousel_items %}
-                <div id="customCarousel" class="carousel slide" data-bs-ride="carousel">
-        
-                    <div class="carousel-indicators">
-                        {% for item in carousel_items %}
-                            <button type="button" data-bs-target="#customCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
-                                class="{% if forloop.first %}active{% endif %} bg-light"
-                                aria-current="{% if forloop.first %}true{% endif %}" 
-                                aria-label="Slide {{ forloop.counter }}">
-                            </button>
-                        {% endfor %}
+        {% with menu_items=site_root.get_children.live.in_menu.specific %}
+            {% if menu_items %}
+                <section aria-labelledby="site-sections-heading">
+                    <div class="section-heading">
+                        <p class="eyebrow">Kam dál</p>
+                        <h2 id="site-sections-heading">Vyberte si, co vás zajímá</h2>
                     </div>
-        
-                    <div class="carousel-inner">
-                        {% for item in carousel_items %}
-                            <div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-interval="5000">
-                                <div class="text-center">
-                                    <a href="{{ item.url }}" class="text-dark text-decoration-none">
-                                        <h2>{{ item.title }}</h2>
+                    <div class="portal-grid">
+                        {% for item in menu_items %}
+                            <article class="portal-card">
+                                <a href="{{ item.url }}" class="portal-card__link">
+                                    {% if item.image %}
+                                        <figure class="portal-card__media">
+                                            {% image item.image fill-720x450 as card_image %}
+                                            <img src="{{ card_image.url }}" alt="" width="720" height="450" {% if not forloop.first %}loading="lazy"{% endif %}>
+                                        </figure>
+                                    {% endif %}
+                                    <div class="portal-card__body">
+                                        <h3>{{ item.title }}</h3>
                                         {% if item.intro %}
-                                            <div class="intro">{{ item.intro|richtext }}</div>
+                                            <div>{{ item.intro|richtext }}</div>
                                         {% endif %}
-                                        {% if item.image %}
-                                            {% image item.image fill-800x400 as img %}
-                                            <img src="{{ img.url }}" alt="{{ item.title }}" class="img-fluid">
-                                        {% endif %}
-                                    </a>
-                                </div>
-                            </div>
+                                        <span class="portal-card__action">Prohlédnout <span aria-hidden="true">→</span></span>
+                                    </div>
+                                </a>
+                            </article>
                         {% endfor %}
                     </div>
-        
-                    <a class="carousel-control-prev" href="#customCarousel" role="button" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon bg-dark rounded-circle p-3 mt-3" aria-hidden="true"></span>
-                        <span class="visually-hidden">Předchozí</span>
-                    </a>
-                    <a class="carousel-control-next" href="#customCarousel" role="button" data-bs-slide="next">
-                        <span class="carousel-control-next-icon bg-dark rounded-circle p-3 mt-3" aria-hidden="true"></span>
-                        <span class="visually-hidden">Další</span>
-                    </a>
-        
-                </div>
+                </section>
             {% endif %}
         {% endwith %}
-                
     </div>
 {% endblock %}

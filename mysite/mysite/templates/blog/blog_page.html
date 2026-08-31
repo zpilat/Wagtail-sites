@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags %}
 
 {% block body_class %}template-blogpage{% endblock %}
 
@@ -9,73 +8,73 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container bg-light py-2 my-4">
-        <div class="text-center">
-            <p class="h1">{{ page.title }}</p>
-            <p class="text-muted">{{ page.date }}</p>
-            <p class="h6">{{ page.intro|richtext }}</p>   
-        </div>
-        <div class="row text-center">
-            {% with tags=page.tags.all %}
-                {% if tags %}
-                    <hr>
-                    <div class="col">
-                        {% for tag in tags %}
-                            <a href="{% slugurl 'blog' %}?tag={{ tag.slug }}" class="btn btn-sm btn-outline-secondary rounded-pill m-1">{{ tag.name }}</a>
-                        {% endfor %}
-                    </div>
+    <div class="container">
+        <article class="article-shell">
+            <header class="article-header">
+                <p class="eyebrow">{{ page.blog_nr }}. blog · {{ page.date|date:"j. n. Y" }}</p>
+                <h1>{{ page.title }}</h1>
+                <p class="article-lead">{{ page.intro }}</p>
+                {% with tags=page.tags.all %}
+                    {% if tags %}
+                        <nav class="tag-list mt-4" aria-label="Tagy článku">
+                            {% for tag in tags %}
+                                <a href="{% slugurl 'blog' %}?tag={{ tag.slug }}" class="tag-chip">{{ tag.name }}</a>
+                            {% endfor %}
+                        </nav>
+                    {% endif %}
+                {% endwith %}
+            </header>
+
+            {% with page.main_image as main_image %}
+                {% if main_image %}
+                    {% image main_image fill-1200x750 as img %}
+                    <img src="{{ img.url }}" alt="" class="article-hero" width="1200" height="750">
                 {% endif %}
             {% endwith %}
-        </div>
-        {% with page.main_image as main_image %}
-            {% if main_image %}
-                {% image main_image fill-1024x768 as img %}
-                <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid my-4 d-block mx-auto">
-            {% endif %}
-        {% endwith %}
 
-        <div>{{ page.body|richtext }}</div>
-        
-        <div class="text-center">
+            <div class="article-body">{{ page.body|richtext }}</div>
+
             {% with gallery_items=page.gallery_images.all %}
                 {% if gallery_items %}
-                    <hr>
-                    <div class="my-4">
-                        <p class="h3 mb-4">Galerie obrázků:</p>
-                        <div class="row">
+                    <hr class="my-5">
+                    <section class="my-5 text-center" aria-labelledby="gallery-heading">
+                        <h2 id="gallery-heading" class="h3 mb-4">Galerie</h2>
+                        <div class="row gallery-grid g-4">
                             {% for item in gallery_items %}
-                                <div class="col-md-4 mb-4">
-                                    {% image item.image fill-320x240 as img %}
-                                    <img src="{{ img.url }}" alt="{{ item.caption }}" class="img-fluid">
-                                    <p>{{ item.caption }}</p>
-                                </div>
+                                <figure class="col-md-4">
+                                    {% image item.image fill-640x480 as img %}
+                                    <img src="{{ img.url }}" alt="{{ item.caption }}" width="640" height="480" loading="lazy">
+                                    {% if item.caption %}<figcaption>{{ item.caption }}</figcaption>{% endif %}
+                                </figure>
                             {% endfor %}
                         </div>
-                    </div>
+                    </section>
                 {% endif %}
             {% endwith %}
 
             {% with authors=page.authors.all %}
                 {% if authors %}
-                    <hr>
-                    <div class="my-4">
-                        <p class="h3">Vytvořil:</p>
+                    <hr class="my-5">
+                    <section class="my-5 text-center" aria-labelledby="authors-heading">
+                        <h2 id="authors-heading" class="h3">Vytvořil</h2>
                         <ul class="list-unstyled d-flex flex-row flex-wrap justify-content-center">
                             {% for author in authors %}
                                 <li class="mx-4 my-2">
-                                    {% image author.author_image fill-40x60 as img %}
-                                    <img src="{{ img.url }}" alt="{{ author.name }}" class="mr-3 img-fluid">
+                                    {% if author.author_image %}
+                                        {% image author.author_image fill-64x64 as img %}
+                                        <img src="{{ img.url }}" alt="" class="rounded-circle mb-2" width="64" height="64" loading="lazy">
+                                    {% endif %}
                                     <div>{{ author.name }}</div>
                                 </li>
                             {% endfor %}
                         </ul>
-                    </div>
+                    </section>
                 {% endif %}
             {% endwith %}
 
-            <p class="my-4">
-                <a href="{{ page.get_parent.url }}" class="btn btn-outline-dark">Návrat do seznamu blogů</a>
+            <p class="mt-5 mb-0 text-center">
+                <a href="{{ page.get_parent.url }}" class="btn btn-outline-dark">← Zpět na všechny blogy</a>
             </p>
-        </div>        
+        </article>
     </div>
 {% endblock %}

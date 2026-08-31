@@ -1,13 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="cs" dir="ltr">
     <head>
         <meta charset="utf-8" />
-        <title>Internal server error</title>
+        <title>Chyba serveru</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>
+            :root { color-scheme: light dark; }
+            body { min-height: 100vh; display: grid; margin: 0; padding: 1.5rem; place-items: center; color: #202827; background: #f5f3ee; font: 1rem/1.7 system-ui, sans-serif; }
+            main { max-width: 42rem; padding: clamp(2rem, 6vw, 4rem); border: 1px solid #dedbd3; border-radius: 1.5rem; text-align: center; background: #fff; box-shadow: 0 1rem 2.75rem rgba(32, 40, 39, 0.12); }
+            h1 { margin-top: 0; font: 700 clamp(2.25rem, 6vw, 4rem)/1.1 Georgia, serif; letter-spacing: -0.035em; }
+            p { margin-bottom: 0; color: #68706e; font-size: 1.1rem; }
+            @media (prefers-color-scheme: dark) { body { color: #edf0ed; background: #141a19; } main { border-color: #35403e; background: #202827; } p { color: #aeb8b5; } }
+        </style>
     </head>
     <body>
-        <h1>Internal server error</h1>
-
-        <h2>Sorry, there seems to be an error. Please try again soon.</h2>
+        <main>
+            <h1>Něco se nepovedlo</h1>
+            <p>Na serveru nastala chyba. Zkuste to prosím za chvíli znovu.</p>
+        </main>
     </body>
 </html>

@@ -4,7 +4,7 @@
     {% image value.image width-1200 as image %}
     <img src="{{ image.url }}"
          alt="{{ value.caption|default:'Fotografie z autovandru' }}"
-         class="img-fluid rounded"
+         class="img-fluid rounded-4"
          loading="lazy">
     {% if value.caption or value.attribution %}
         <figcaption class="text-muted small mt-1">

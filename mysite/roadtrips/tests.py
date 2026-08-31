@@ -137,16 +137,15 @@ class RoadTripPageTests(TestCase):
         self.assertContains(response, "Večer jsme dorazili do cíle.")
         self.assertContains(
             response,
-            'class="d-none d-md-inline">2. den Přes horský průsmyk</span>',
+            'class="d-none d-md-inline">2. den · </span>Přes horský průsmyk',
         )
-        self.assertContains(response, 'class="d-md-none">2. den</span>')
         self.assertContains(
             response,
             'aria-label="Následující: 2. den – Přes horský průsmyk"',
         )
         self.assertContains(
             response,
-            'class="mx-auto my-4 p-3 bg-white border rounded"',
+            'class="article-pagination article-pagination--days"',
         )
         self.assertContains(response, 'aria-label="Navigace mezi dny cesty"')
 
@@ -154,11 +153,7 @@ class RoadTripPageTests(TestCase):
         self.assertEqual(second_day_response.status_code, 200)
         self.assertContains(
             second_day_response,
-            'class="d-none d-md-inline">1. den Den 1: Cesta na sever</span>',
-        )
-        self.assertContains(
-            second_day_response,
-            'class="d-md-none">1. den</span>',
+            'class="d-none d-md-inline">1. den · </span>Den 1: Cesta na sever',
         )
 
     def test_content_supports_text_photos_images_and_video(self):
@@ -181,8 +176,7 @@ class RoadTripPageTests(TestCase):
             },
         )
 
-        self.assertIn('class="mx-auto my-4 p-3 bg-white border rounded"', html)
-        self.assertIn('style="max-width: 1200px;"', html)
+        self.assertIn('class="media-surface"', html)
         self.assertIn('aria-labelledby="test-image-heading"', html)
         self.assertIn(
             '<h2 id="test-image-heading" class="h4 text-center mb-3">'
@@ -190,6 +184,7 @@ class RoadTripPageTests(TestCase):
             html,
         )
         self.assertIn('src="/media/hero.jpg"', html)
+        self.assertIn('loading="lazy"', html)
 
     def test_end_date_cannot_precede_start_date(self):
         invalid_trip = RoadTripPage(

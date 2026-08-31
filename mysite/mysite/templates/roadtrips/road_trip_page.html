@@ -8,58 +8,60 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container bg-light py-3 my-4">
-        <article>
-            <header class="text-center">
-                <p class="mb-2">
-                    <a href="{% pageurl road_trip_index %}" class="text-secondary text-decoration-none">Autovandry</a>
-                </p>
+    <div class="container">
+        <article class="article-shell article-shell--wide">
+            <header class="article-header">
+                <p class="eyebrow">Autovandry · {{ page.start_date|date:"j. n. Y" }}–{{ page.end_date|date:"j. n. Y" }}</p>
                 <h1>{{ page.title }}</h1>
-                <p class="text-muted">
-                    {{ page.start_date|date:"j. n. Y" }}–{{ page.end_date|date:"j. n. Y" }}
-                </p>
-                <p class="h6">{{ page.intro }}</p>
+                <p class="article-lead">{{ page.intro }}</p>
             </header>
 
             {% include "blocks/mapy_route.html" with mapy_url=page.mapy_route_url map_title=page.title %}
-
             {% include "blocks/road_trip_hero_image.html" with image=page.image heading=page.image_heading heading_id="road-trip-image-heading" alt_text=page.title %}
 
-            <div class="roadtrip-content mx-auto" style="max-width: 1200px;">
+            <div class="roadtrip-content">
                 {% for block in page.content %}
                     {% include_block block %}
                 {% endfor %}
             </div>
-        </article>
 
-        <hr>
-        <section class="my-4">
-            <h2 class="h3 text-center mb-4">Deník cesty</h2>
-            <div class="row">
-                {% for day in days %}
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <article class="card h-100">
-                            {% with main_image=day.main_image %}
-                                {% if main_image %}
-                                    {% image main_image fill-640x400 as day_image %}
-                                    <img src="{{ day_image.url }}" alt="{{ day.title }}" class="card-img-top">
-                                {% endif %}
-                            {% endwith %}
-                            <div class="card-body">
-                                <p class="text-muted mb-1">{{ day.day_number }}. den · {{ day.date|date:"j. n. Y" }}</p>
-                                <h3 class="h5 card-title">
-                                    <a href="{% pageurl day %}" class="text-dark">{{ day.title }}</a>
-                                </h3>
-                                <p class="card-text">{{ day.intro }}</p>
-                            </div>
-                        </article>
-                    </div>
-                {% empty %}
-                    <div class="col-12 text-center">
-                        <p>Jednotlivé dny této cesty zatím nejsou zveřejněné.</p>
-                    </div>
-                {% endfor %}
-            </div>
-        </section>
+            <hr class="my-5">
+            <section aria-labelledby="trip-diary-heading">
+                <div class="section-heading text-center">
+                    <p class="eyebrow">Den po dni</p>
+                    <h2 id="trip-diary-heading">Deník cesty</h2>
+                </div>
+                <div class="row listing-grid">
+                    {% for day in days %}
+                        <div class="col-md-6 col-xl-4">
+                            <article class="listing-card">
+                                <a href="{% pageurl day %}" class="listing-card__link">
+                                    {% with main_image=day.main_image %}
+                                        {% if main_image %}
+                                            <figure class="listing-card__media">
+                                                {% image main_image fill-640x400 as day_image %}
+                                                <img src="{{ day_image.url }}" alt="" width="640" height="400" loading="lazy">
+                                            </figure>
+                                        {% endif %}
+                                    {% endwith %}
+                                    <div class="listing-card__body">
+                                        <p class="eyebrow">{{ day.day_number }}. den · {{ day.date|date:"j. n. Y" }}</p>
+                                        <h3>{{ day.title }}</h3>
+                                        <p>{{ day.intro }}</p>
+                                        <span class="portal-card__action">Číst zápis <span aria-hidden="true">→</span></span>
+                                    </div>
+                                </a>
+                            </article>
+                        </div>
+                    {% empty %}
+                        <p class="text-center text-muted py-4">Jednotlivé dny této cesty zatím nejsou zveřejněné.</p>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <p class="mt-5 mb-0 text-center">
+                <a href="{% pageurl road_trip_index %}" class="btn btn-outline-dark">← Zpět na všechny autovandry</a>
+            </p>
+        </article>
     </div>
 {% endblock %}

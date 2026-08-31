@@ -2,7 +2,8 @@
 
 <figure class="text-center">
     {% image self.image width-800 as img %}
-    <img src="{{ img.url }}" class="img-fluid" alt="{{ self.caption }}">
-    <figcaption>{{ self.caption }} - {{ self.attribution }}</figcaption>
+    <img src="{{ img.url }}" class="img-fluid rounded-4" alt="{{ self.caption }}" loading="lazy">
+    {% if self.caption or self.attribution %}
+        <figcaption>{{ self.caption }}{% if self.caption and self.attribution %} – {% endif %}{{ self.attribution }}</figcaption>
+    {% endif %}
 </figure>
-

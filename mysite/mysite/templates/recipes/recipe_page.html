@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
-{% load navigation_tags wagtailimages_tags wagtailcore_tags %}
+{% load static navigation_tags wagtailimages_tags wagtailcore_tags %}
 
 {% block extra_css %}
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2/dist/css/lightbox.min.css" rel="stylesheet">
@@ -12,99 +11,98 @@
     {% include 'includes/navbar.html' with page=recipe_index_page %}
 {% endblock %}
 
-
 {% block content %}
-<div class="container my-4">
+    <div class="container">
+        <article class="article-shell">
+            <header class="article-header">
+                <p class="eyebrow">
+                    {{ active_category.title }}
+                    {% if page.date_published %} · {{ page.date_published|date:"j. n. Y" }}{% endif %}
+                </p>
+                <h1>{{ page.title }}</h1>
+                {% if page.subtitle %}<h2 class="h3">{{ page.subtitle }}</h2>{% endif %}
+                {% if page.introduction %}<p class="article-lead">{{ page.introduction }}</p>{% endif %}
+            </header>
 
-    <div class="row bg-light border rounded py-3">
-        <div class="col">
-            <p class="h1 mb-3">{{ page.subtitle }}</p>
-            {% if page.date_published %}
-                <p class="text-muted">{{ page.date_published }}</p>
-            {% endif %}            
-            <p class="h4 text-muted">Kategorie: {{ active_category }}</p>
-            <hr class="my-3 border-secondary opacity-100">
-            <p class="h3">Úvod</p>
-            <p>{{ page.introduction }}</p>
             {% if page.get_main_image %}
-                <figure class="text-center">
-                    {% image page.get_main_image.image width-800 as img %}
-                    <img src="{{ img.url }}" class="img-fluid" alt="{{ page.get_main_image.caption}}">
-                    <figcaption>{{ page.get_main_image.caption }}</figcaption>
+                <figure class="mb-5 text-center">
+                    {% image page.get_main_image.image fill-1200x750 as img %}
+                    <img src="{{ img.url }}" class="article-hero mb-0" alt="{{ page.get_main_image.caption }}" width="1200" height="750">
+                    {% if page.get_main_image.caption %}<figcaption>{{ page.get_main_image.caption }}</figcaption>{% endif %}
                 </figure>
-            {% endif %}            
-            {% if page.has_backstory_content %}
-                <p class="h3">Příběh</p>            
-                {% for block in page.backstory %}
-                    {% if block.block_type != 'image_block' %}
-                        {{ block }}
-                    {% endif %}
-                {% endfor %}
             {% endif %}
-        </div>
-    </div>
 
-    <div class="row bg-light border rounded mt-2 py-3">
-        <div class="col">
-            <p class="h3">Recept</p>
-            {% for block in page.body %}
-                <div class="my-4">{{ block }}</div>
-            {% endfor %}
-        </div>
-    </div>
-
-    {% with gallery_items=page.gallery_images.all %}
-        {% if gallery_items %}
-            <div class="row bg-light border rounded text-center mt-2 py-3">
-                <div>
-                    <p class="h3 mb-4">Galerie obrázků:</p>
-                    <div class="row">
-                        {% for item in gallery_items %}
-                            <div class="col-md-4 mb-4">
-                                {% image item.image width-800 as full %}
-                                <a href="{{ full.url }}" data-lightbox="recipe-gallery" data-title="{{ item.caption }}">
-                                    {% image item.image fill-480x360 as thumb %}
-                                    <img src="{{ thumb.url }}" alt="{{ item.caption }}" class="img-fluid">
-                                </a>
-                                <p>{{ item.caption }}</p>
-                            </div>
-                        {% endfor %}                     
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-    {% endwith %}
-
-    {% with tags=page.tags.all %}
-        {% if tags %}
-            <div class="row bg-light border rounded text-center mt-2 py-3">
-                <div class="col">
-                    <p class="mb-2 fw-bold">Tagy receptu</p>
-                    {% for tag in tags %}
-                        <a href="{% slugurl 'recepty' %}?tag={{ tag.slug }}" class="btn btn-sm btn-outline-secondary rounded-pill m-1">{{ tag.name }}</a>
+            {% if page.has_backstory_content %}
+                <section class="article-body mb-5" aria-labelledby="story-heading">
+                    <h2 id="story-heading">Příběh</h2>
+                    {% for block in page.backstory %}
+                        {% if block.block_type != 'image_block' %}
+                            {% include_block block %}
+                        {% endif %}
                     {% endfor %}
-                </div>
-            </div>
-        {% endif %}
-    {% endwith %}
-    
-    {% if prev_recipe != page or next_recipe != page %}
-    <div class="d-flex justify-content-between my-2">
-        {% if prev_recipe != page %}
-            <a class="btn btn-outline-secondary" href="{{ prev_recipe.url }}">&larr; {{ prev_recipe.title }}</a>
-        {% else %}
-            <span></span>
-        {% endif %}
-    
-        {% if next_recipe != page %}
-            <a class="btn btn-outline-secondary" href="{{ next_recipe.url }}">{{ next_recipe.title }} &rarr;</a>
-        {% else %}
-            <span></span>        
-        {% endif %}
-    </div> 
-    {% endif %}
+                </section>
+            {% endif %}
 
-</div>
+            <hr class="my-5">
+            <section class="recipe-content article-body" aria-labelledby="recipe-heading">
+                <h2 id="recipe-heading">Recept</h2>
+                {% if page.recipe_headline %}<div class="article-lead mb-4">{{ page.recipe_headline|richtext }}</div>{% endif %}
+                {% for block in page.body %}
+                    <div class="recipe-block">{% include_block block %}</div>
+                {% empty %}
+                    <p class="text-muted">Postup zatím nebyl doplněn.</p>
+                {% endfor %}
+            </section>
+
+            {% with gallery_items=page.gallery_images.all %}
+                {% if gallery_items %}
+                    <hr class="my-5">
+                    <section class="text-center" aria-labelledby="recipe-gallery-heading">
+                        <h2 id="recipe-gallery-heading" class="h3 mb-4">Galerie</h2>
+                        <div class="row gallery-grid g-4">
+                            {% for item in gallery_items %}
+                                <figure class="col-md-4">
+                                    {% image item.image width-1200 as full %}
+                                    <a href="{{ full.url }}" data-lightbox="recipe-gallery" data-title="{{ item.caption }}">
+                                        {% image item.image fill-640x480 as thumb %}
+                                        <img src="{{ thumb.url }}" alt="{{ item.caption }}" width="640" height="480" loading="lazy">
+                                    </a>
+                                    {% if item.caption %}<figcaption>{{ item.caption }}</figcaption>{% endif %}
+                                </figure>
+                            {% endfor %}
+                        </div>
+                    </section>
+                {% endif %}
+            {% endwith %}
+
+            {% with tags=page.tags.all %}
+                {% if tags %}
+                    <hr class="my-5">
+                    <nav class="tag-list" aria-label="Tagy receptu">
+                        {% for tag in tags %}
+                            <a href="{% slugurl 'recepty' %}?tag={{ tag.slug }}" class="tag-chip">{{ tag.name }}</a>
+                        {% endfor %}
+                    </nav>
+                {% endif %}
+            {% endwith %}
+
+            {% if prev_recipe != page or next_recipe != page %}
+                <nav class="article-pagination article-pagination--recipes" aria-label="Navigace mezi recepty">
+                    <div class="article-pagination__previous">
+                        {% if prev_recipe != page %}
+                            <a class="btn btn-outline-dark" href="{{ prev_recipe.url }}">← {{ prev_recipe.title }}</a>
+                        {% endif %}
+                    </div>
+
+                    <div class="article-pagination__next">
+                        {% if next_recipe != page %}
+                            <a class="btn btn-outline-dark" href="{{ next_recipe.url }}">{{ next_recipe.title }} →</a>
+                        {% endif %}
+                    </div>
+                </nav>
+            {% endif %}
+        </article>
+    </div>
 {% endblock %}
 
 {% block extra_js %}

@@ -1,33 +1,34 @@
 {% load static wagtailcore_tags wagtailimages_tags navigation_tags %}
 
 {% get_site_root as site_root %}
-<div class="container bg-dark">
-    <div class="row">
-        <nav class="navbar navbar-sm navbar-expand-xl navbar-dark bg-dark">
-            <div>
-                <span class="navbar-brand mb-0 me-0">
-                    <a href="{% pageurl site_root %}">
-                        <img src="{% static 'images/logo-32x32.webp' %}" alt="Logo" width="32" height="32" class="d-inline-block align-text-top me-2">
-                    </a>
-                </span>        
-            </div>
+<div class="site-navbar sticky-top">
+    <nav class="navbar navbar-expand-lg" aria-label="Hlavní navigace">
+        <div class="container">
+            <a class="navbar-brand" href="{% pageurl site_root %}" aria-label="Pilátovic famílie – úvodní stránka">
+                <img src="{% static 'images/logo-32x32.webp' %}" alt="" width="40" height="40">
+                <span>Pilátovic famílie</span>
+            </a>
 
-            {# Tlačítko pro rozbalení menu na mobilu #}
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <div class="d-flex align-items-center gap-2 order-lg-3">
+                <button class="site-theme-toggle" type="button" aria-label="Přepnout barevný režim" title="Přepnout barevný režim">
+                    <i class="fa-solid fa-moon" aria-hidden="true"></i>
+                </button>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Otevřít navigaci">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
 
             {# Menu položky + vyhledávání #}
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
                 {# Dynamické menu #}                
                 {% with menu_items=site_root.get_children.live.in_menu.specific %}
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <ul class="navbar-nav mx-lg-auto mb-3 mb-lg-0">
                         {% for item in menu_items %}
                             {% with children=item.get_children.live.in_menu %}
                                 {% if children %}
                                     <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle {% if request.path|startswith:item.url %}active{% endif %}" href="{{ item.url }}" data-bs-toggle="dropdown">
+                                        <a class="nav-link dropdown-toggle {% if request.path|startswith:item.url %}active{% endif %}" href="{{ item.url }}" data-bs-toggle="dropdown" aria-expanded="false" {% if request.path|startswith:item.url %}aria-current="page"{% endif %}>
                                             {{ item.subtitle }}
                                         </a>
                                         <ul class="dropdown-menu">
@@ -48,7 +49,7 @@
                                     </li>
                                 {% else %}
                                     <li class="nav-item">
-                                        <a class="nav-link {% if request.path == item.url %}active{% endif %}" href="{{ item.url }}">
+                                        <a class="nav-link {% if request.path == item.url %}active{% endif %}" href="{{ item.url }}" {% if request.path == item.url %}aria-current="page"{% endif %}>
                                             {{ item.subtitle }}
                                         </a>
                                     </li>
@@ -59,29 +60,26 @@
                 {% endwith %}
 
                 {# Vyhledávání napravo #}                
-                <form action="{% url 'search' %}" method="get" class="py-1">
+                <form action="{% url 'search' %}" method="get" class="site-search" role="search">
                     <div class="input-group">
-                        <input type="text" id="search-query" name="query" class="form-control form-control-sm" placeholder="Copak to tu máme?" {% if search_query %} value="{{ search_query }}"{% endif %}>
-                        <button class="btn btn-sm btn-outline-light" type="submit">
-                            <i class="fas fa-search"></i>
+                        <label class="visually-hidden" for="search-query">Hledat na webu</label>
+                        <input type="search" id="search-query" name="query" class="form-control" placeholder="Hledat…" {% if search_query %} value="{{ search_query }}"{% endif %}>
+                        <button class="btn" type="submit" aria-label="Hledat">
+                            <i class="fas fa-search" aria-hidden="true"></i>
                         </button>
                     </div>
                 </form>
             </div>
-        </nav>
-    </div>
-
-    {# Hlavní obrázek menu #}
-    <div class="row">
-        <div class="col text-center">
-            {% if page.image %}
-                {% if request.path == site_root.url %}
-                    {% image page.image max-1280x1280 as img %}
-                {% else %}
-                    {% image page.image max-1024x1024 as img %}
-                {% endif %}
-                <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid mb-3 d-block mx-auto">
-            {% endif %}
         </div>
-    </div>
+    </nav>
 </div>
+
+{# Hlavní obrázek je samostatný hero prvek, ne součást tmavého navbaru. #}
+{% if page.image %}
+    <div class="container site-hero-wrap">
+        <figure class="site-hero">
+            {% image page.image fill-1600x520 as hero_image %}
+            <img src="{{ hero_image.url }}" alt="" width="1600" height="520" fetchpriority="high">
+        </figure>
+    </div>
+{% endif %}
