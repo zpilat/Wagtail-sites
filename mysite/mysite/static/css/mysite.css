@@ -826,14 +826,16 @@ figcaption {
 }
 
 .article-pagination--recipes {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
 }
 
 .article-pagination--recipes .article-pagination__previous {
+    width: 100%;
     justify-self: start;
 }
 
 .article-pagination--recipes .article-pagination__next {
+    width: 100%;
     justify-self: end;
     text-align: right;
 }
@@ -847,6 +849,17 @@ figcaption {
     padding: 0.65rem 1.1rem;
     line-height: 1.25;
     white-space: normal;
+}
+
+.article-pagination--recipes .article-pagination__previous .btn,
+.article-pagination--recipes .article-pagination__next .btn {
+    width: auto;
+}
+
+.article-pagination--recipes .article-pagination__category {
+    width: auto;
+    justify-self: center;
+    white-space: nowrap;
 }
 
 .blockquote {

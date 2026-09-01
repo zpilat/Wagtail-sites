@@ -86,21 +86,20 @@
                 {% endif %}
             {% endwith %}
 
-            {% if prev_recipe != page or next_recipe != page %}
-                <nav class="article-pagination article-pagination--recipes" aria-label="Navigace mezi recepty">
-                    <div class="article-pagination__previous">
-                        {% if prev_recipe != page %}
-                            <a class="btn btn-outline-dark" href="{{ prev_recipe.url }}">← {{ prev_recipe.title }}</a>
-                        {% endif %}
-                    </div>
+            <nav class="article-pagination article-pagination--recipes" aria-label="Navigace mezi recepty">
+                <div class="article-pagination__previous">
+                    {% if prev_recipe != page %}
+                        <a class="btn btn-outline-dark" href="{{ prev_recipe.url }}">← {{ prev_recipe.title }}</a>
+                    {% endif %}
+                </div>
+                <a href="{% pageurl active_category %}" class="btn btn-dark article-pagination__category">{{ active_category.title }}</a>
+                <div class="article-pagination__next">
+                    {% if next_recipe != page %}
+                        <a class="btn btn-outline-dark" href="{{ next_recipe.url }}">{{ next_recipe.title }} →</a>
+                    {% endif %}
+                </div>
+            </nav>
 
-                    <div class="article-pagination__next">
-                        {% if next_recipe != page %}
-                            <a class="btn btn-outline-dark" href="{{ next_recipe.url }}">{{ next_recipe.title }} →</a>
-                        {% endif %}
-                    </div>
-                </nav>
-            {% endif %}
         </article>
     </div>
 {% endblock %}
