@@ -7,11 +7,11 @@
             <h2 id="{{ heading_id }}" class="h4 text-center mb-3">{{ heading }}</h2>
         {% endif %}
 
-        {% image image width-1200 as hero_image %}
+        {% image image width-1024 as hero_image %}
         <img src="{{ hero_image.url }}"
              alt="{{ heading|default:alt_text }}"
              class="img-fluid d-block mx-auto w-100"
-             width="1200"
+             width="1024"
              loading="lazy">
     </section>
 {% endif %}

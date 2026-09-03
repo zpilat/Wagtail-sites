@@ -1,10 +1,12 @@
-<figure class="my-4 text-center">
+<figure class="roadtrip-media my-4 text-center">
     <a href="{{ value.mapy_url }}"
+       class="d-block w-100"
        target="_blank"
        rel="noopener noreferrer">
         <img src="{{ value.image_url }}"
              alt="{{ value.caption|default:'Fotografie z Mapy.com' }}"
-             class="img-fluid rounded-4"
+             class="img-fluid d-block w-100 rounded-4"
+             width="1024"
              loading="lazy">
     </a>
 

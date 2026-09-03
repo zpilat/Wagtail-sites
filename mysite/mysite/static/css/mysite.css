@@ -375,7 +375,7 @@ figcaption {
 }
 
 .article-shell--wide {
-    max-width: 76rem;
+    max-width: 64rem;
 }
 
 .article-header {
@@ -883,7 +883,8 @@ hr {
 .map-surface,
 .media-surface {
     overflow: hidden;
-    max-width: 72rem;
+    width: 100%;
+    max-width: 64rem;
     margin: 2rem auto;
     padding: 0;
 }
@@ -892,6 +893,24 @@ hr {
 .media-surface img,
 .media-surface video {
     border-radius: 0;
+}
+
+.roadtrip-media {
+    width: 100%;
+    max-width: 64rem;
+    margin: 2rem auto;
+}
+
+.roadtrip-media img,
+.roadtrip-media video {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.roadtrip-media > a {
+    display: block;
+    width: 100%;
 }
 
 .map-surface > h2,
@@ -908,7 +927,7 @@ hr {
 }
 
 .roadtrip-content {
-    max-width: 72rem;
+    max-width: 64rem;
     margin-inline: auto;
 }
 

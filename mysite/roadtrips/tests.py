@@ -104,6 +104,10 @@ class RoadTripPageTests(TestCase):
     def test_road_trip_lists_days(self):
         response = self.client.get(self.road_trip.url)
         self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            'class="article-shell article-shell--wide" style="max-width: 1024px;"',
+        )
         self.assertContains(response, "Den 1: Cesta na sever")
         self.assertContains(response, "Výhled z cesty")
         self.assertContains(response, "Foto autorů na&nbsp;")
@@ -112,8 +116,8 @@ class RoadTripPageTests(TestCase):
         self.assertContains(response, "Mapa trasy – Norsko 2026")
         self.assertContains(response, '>Mapa trasy</h2>')
         self.assertContains(response, 'aria-labelledby="mapy-route-heading"')
-        self.assertContains(response, 'width="1200"')
-        self.assertContains(response, 'height="768"')
+        self.assertContains(response, 'width="1024"', count=4)
+        self.assertContains(response, 'height="655"')
         self.assertContains(response, "Pokračujeme dál na sever.")
         self.assertContains(response, "Druhá zastávka")
         self.assertContains(response, "Přejezd horského průsmyku")
@@ -128,6 +132,10 @@ class RoadTripPageTests(TestCase):
     def test_day_page_links_back_to_road_trip(self):
         response = self.client.get(self.day.url)
         self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            'class="article-shell article-shell--wide" style="max-width: 1024px;"',
+        )
         self.assertContains(response, "Norsko 2026")
         self.assertContains(response, "První den na cestě.")
         self.assertContains(response, "První zastávka")
@@ -184,7 +192,10 @@ class RoadTripPageTests(TestCase):
             html,
         )
         self.assertIn('src="/media/hero.jpg"', html)
+        self.assertIn('width="1024"', html)
         self.assertIn('loading="lazy"', html)
+        rendition_filter = image.get_rendition.call_args.args[0]
+        self.assertEqual(rendition_filter.spec, "width-1024")
 
     def test_end_date_cannot_precede_start_date(self):
         invalid_trip = RoadTripPage(
