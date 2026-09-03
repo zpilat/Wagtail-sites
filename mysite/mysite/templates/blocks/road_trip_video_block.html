@@ -2,7 +2,7 @@
     <video controls
            preload="metadata"
            class="w-100 rounded-4"
-           width="1024">
+           width="{% if is_roadtrip_day %}1024{% else %}1200{% endif %}">
         <source src="{{ value.video.url }}">
         Váš prohlížeč nepodporuje přehrávání videa.
     </video>

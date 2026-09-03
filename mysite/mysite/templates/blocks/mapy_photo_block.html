@@ -6,7 +6,7 @@
         <img src="{{ value.image_url }}"
              alt="{{ value.caption|default:'Fotografie z Mapy.com' }}"
              class="img-fluid d-block w-100 rounded-4"
-             width="1024"
+             width="{% if is_roadtrip_day %}1024{% else %}1200{% endif %}"
              loading="lazy">
     </a>
 

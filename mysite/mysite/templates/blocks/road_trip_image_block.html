@@ -1,11 +1,15 @@
 {% load wagtailimages_tags %}
 
 <figure class="roadtrip-media my-4 text-center">
-    {% image value.image width-1024 as image %}
+    {% if is_roadtrip_day %}
+        {% image value.image width-1024 as image %}
+    {% else %}
+        {% image value.image width-1200 as image %}
+    {% endif %}
     <img src="{{ image.url }}"
          alt="{{ value.caption|default:'Fotografie z autovandru' }}"
          class="img-fluid d-block w-100 rounded-4"
-         width="1024"
+         width="{% if is_roadtrip_day %}1024{% else %}1200{% endif %}"
          loading="lazy">
     {% if value.caption or value.attribution %}
         <figcaption class="text-muted small mt-1">

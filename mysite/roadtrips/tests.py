@@ -104,7 +104,7 @@ class RoadTripPageTests(TestCase):
     def test_road_trip_lists_days(self):
         response = self.client.get(self.road_trip.url)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(
+        self.assertNotContains(
             response,
             'class="article-shell article-shell--wide" style="max-width: 1024px;"',
         )
@@ -116,8 +116,8 @@ class RoadTripPageTests(TestCase):
         self.assertContains(response, "Mapa trasy – Norsko 2026")
         self.assertContains(response, '>Mapa trasy</h2>')
         self.assertContains(response, 'aria-labelledby="mapy-route-heading"')
-        self.assertContains(response, 'width="1024"', count=4)
-        self.assertContains(response, 'height="655"')
+        self.assertContains(response, 'width="1200"', count=4)
+        self.assertContains(response, 'height="768"')
         self.assertContains(response, "Pokračujeme dál na sever.")
         self.assertContains(response, "Druhá zastávka")
         self.assertContains(response, "Přejezd horského průsmyku")
@@ -142,6 +142,8 @@ class RoadTripPageTests(TestCase):
         self.assertContains(response, "https://mapy.com/s/homadadune")
         self.assertContains(response, 'src="https://mapy.com/s/hodepofuza"')
         self.assertContains(response, "Mapa trasy – Den 1: Cesta na sever")
+        self.assertContains(response, 'width="1024"', count=2)
+        self.assertContains(response, 'height="655"')
         self.assertContains(response, "Večer jsme dorazili do cíle.")
         self.assertContains(
             response,
@@ -181,6 +183,7 @@ class RoadTripPageTests(TestCase):
                 "heading": "Fotografie z Nordkappu",
                 "heading_id": "test-image-heading",
                 "alt_text": "Norsko 2026",
+                "is_roadtrip_day": True,
             },
         )
 
@@ -196,6 +199,20 @@ class RoadTripPageTests(TestCase):
         self.assertIn('loading="lazy"', html)
         rendition_filter = image.get_rendition.call_args.args[0]
         self.assertEqual(rendition_filter.spec, "width-1024")
+
+        image.reset_mock()
+        overview_html = render_to_string(
+            "blocks/road_trip_hero_image.html",
+            {
+                "image": image,
+                "heading": "Fotografie z Nordkappu",
+                "heading_id": "test-overview-image-heading",
+                "alt_text": "Norsko 2026",
+            },
+        )
+        self.assertIn('width="1200"', overview_html)
+        rendition_filter = image.get_rendition.call_args.args[0]
+        self.assertEqual(rendition_filter.spec, "width-1200")
 
     def test_end_date_cannot_precede_start_date(self):
         invalid_trip = RoadTripPage(

@@ -375,7 +375,7 @@ figcaption {
 }
 
 .article-shell--wide {
-    max-width: 64rem;
+    max-width: 76rem;
 }
 
 .article-header {
@@ -884,7 +884,7 @@ hr {
 .media-surface {
     overflow: hidden;
     width: 100%;
-    max-width: 64rem;
+    max-width: 72rem;
     margin: 2rem auto;
     padding: 0;
 }
@@ -897,7 +897,7 @@ hr {
 
 .roadtrip-media {
     width: 100%;
-    max-width: 64rem;
+    max-width: 72rem;
     margin: 2rem auto;
 }
 
@@ -927,7 +927,7 @@ hr {
 }
 
 .roadtrip-content {
-    max-width: 64rem;
+    max-width: 72rem;
     margin-inline: auto;
 }
 
