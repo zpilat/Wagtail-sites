@@ -5,7 +5,9 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['pilatovic.pythonanywhere.com', 'localhost']
+# Environment-specific values are defined in the untracked local.py file.
+ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = []
 
 try:
     from .local import *
