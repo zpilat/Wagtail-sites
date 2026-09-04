@@ -7,7 +7,6 @@ from django.test import TestCase
 from wagtail.documents import get_document_model
 from wagtail.models import Site
 
-from .blocks import RoadTripImageBlock
 from .models import RoadTripDayPage, RoadTripIndexPage, RoadTripPage
 
 
@@ -176,17 +175,17 @@ class RoadTripPageTests(TestCase):
     def test_custom_image_can_link_to_mapy(self):
         image = Mock()
         image.get_rendition.return_value.url = "/media/own-photo.jpg"
-        block = RoadTripImageBlock()
 
-        html = block.render(
-            block.to_python(
-                {
+        html = render_to_string(
+            "blocks/road_trip_image_block.html",
+            {
+                "value": {
                     "image": image,
                     "caption": "Vyhlídka",
                     "attribution": "",
                     "link_url": "https://mapy.com/s/hejunakope",
-                }
-            )
+                },
+            },
         )
 
         self.assertIn('href="https://mapy.com/s/hejunakope"', html)
@@ -197,17 +196,17 @@ class RoadTripPageTests(TestCase):
     def test_custom_image_without_link_is_not_wrapped_in_anchor(self):
         image = Mock()
         image.get_rendition.return_value.url = "/media/own-photo.jpg"
-        block = RoadTripImageBlock()
 
-        html = block.render(
-            block.to_python(
-                {
+        html = render_to_string(
+            "blocks/road_trip_image_block.html",
+            {
+                "value": {
                     "image": image,
                     "caption": "Vyhlídka",
                     "attribution": "",
                     "link_url": "",
-                }
-            )
+                },
+            },
         )
 
         self.assertNotIn("<a ", html)
