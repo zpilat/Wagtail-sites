@@ -174,6 +174,8 @@ class RoadTripPageTests(TestCase):
 
     def test_custom_image_can_link_to_mapy(self):
         image = Mock()
+        image.width = 800
+        image.height = 1200
         image.get_rendition.return_value.url = "/media/own-photo.jpg"
 
         html = render_to_string(
@@ -192,9 +194,12 @@ class RoadTripPageTests(TestCase):
         self.assertIn('target="_blank"', html)
         self.assertIn('rel="noopener noreferrer"', html)
         self.assertIn('src="/media/own-photo.jpg"', html)
+        self.assertIn("roadtrip-media--portrait", html)
 
     def test_custom_image_without_link_is_not_wrapped_in_anchor(self):
         image = Mock()
+        image.width = 1200
+        image.height = 800
         image.get_rendition.return_value.url = "/media/own-photo.jpg"
 
         html = render_to_string(
@@ -211,6 +216,7 @@ class RoadTripPageTests(TestCase):
 
         self.assertNotIn("<a ", html)
         self.assertIn('src="/media/own-photo.jpg"', html)
+        self.assertNotIn("roadtrip-media--portrait", html)
 
     def test_title_image_uses_separate_card_and_optional_heading(self):
         image = Mock()

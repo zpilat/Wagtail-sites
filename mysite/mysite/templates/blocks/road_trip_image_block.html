@@ -1,6 +1,6 @@
 {% load wagtailimages_tags %}
 
-<figure class="roadtrip-media my-4 text-center">
+<figure class="roadtrip-media{% if value.image.height > value.image.width %} roadtrip-media--portrait{% endif %} my-4 text-center">
     {% if is_roadtrip_day %}
         {% image value.image width-1024 as image %}
     {% else %}

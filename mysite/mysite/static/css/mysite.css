@@ -901,6 +901,17 @@ hr {
     margin: 2rem auto;
 }
 
+.roadtrip-media--portrait {
+    width: 70%;
+    max-width: 40rem;
+}
+
+@media (max-width: 575.98px) {
+    .roadtrip-media--portrait {
+        width: 100%;
+    }
+}
+
 .roadtrip-media img,
 .roadtrip-media video {
     display: block;
