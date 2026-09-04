@@ -6,11 +6,20 @@
     {% else %}
         {% image value.image width-1200 as image %}
     {% endif %}
-    <img src="{{ image.url }}"
-         alt="{{ value.caption|default:'Fotografie z autovandru' }}"
-         class="img-fluid d-block w-100 rounded-4"
-         width="{% if is_roadtrip_day %}1024{% else %}1200{% endif %}"
-         loading="lazy">
+    {% if value.link_url %}
+        <a href="{{ value.link_url }}"
+           class="d-block w-100"
+           target="_blank"
+           rel="noopener noreferrer">
+    {% endif %}
+        <img src="{{ image.url }}"
+             alt="{{ value.caption|default:'Fotografie z autovandru' }}"
+             class="img-fluid d-block w-100 rounded-4"
+             width="{% if is_roadtrip_day %}1024{% else %}1200{% endif %}"
+             loading="lazy">
+    {% if value.link_url %}
+        </a>
+    {% endif %}
     {% if value.caption or value.attribution %}
         <figcaption class="text-muted small mt-1">
             {{ value.caption }}{% if value.caption and value.attribution %} – {% endif %}{{ value.attribution }}

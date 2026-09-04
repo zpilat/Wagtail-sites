@@ -7,6 +7,7 @@ from django.test import TestCase
 from wagtail.documents import get_document_model
 from wagtail.models import Site
 
+from .blocks import RoadTripImageBlock
 from .models import RoadTripDayPage, RoadTripIndexPage, RoadTripPage
 
 
@@ -171,6 +172,46 @@ class RoadTripPageTests(TestCase):
         self.assertEqual(
             list(content_blocks), ["text", "mapy_photo", "image", "video"]
         )
+
+    def test_custom_image_can_link_to_mapy(self):
+        image = Mock()
+        image.get_rendition.return_value.url = "/media/own-photo.jpg"
+        block = RoadTripImageBlock()
+
+        html = block.render(
+            block.to_python(
+                {
+                    "image": image,
+                    "caption": "Vyhlídka",
+                    "attribution": "",
+                    "link_url": "https://mapy.com/s/hejunakope",
+                }
+            )
+        )
+
+        self.assertIn('href="https://mapy.com/s/hejunakope"', html)
+        self.assertIn('target="_blank"', html)
+        self.assertIn('rel="noopener noreferrer"', html)
+        self.assertIn('src="/media/own-photo.jpg"', html)
+
+    def test_custom_image_without_link_is_not_wrapped_in_anchor(self):
+        image = Mock()
+        image.get_rendition.return_value.url = "/media/own-photo.jpg"
+        block = RoadTripImageBlock()
+
+        html = block.render(
+            block.to_python(
+                {
+                    "image": image,
+                    "caption": "Vyhlídka",
+                    "attribution": "",
+                    "link_url": "",
+                }
+            )
+        )
+
+        self.assertNotIn("<a ", html)
+        self.assertIn('src="/media/own-photo.jpg"', html)
 
     def test_title_image_uses_separate_card_and_optional_heading(self):
         image = Mock()

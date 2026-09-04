@@ -19,6 +19,15 @@ class MapyPhotoBlock(blocks.StructBlock):
 
 
 class RoadTripImageBlock(ImageBlock):
+    link_url = blocks.URLBlock(
+        required=False,
+        label="Odkaz po kliknutí",
+        help_text=(
+            "Volitelná cílová adresa obrázku, například sdílecí odkaz "
+            "https://mapy.com/s/hejunakope."
+        ),
+    )
+
     class Meta:
         icon = "image"
         label = "Vlastní obrázek"
