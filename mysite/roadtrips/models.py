@@ -9,7 +9,7 @@ from wagtail.models import Page
 from wagtail.search import index
 from wagtail.admin.forms import WagtailAdminPageForm
 
-from .blocks import RoadTripContentBlock
+from .blocks import RoadTripContentBlock, RoadTripDayContentBlock
 
 
 class RoadTripDayPageForm(WagtailAdminPageForm):
@@ -190,11 +190,14 @@ class RoadTripDayPage(Page):
     )
     intro = models.CharField("Krátký úvod", max_length=300)
     content = StreamField(
-        RoadTripContentBlock(),
+        RoadTripDayContentBlock(),
         blank=True,
         use_json_field=True,
         verbose_name="Řaditelný obsah",
-        help_text="Libovolně střídejte texty, vlastní obrázky a vlastní videa.",
+        help_text=(
+            "Libovolně střídejte texty, vlastní obrázky a vlastní videa. "
+            "Na konec zápisu můžete přidat blok Přehled dne."
+        ),
     )
     image = models.ForeignKey(
         "wagtailimages.Image",

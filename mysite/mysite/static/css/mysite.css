@@ -962,6 +962,87 @@ hr {
     font-size: 1.05rem;
 }
 
+.roadtrip-day-summary {
+    margin: 2.5rem auto;
+    padding: clamp(1.25rem, 4vw, 2rem);
+    border: 1px solid var(--site-border);
+    border-top: 3px solid var(--site-primary);
+    border-radius: var(--site-radius);
+    background: var(--site-surface-soft);
+    color: var(--site-text);
+    overflow-wrap: anywhere;
+}
+
+.roadtrip-day-summary__header {
+    margin-bottom: 1.5rem;
+}
+
+.roadtrip-day-summary__header h2 {
+    margin: 0;
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+}
+
+.roadtrip-day-summary__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin: 0;
+}
+
+.roadtrip-day-summary__item dt {
+    margin-bottom: 0.35rem;
+    color: var(--site-muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.roadtrip-day-summary__item dd {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.roadtrip-day-summary__item--distance dd {
+    color: var(--site-primary);
+    font-size: 2rem;
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.roadtrip-day-summary__item--distance dd span {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.roadtrip-day-summary__countries {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.roadtrip-day-summary__countries li {
+    padding: 0.15rem 0.65rem;
+    border: 1px solid var(--site-border);
+    border-radius: 999px;
+    background: var(--site-surface);
+}
+
+.roadtrip-day-summary__note {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--site-border);
+    color: var(--site-muted);
+}
+
+@media (max-width: 575.98px) {
+    .roadtrip-day-summary__grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
 /* Search */
 .search-form-large {
     max-width: 42rem;

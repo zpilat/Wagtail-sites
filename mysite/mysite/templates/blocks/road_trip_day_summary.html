@@ -1,0 +1,53 @@
+<section class="roadtrip-day-summary" aria-label="{{ value.heading }}">
+    <header class="roadtrip-day-summary__header">
+        <p class="eyebrow">Den v číslech a zastávkách</p>
+        <h2>{{ value.heading }}</h2>
+    </header>
+    {% if value.distance_km != None or value.countries or value.route or value.driving_time or value.overnight_stay or value.extra_items %}
+        <dl class="roadtrip-day-summary__grid">
+            {% if value.distance_km != None %}
+                <div class="roadtrip-day-summary__item roadtrip-day-summary__item--distance">
+                    <dt>Ujeto</dt>
+                    <dd>{{ value.distance_km|floatformat:"-1" }} <span>km</span></dd>
+                </div>
+            {% endif %}
+            {% if value.countries %}
+                <div class="roadtrip-day-summary__item">
+                    <dt>Navštívené země</dt>
+                    <dd>
+                        <ul class="roadtrip-day-summary__countries">
+                            {% for country in value.countries %}<li>{{ country }}</li>{% endfor %}
+                        </ul>
+                    </dd>
+                </div>
+            {% endif %}
+            {% if value.route %}
+                <div class="roadtrip-day-summary__item">
+                    <dt>Trasa</dt>
+                    <dd>{{ value.route }}</dd>
+                </div>
+            {% endif %}
+            {% if value.driving_time %}
+                <div class="roadtrip-day-summary__item">
+                    <dt>Čas na cestě</dt>
+                    <dd>{{ value.driving_time }}</dd>
+                </div>
+            {% endif %}
+            {% if value.overnight_stay %}
+                <div class="roadtrip-day-summary__item">
+                    <dt>Místo noclehu</dt>
+                    <dd>{{ value.overnight_stay }}</dd>
+                </div>
+            {% endif %}
+            {% for item in value.extra_items %}
+                <div class="roadtrip-day-summary__item">
+                    <dt>{{ item.label }}</dt>
+                    <dd>{{ item.value }}</dd>
+                </div>
+            {% endfor %}
+        </dl>
+    {% endif %}
+    {% if value.note %}
+        <div class="roadtrip-day-summary__note">{{ value.note|linebreaksbr }}</div>
+    {% endif %}
+</section>
