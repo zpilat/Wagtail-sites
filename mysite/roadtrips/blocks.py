@@ -94,7 +94,12 @@ class RoadTripDaySummaryBlock(blocks.StructBlock):
         help_text="Přidejte moře v pořadí, ve kterém jste je navštívili.",
     )
     route = blocks.CharBlock(
-        required=False, label="Trasa", help_text="Například Praha → Drážďany → Berlín."
+        required=False,
+        label="Trasa",
+        help_text=(
+            "Například :home: → Drážďany → Berlín. "
+            "Zápis :home: zobrazí ikonu domova."
+        ),
     )
     driving_time = blocks.CharBlock(
         required=False, label="Čas na cestě", help_text="Například 4 h 30 min."
@@ -141,7 +146,12 @@ class RoadTripDayContentBlock(RoadTripContentBlock):
 class RoadTripSummaryBlock(blocks.StructBlock):
     heading = blocks.CharBlock(label="Nadpis", default="Přehled autovandru")
     route = blocks.CharBlock(
-        required=False, label="Trasa", help_text="Například Praha → Oslo → Praha."
+        required=False,
+        label="Trasa",
+        help_text=(
+            "Například :home: → Oslo → :home:. "
+            "Zápis :home: zobrazí ikonu domova."
+        ),
     )
     driving_time = blocks.CharBlock(
         required=False, label="Čas na cestě", help_text="Například 32 h."

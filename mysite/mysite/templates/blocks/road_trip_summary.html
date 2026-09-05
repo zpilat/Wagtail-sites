@@ -1,3 +1,4 @@
+{% load roadtrip_tags %}
 <section class="roadtrip-day-summary" aria-label="{{ value.heading }}">
     <header class="roadtrip-day-summary__header">
         <p class="eyebrow">Cesta v číslech a zastávkách</p>
@@ -45,7 +46,7 @@
         {% if value.route %}
             <div class="roadtrip-day-summary__item">
                 <dt>Trasa</dt>
-                <dd>{{ value.route }}</dd>
+                <dd>{% road_trip_route value.route %}</dd>
             </div>
         {% endif %}
         {% if value.driving_time %}
