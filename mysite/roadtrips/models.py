@@ -198,6 +198,7 @@ class RoadTripPage(Page):
             if total is not None:
                 summary["total_distance_km"] = total
                 summary["distance_day_number"] = day.day_number
+                summary["distance_is_partial"] = day.date != self.end_date
             for block in day.content:
                 if block.block_type != "day_summary":
                     continue
@@ -210,7 +211,8 @@ class RoadTripPage(Page):
                             seen[field].add(key)
         if days and summary["distance_day_number"] is not None:
             summary["distance_is_partial"] = (
-                summary["distance_day_number"] != days[-1].day_number
+                summary["distance_is_partial"]
+                or summary["distance_day_number"] != days[-1].day_number
             )
         return summary
 

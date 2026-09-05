@@ -145,6 +145,18 @@ class RoadTripDayContentBlock(RoadTripContentBlock):
 
 class RoadTripSummaryBlock(blocks.StructBlock):
     heading = blocks.CharBlock(label="Nadpis", default="Přehled autovandru")
+    total_distance_km = blocks.DecimalBlock(
+        required=False,
+        min_value=0,
+        max_digits=7,
+        decimal_places=1,
+        label="Celkem najeto za celý autovandr",
+        help_text=(
+            "Celková vzdálenost celé cesty, i když ještě nejsou zveřejněné všechny "
+            "dny. Nechte prázdné pro převzetí posledního vyplněného stavu "
+            "ze zveřejněných dnů."
+        ),
+    )
     route = blocks.CharBlock(
         required=False,
         label="Trasa",
@@ -175,6 +187,13 @@ class RoadTripSummaryBlock(blocks.StructBlock):
         page = context.get("page")
         if "trip_summary" not in context and hasattr(page, "get_trip_summary"):
             context["trip_summary"] = page.get_trip_summary()
+        if value.get("total_distance_km") is not None:
+            context["trip_summary"] = {
+                **context.get("trip_summary", {}),
+                "total_distance_km": value["total_distance_km"],
+                "distance_day_number": None,
+                "distance_is_partial": False,
+            }
         return context
 
     class Meta:
@@ -182,9 +201,9 @@ class RoadTripSummaryBlock(blocks.StructBlock):
         label = "Přehled autovandru"
         template = "blocks/road_trip_summary.html"
         help_text = (
-            "Termín a délka se načtou z cesty. Kilometry, země a moře se "
-            "automaticky doplní ze zveřejněných dnů. Celkové kilometry "
-            "přebírají poslední vyplněný celkový stav, nesčítají se."
+            "Termín a délka se načtou z cesty. Celkové kilometry můžete zadat "
+            "ručně; jinak se převezme poslední vyplněný stav ze zveřejněných "
+            "dnů. Země a moře se automaticky doplní ze zveřejněných dnů."
         )
 
 

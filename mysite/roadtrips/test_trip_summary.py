@@ -122,6 +122,52 @@ class TripSummaryTests(TestCase):
         self.assertContains(response, "Celkem najeto · k 1. dni")
         self.assertContains(response, "100 <span>km</span>")
 
+    def test_unfinished_daily_posts_label_distance_as_partial(self):
+        response = self.client.get(self.trip.url)
+        self.assertContains(response, "Celkem najeto · k 2. dni")
+
+    def test_distance_from_final_trip_date_is_complete(self):
+        self.second.date = self.trip.end_date
+        self.second.save_revision().publish()
+        response = self.client.get(self.trip.url)
+        self.assertContains(response, "<dt>Celkem najeto</dt>", html=True)
+
+    def test_manual_total_overrides_days_and_is_not_changed_by_new_days(self):
+        self.trip.content[1].value["total_distance_km"] = Decimal("2500.5")
+        self.trip.save_revision().publish()
+        self.draft.save_revision().publish()
+        response = self.client.get(self.trip.url)
+        self.assertContains(response, "2500,5 <span>km</span>", html=True)
+        self.assertContains(response, "<dt>Celkem najeto</dt>", html=True)
+        self.assertNotContains(response, "999 <span>km</span>")
+
+    def test_manual_total_is_visible_without_published_days(self):
+        self.first.unpublish()
+        self.second.unpublish()
+        self.trip.content[1].value["total_distance_km"] = Decimal("2500")
+        self.trip.save_revision().publish()
+        self.assertContains(self.client.get(self.trip.url), "2500 <span>km</span>")
+
+    def test_manual_zero_overrides_daily_distance_without_mutating_context(self):
+        summary = self.trip.get_trip_summary()
+        block = RoadTripSummaryBlock()
+        html = block.render(
+            block.to_python({"heading": "Přehled", "total_distance_km": "0"}),
+            context={"page": self.trip, "trip_summary": summary},
+        )
+        self.assertIn("0 <span>km</span>", html)
+        self.assertNotIn("425,5", html)
+        self.assertEqual(summary["total_distance_km"], Decimal("425.5"))
+
+    def test_clearing_manual_total_restores_automatic_distance(self):
+        self.trip.content[1].value["total_distance_km"] = Decimal("2500")
+        self.trip.save_revision().publish()
+        self.trip.content[1].value["total_distance_km"] = None
+        self.trip.save_revision().publish()
+        response = self.client.get(self.trip.url)
+        self.assertContains(response, "425,5 <span>km</span>")
+        self.assertContains(response, "Celkem najeto · k 2. dni")
+
     def test_zero_total_is_visible(self):
         self.second.unpublish()
         self.first.content[0].value["total_distance_km"] = Decimal("0")
@@ -197,6 +243,7 @@ class TripSummaryTests(TestCase):
                 "content-0-order": "0",
                 "content-0-deleted": "",
                 "content-0-value-heading": "Naše cesta v číslech",
+                "content-0-value-total_distance_km": "2500.5",
                 "content-0-value-route": "Praha → Oslo",
                 "content-0-value-extra_items-count": "0",
                 "comments-TOTAL_FORMS": "0",
@@ -211,7 +258,11 @@ class TripSummaryTests(TestCase):
         revision.publish()
         restored = revision.as_object()
         self.assertEqual(restored.content[0].value["route"], "Praha → Oslo")
+        self.assertEqual(
+            restored.content[0].value["total_distance_km"], Decimal("2500.5")
+        )
         self.assertContains(self.client.get(page.url), "Naše cesta v číslech")
+        self.assertContains(self.client.get(page.url), "2500,5 <span>km</span>")
 
     def test_manual_text_is_escaped(self):
         block = RoadTripSummaryBlock()
