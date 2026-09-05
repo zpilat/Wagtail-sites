@@ -6,7 +6,7 @@
              style="--bs-aspect-ratio: {% if is_roadtrip_day %}75%{% else %}100%{% endif %}">
             <iframe src="{{ mapy_url }}"
                     title="Mapa trasy – {{ map_title }}"
-                    {% if is_roadtrip_day %}width="1024" height="768"{% else %}width="1000" height="1000"{% endif %}
+                    {% if is_roadtrip_day %}width="1024" height="768"{% else %}width="1024" height="1024"{% endif %}
                     style="border: 0;"
                     frameborder="0"
                     loading="lazy"></iframe>
