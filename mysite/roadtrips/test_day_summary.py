@@ -38,6 +38,7 @@ class DaySummaryBlockTests(SimpleTestCase):
             "<dl",
             "Ujeto",
             "Navštívené země",
+            "Navštívená moře",
             "Trasa",
             "Čas na cestě",
             "Místo noclehu",
@@ -60,6 +61,15 @@ class DaySummaryBlockTests(SimpleTestCase):
         self.assertLess(html.index("Česko"), html.index("Německo"))
         self.assertLess(html.index("Německo"), html.index("Dánsko"))
 
+    def test_seas_render_in_travel_order_without_other_statistics(self):
+        value = self.block.clean(self.value(seas=["Baltské moře", "Severní moře"]))
+        html = self.block.render(value)
+        self.assertIn("<dt>Navštívená moře</dt>", html)
+        self.assertIn("<li>Baltské moře</li>", html)
+        self.assertIn("<li>Severní moře</li>", html)
+        self.assertLess(html.index("Baltské moře"), html.index("Severní moře"))
+        self.assertNotIn("Navštívené země", html)
+
     def test_extra_items_require_both_label_and_value(self):
         for item in ({"label": "", "value": "24 °C"}, {"label": "Počasí", "value": ""}):
             with self.subTest(item=item):
@@ -73,6 +83,7 @@ class DaySummaryBlockTests(SimpleTestCase):
             self.value(
                 heading=unsafe,
                 countries=[unsafe],
+                seas=[unsafe],
                 route=unsafe,
                 driving_time=unsafe,
                 overnight_stay=unsafe,
@@ -81,7 +92,7 @@ class DaySummaryBlockTests(SimpleTestCase):
             )
         )
         self.assertNotIn("<script>", html)
-        self.assertEqual(html.count("&lt;script&gt;"), 9)
+        self.assertEqual(html.count("&lt;script&gt;"), 10)
         self.assertIn("<br>Druhý řádek", html)
 
 
@@ -116,6 +127,7 @@ class DaySummaryPageTests(TestCase):
                         "heading": "Přehled dne",
                         "distance_km": Decimal("428.5"),
                         "countries": ["Česko", "Německo"],
+                        "seas": ["Baltské moře", "Severní moře"],
                         "route": "Praha → Berlín",
                         "driving_time": "4 h 30 min",
                         "overnight_stay": "Kemp u jezera",
@@ -135,6 +147,8 @@ class DaySummaryPageTests(TestCase):
             "428,5",
             "Česko",
             "Německo",
+            "Baltské moře",
+            "Severní moře",
             "Praha → Berlín",
             "4 h 30 min",
             "Kemp u jezera",
@@ -161,6 +175,9 @@ class DaySummaryPageTests(TestCase):
                 summary = page.content[1].value
                 self.assertEqual(summary["distance_km"], Decimal("428.5"))
                 self.assertEqual(list(summary["countries"]), ["Česko", "Německo"])
+                self.assertEqual(
+                    list(summary["seas"]), ["Baltské moře", "Severní moře"]
+                )
                 self.assertEqual(summary["extra_items"][0]["value"], "Slunečno, 24 °C")
                 self.assertEqual(page.content[0].block_type, "text")
 
@@ -188,6 +205,10 @@ class DaySummaryPageTests(TestCase):
                 "content-0-value-heading": "Přehled dne",
                 "content-0-value-distance_km": "0",
                 "content-0-value-countries-count": "0",
+                "content-0-value-seas-count": "1",
+                "content-0-value-seas-0-deleted": "",
+                "content-0-value-seas-0-order": "0",
+                "content-0-value-seas-0-value": "Baltské moře",
                 "content-0-value-extra_items-count": "0",
                 "comments-TOTAL_FORMS": "0",
                 "comments-INITIAL_FORMS": "0",
@@ -199,4 +220,6 @@ class DaySummaryPageTests(TestCase):
         page = form.save(commit=False)
         self.trip.add_child(instance=page)
         page.save_revision().publish()
-        self.assertContains(self.client.get(page.url), "0 <span>km</span>")
+        response = self.client.get(page.url)
+        self.assertContains(response, "0 <span>km</span>")
+        self.assertContains(response, "<li>Baltské moře</li>")

@@ -81,6 +81,13 @@ class RoadTripDaySummaryBlock(blocks.StructBlock):
         label="Navštívené země",
         help_text="Přidejte země v pořadí, ve kterém jste jimi projížděli.",
     )
+    seas = blocks.ListBlock(
+        blocks.CharBlock(label="Moře"),
+        required=False,
+        default=[],
+        label="Navštívená moře",
+        help_text="Přidejte moře v pořadí, ve kterém jste je navštívili.",
+    )
     route = blocks.CharBlock(
         required=False, label="Trasa", help_text="Například Praha → Drážďany → Berlín."
     )

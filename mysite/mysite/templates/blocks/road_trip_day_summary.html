@@ -3,7 +3,7 @@
         <p class="eyebrow">Den v číslech a zastávkách</p>
         <h2>{{ value.heading }}</h2>
     </header>
-    {% if value.distance_km != None or value.countries or value.route or value.driving_time or value.overnight_stay or value.extra_items %}
+    {% if value.distance_km != None or value.countries or value.seas or value.route or value.driving_time or value.overnight_stay or value.extra_items %}
         <dl class="roadtrip-day-summary__grid">
             {% if value.distance_km != None %}
                 <div class="roadtrip-day-summary__item roadtrip-day-summary__item--distance">
@@ -17,6 +17,16 @@
                     <dd>
                         <ul class="roadtrip-day-summary__countries">
                             {% for country in value.countries %}<li>{{ country }}</li>{% endfor %}
+                        </ul>
+                    </dd>
+                </div>
+            {% endif %}
+            {% if value.seas %}
+                <div class="roadtrip-day-summary__item">
+                    <dt>Navštívená moře</dt>
+                    <dd>
+                        <ul class="roadtrip-day-summary__seas">
+                            {% for sea in value.seas %}<li>{{ sea }}</li>{% endfor %}
                         </ul>
                     </dd>
                 </div>

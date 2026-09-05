@@ -1014,7 +1014,8 @@ hr {
     font-weight: 500;
 }
 
-.roadtrip-day-summary__countries {
+.roadtrip-day-summary__countries,
+.roadtrip-day-summary__seas {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -1023,7 +1024,8 @@ hr {
     list-style: none;
 }
 
-.roadtrip-day-summary__countries li {
+.roadtrip-day-summary__countries li,
+.roadtrip-day-summary__seas li {
     padding: 0.15rem 0.65rem;
     border: 1px solid var(--site-border);
     border-radius: 999px;
