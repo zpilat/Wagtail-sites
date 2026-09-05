@@ -9,7 +9,7 @@ from wagtail.models import Page
 from wagtail.search import index
 from wagtail.admin.forms import WagtailAdminPageForm
 
-from .blocks import RoadTripContentBlock, RoadTripDayContentBlock
+from .blocks import RoadTripDayContentBlock, RoadTripOverviewContentBlock
 
 
 class RoadTripDayPageForm(WagtailAdminPageForm):
@@ -113,11 +113,14 @@ class RoadTripPage(Page):
     )
     intro = models.CharField("Krátký úvod", max_length=300)
     content = StreamField(
-        RoadTripContentBlock(),
+        RoadTripOverviewContentBlock(),
         blank=True,
         use_json_field=True,
         verbose_name="Řaditelný obsah",
-        help_text="Libovolně střídejte texty, vlastní obrázky a vlastní videa.",
+        help_text=(
+            "Libovolně střídejte texty, vlastní obrázky a vlastní videa. "
+            "Přidat můžete také blok Přehled autovandru."
+        ),
     )
     image = models.ForeignKey(
         "wagtailimages.Image",
@@ -175,9 +178,46 @@ class RoadTripPage(Page):
     def get_road_trip_index(self):
         return self.get_parent().specific
 
+    def get_trip_summary(self, days=None):
+        days = list(self.get_days() if days is None else days)
+        summary = {
+            "start_date": self.start_date,
+            "end_date": self.end_date,
+            "duration_days": None,
+            "total_distance_km": None,
+            "distance_day_number": None,
+            "distance_is_partial": False,
+            "countries": [],
+            "seas": [],
+        }
+        if self.start_date and self.end_date and self.end_date >= self.start_date:
+            summary["duration_days"] = (self.end_date - self.start_date).days + 1
+        seen = {"countries": set(), "seas": set()}
+        for day in days:
+            total = day.get_total_distance_km()
+            if total is not None:
+                summary["total_distance_km"] = total
+                summary["distance_day_number"] = day.day_number
+            for block in day.content:
+                if block.block_type != "day_summary":
+                    continue
+                for field in seen:
+                    for place in block.value.get(field, []):
+                        name = place.strip()
+                        key = name.casefold()
+                        if name and key not in seen[field]:
+                            summary[field].append(name)
+                            seen[field].add(key)
+        if days and summary["distance_day_number"] is not None:
+            summary["distance_is_partial"] = (
+                summary["distance_day_number"] != days[-1].day_number
+            )
+        return summary
+
     def get_context(self, request):
         context = super().get_context(request)
-        context["days"] = self.get_days()
+        context["days"] = list(self.get_days())
+        context["trip_summary"] = self.get_trip_summary(context["days"])
         context["road_trip_index"] = self.get_road_trip_index()
         return context
 

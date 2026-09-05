@@ -136,3 +136,47 @@ class RoadTripDaySummaryBlock(blocks.StructBlock):
 
 class RoadTripDayContentBlock(RoadTripContentBlock):
     day_summary = RoadTripDaySummaryBlock()
+
+
+class RoadTripSummaryBlock(blocks.StructBlock):
+    heading = blocks.CharBlock(label="Nadpis", default="Přehled autovandru")
+    route = blocks.CharBlock(
+        required=False, label="Trasa", help_text="Například Praha → Oslo → Praha."
+    )
+    driving_time = blocks.CharBlock(
+        required=False, label="Čas na cestě", help_text="Například 32 h."
+    )
+    extra_items = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ("label", blocks.CharBlock(label="Název údaje")),
+                ("value", blocks.CharBlock(label="Hodnota")),
+            ]
+        ),
+        required=False,
+        default=[],
+        label="Další údaje",
+        help_text="Například Pěšky: 60 km nebo Trajekty: 3 plavby.",
+    )
+    note = blocks.TextBlock(required=False, label="Poznámka")
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        page = context.get("page")
+        if "trip_summary" not in context and hasattr(page, "get_trip_summary"):
+            context["trip_summary"] = page.get_trip_summary()
+        return context
+
+    class Meta:
+        icon = "list-ul"
+        label = "Přehled autovandru"
+        template = "blocks/road_trip_summary.html"
+        help_text = (
+            "Termín a délka se načtou z cesty. Kilometry, země a moře se "
+            "automaticky doplní ze zveřejněných dnů. Celkové kilometry "
+            "přebírají poslední vyplněný celkový stav, nesčítají se."
+        )
+
+
+class RoadTripOverviewContentBlock(RoadTripContentBlock):
+    trip_summary = RoadTripSummaryBlock()

@@ -157,7 +157,9 @@ class RoadTripPageTests(TestCase):
         content_blocks = RoadTripPage._meta.get_field(
             "content"
         ).stream_block.child_blocks
-        self.assertEqual(list(content_blocks), ["text", "image", "video"])
+        self.assertEqual(
+            list(content_blocks), ["text", "image", "video", "trip_summary"]
+        )
 
     def test_removed_mapy_photo_blocks_are_cleaned_from_stored_content(self):
         migration = import_module(

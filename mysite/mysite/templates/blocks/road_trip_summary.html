@@ -1,0 +1,67 @@
+<section class="roadtrip-day-summary" aria-label="{{ value.heading }}">
+    <header class="roadtrip-day-summary__header">
+        <p class="eyebrow">Cesta v číslech a zastávkách</p>
+        <h2>{{ value.heading }}</h2>
+    </header>
+    <dl class="roadtrip-day-summary__grid">
+        {% if trip_summary.start_date and trip_summary.end_date %}
+            <div class="roadtrip-day-summary__item">
+                <dt>Termín</dt>
+                <dd>{{ trip_summary.start_date|date:"j. n. Y" }}–{{ trip_summary.end_date|date:"j. n. Y" }}</dd>
+            </div>
+        {% endif %}
+        {% if trip_summary.duration_days != None %}
+            <div class="roadtrip-day-summary__item">
+                <dt>Počet dnů cesty</dt>
+                <dd>{{ trip_summary.duration_days }}</dd>
+            </div>
+        {% endif %}
+        {% if trip_summary.total_distance_km != None %}
+            <div class="roadtrip-day-summary__item roadtrip-day-summary__item--distance">
+                <dt>Celkem najeto{% if trip_summary.distance_is_partial %} · k {{ trip_summary.distance_day_number }}. dni{% endif %}</dt>
+                <dd>{{ trip_summary.total_distance_km|floatformat:"-1" }} <span>km</span></dd>
+            </div>
+        {% endif %}
+        {% if trip_summary.countries %}
+            <div class="roadtrip-day-summary__item">
+                <dt>Navštívené země</dt>
+                <dd>
+                    <ul class="roadtrip-day-summary__countries">
+                        {% for country in trip_summary.countries %}<li>{{ country }}</li>{% endfor %}
+                    </ul>
+                </dd>
+            </div>
+        {% endif %}
+        {% if trip_summary.seas %}
+            <div class="roadtrip-day-summary__item">
+                <dt>Navštívená moře</dt>
+                <dd>
+                    <ul class="roadtrip-day-summary__seas">
+                        {% for sea in trip_summary.seas %}<li>{{ sea }}</li>{% endfor %}
+                    </ul>
+                </dd>
+            </div>
+        {% endif %}
+        {% if value.route %}
+            <div class="roadtrip-day-summary__item">
+                <dt>Trasa</dt>
+                <dd>{{ value.route }}</dd>
+            </div>
+        {% endif %}
+        {% if value.driving_time %}
+            <div class="roadtrip-day-summary__item">
+                <dt>Čas na cestě</dt>
+                <dd>{{ value.driving_time }}</dd>
+            </div>
+        {% endif %}
+        {% for item in value.extra_items %}
+            <div class="roadtrip-day-summary__item">
+                <dt>{{ item.label }}</dt>
+                <dd>{{ item.value }}</dd>
+            </div>
+        {% endfor %}
+    </dl>
+    {% if value.note %}
+        <div class="roadtrip-day-summary__note">{{ value.note|linebreaksbr }}</div>
+    {% endif %}
+</section>
