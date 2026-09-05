@@ -39,6 +39,15 @@ class RoadTripDayPageForm(WagtailAdminPageForm):
                     "day_number", "Toto číslo dne už cesta obsahuje."
                 )
 
+            content = cleaned_data.get("content")
+            if content is not None:
+                try:
+                    RoadTripDayPage.validate_mileage(
+                        road_trip, day_number, content, exclude_pk=self.instance.pk
+                    )
+                except ValidationError as error:
+                    self.add_error("content", error)
+
         return cleaned_data
 
 
@@ -247,6 +256,63 @@ class RoadTripDayPage(Page):
     def get_road_trip_index(self):
         return self.get_parent().get_parent().specific
 
+    @staticmethod
+    def total_distance_from_content(content):
+        for block in content:
+            if block.block_type == "day_summary":
+                return block.value.get("total_distance_km")
+        return None
+
+    def get_total_distance_km(self):
+        return self.total_distance_from_content(self.content)
+
+    def get_daily_distance_km(self, total, *, is_preview=False):
+        if total is None:
+            return None
+        if self.day_number == 1:
+            return total
+        if not self.path:
+            return None
+
+        # Use the immediately preceding day, not the previous available total:
+        # a missing day must not turn several days' mileage into one day's.
+        previous_days = RoadTripDayPage.objects.child_of(self.get_road_trip()).filter(
+            day_number=self.day_number - 1
+        )
+        if not is_preview:
+            previous_days = previous_days.live()
+        previous_day = previous_days.first()
+        if previous_day is None:
+            return None
+        if is_preview:
+            previous_day = previous_day.get_latest_revision_as_object()
+        previous_total = previous_day.get_total_distance_km()
+        if previous_total is None or total < previous_total:
+            return None
+        return total - previous_total
+
+    @classmethod
+    def validate_mileage(cls, road_trip, day_number, content, *, exclude_pk=None):
+        total = cls.total_distance_from_content(content)
+        if total is None or day_number is None:
+            return
+        neighbours = cls.objects.child_of(road_trip).filter(
+            day_number__in=[day_number - 1, day_number + 1]
+        ).exclude(pk=exclude_pk)
+        for neighbour in neighbours:
+            neighbour = neighbour.get_latest_revision_as_object()
+            neighbour_total = neighbour.get_total_distance_km()
+            if neighbour_total is None:
+                continue
+            if neighbour.day_number < day_number and total < neighbour_total:
+                raise ValidationError(
+                    "Celkové kilometry nesmí být menší než u předchozího dne."
+                )
+            if neighbour.day_number > day_number and total > neighbour_total:
+                raise ValidationError(
+                    "Celkové kilometry nesmí být větší než u následujícího dne."
+                )
+
     def clean(self):
         super().clean()
         if not self.path:
@@ -265,6 +331,13 @@ class RoadTripDayPage(Page):
         )
         if duplicate_day:
             errors["day_number"] = "Toto číslo dne už cesta obsahuje."
+
+        try:
+            self.validate_mileage(
+                road_trip, self.day_number, self.content, exclude_pk=self.pk
+            )
+        except ValidationError as error:
+            errors["content"] = error.messages
 
         if errors:
             raise ValidationError(errors)

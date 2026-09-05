@@ -3,12 +3,18 @@
         <p class="eyebrow">Den v číslech a zastávkách</p>
         <h2>{{ value.heading }}</h2>
     </header>
-    {% if value.distance_km != None or value.countries or value.seas or value.route or value.driving_time or value.overnight_stay or value.extra_items %}
+    {% if daily_distance_km != None or value.total_distance_km != None or value.countries or value.seas or value.route or value.driving_time or value.overnight_stay or value.extra_items %}
         <dl class="roadtrip-day-summary__grid">
-            {% if value.distance_km != None %}
+            {% if daily_distance_km != None %}
                 <div class="roadtrip-day-summary__item roadtrip-day-summary__item--distance">
-                    <dt>Ujeto</dt>
-                    <dd>{{ value.distance_km|floatformat:"-1" }} <span>km</span></dd>
+                    <dt>Ujeto za den</dt>
+                    <dd>{{ daily_distance_km|floatformat:"-1" }} <span>km</span></dd>
+                </div>
+            {% endif %}
+            {% if value.total_distance_km != None %}
+                <div class="roadtrip-day-summary__item roadtrip-day-summary__item--distance">
+                    <dt>Celkem najeto</dt>
+                    <dd>{{ value.total_distance_km|floatformat:"-1" }} <span>km</span></dd>
                 </div>
             {% endif %}
             {% if value.countries %}

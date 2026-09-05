@@ -66,13 +66,18 @@ class RoadTripContentBlock(blocks.StreamBlock):
 
 class RoadTripDaySummaryBlock(blocks.StructBlock):
     heading = blocks.CharBlock(label="Nadpis", default="Přehled dne")
-    distance_km = blocks.DecimalBlock(
+    total_distance_km = blocks.DecimalBlock(
         required=False,
         min_value=0,
         max_digits=7,
         decimal_places=1,
-        label="Ujeté kilometry",
-        help_text="Vzdálenost za tento den. Pro den bez přejezdu zadejte 0.",
+        label="Celkové najeté kilometry",
+        help_text=(
+            "Celkem od začátku této cesty ke konci dne. Kilometry za den se "
+            "vypočítají odečtením celkového stavu předchozího dne; první den "
+            "počítá od nuly. Bez celkového stavu předchozího dne se denní "
+            "vzdálenost nezobrazí."
+        ),
     )
     countries = blocks.ListBlock(
         blocks.CharBlock(label="Země"),
@@ -108,6 +113,19 @@ class RoadTripDaySummaryBlock(blocks.StructBlock):
         help_text="Například Počasí: Slunečno, 24 °C nebo Pěšky: 8 km.",
     )
     note = blocks.TextBlock(required=False, label="Poznámka")
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        total = value.get("total_distance_km")
+        daily_distance = None
+        page = context.get("page")
+        if total is not None and hasattr(page, "get_daily_distance_km"):
+            daily_distance = page.get_daily_distance_km(
+                total,
+                is_preview=getattr(context.get("request"), "is_preview", False),
+            )
+        context["daily_distance_km"] = daily_distance
+        return context
 
     class Meta:
         icon = "list-ul"
