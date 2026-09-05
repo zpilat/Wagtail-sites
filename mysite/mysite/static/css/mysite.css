@@ -889,6 +889,10 @@ hr {
     padding: 0;
 }
 
+.map-surface--square {
+    max-width: 1000px;
+}
+
 .map-surface iframe,
 .media-surface img,
 .media-surface video {

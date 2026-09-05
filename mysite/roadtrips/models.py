@@ -108,9 +108,7 @@ class RoadTripPage(Page):
         blank=True,
         use_json_field=True,
         verbose_name="Řaditelný obsah",
-        help_text=(
-            "Libovolně střídejte texty, fotografie z Mapy.com a vlastní obrázky."
-        ),
+        help_text="Libovolně střídejte texty, vlastní obrázky a vlastní videa.",
     )
     image = models.ForeignKey(
         "wagtailimages.Image",
@@ -196,9 +194,7 @@ class RoadTripDayPage(Page):
         blank=True,
         use_json_field=True,
         verbose_name="Řaditelný obsah",
-        help_text=(
-            "Libovolně střídejte texty, fotografie z Mapy.com a vlastní obrázky."
-        ),
+        help_text="Libovolně střídejte texty, vlastní obrázky a vlastní videa.",
     )
     image = models.ForeignKey(
         "wagtailimages.Image",

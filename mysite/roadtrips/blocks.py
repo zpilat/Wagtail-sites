@@ -7,17 +7,6 @@ from wagtail.documents.blocks import DocumentChooserBlock
 from base.blocks import ImageBlock
 
 
-class MapyPhotoBlock(blocks.StructBlock):
-    image_url = blocks.URLBlock(label="URL obrázku")
-    mapy_url = blocks.URLBlock(label="Odkaz na Mapy.com")
-    caption = blocks.CharBlock(required=False, label="Popisek")
-
-    class Meta:
-        icon = "image"
-        label = "Fotografie z Mapy.com"
-        template = "blocks/mapy_photo_block.html"
-
-
 class RoadTripImageBlock(ImageBlock):
     link_url = blocks.URLBlock(
         required=False,
@@ -68,7 +57,6 @@ class RoadTripContentBlock(blocks.StreamBlock):
         label="Text",
         template="blocks/paragraph_block.html",
     )
-    mapy_photo = MapyPhotoBlock()
     image = RoadTripImageBlock()
     video = RoadTripVideoBlock()
 
