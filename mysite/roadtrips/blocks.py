@@ -157,6 +157,26 @@ class RoadTripSummaryBlock(blocks.StructBlock):
             "ze zveřejněných dnů."
         ),
     )
+    countries = blocks.ListBlock(
+        blocks.CharBlock(label="Země"),
+        required=False,
+        default=[],
+        label="Navštívené země za celý autovandr",
+        help_text=(
+            "Úplný seznam zemí celé cesty v pořadí návštěvy. Nechte prázdné "
+            "pro automatické doplnění ze zveřejněných dnů."
+        ),
+    )
+    seas = blocks.ListBlock(
+        blocks.CharBlock(label="Moře"),
+        required=False,
+        default=[],
+        label="Navštívená moře za celý autovandr",
+        help_text=(
+            "Úplný seznam moří celé cesty v pořadí návštěvy. Nechte prázdné "
+            "pro automatické doplnění ze zveřejněných dnů."
+        ),
+    )
     route = blocks.CharBlock(
         required=False,
         label="Trasa",
@@ -187,12 +207,22 @@ class RoadTripSummaryBlock(blocks.StructBlock):
         page = context.get("page")
         if "trip_summary" not in context and hasattr(page, "get_trip_summary"):
             context["trip_summary"] = page.get_trip_summary()
+        overrides = {}
         if value.get("total_distance_km") is not None:
+            overrides.update(
+                {
+                    "total_distance_km": value["total_distance_km"],
+                    "distance_day_number": None,
+                    "distance_is_partial": False,
+                }
+            )
+        for field in ("countries", "seas"):
+            if value.get(field):
+                overrides[field] = value[field]
+        if overrides:
             context["trip_summary"] = {
                 **context.get("trip_summary", {}),
-                "total_distance_km": value["total_distance_km"],
-                "distance_day_number": None,
-                "distance_is_partial": False,
+                **overrides,
             }
         return context
 
@@ -203,7 +233,8 @@ class RoadTripSummaryBlock(blocks.StructBlock):
         help_text = (
             "Termín a délka se načtou z cesty. Celkové kilometry můžete zadat "
             "ručně; jinak se převezme poslední vyplněný stav ze zveřejněných "
-            "dnů. Země a moře se automaticky doplní ze zveřejněných dnů."
+            "dnů. Také země a moře můžete zadat ručně, nebo je nechat "
+            "automaticky doplnit ze zveřejněných dnů."
         )
 
 

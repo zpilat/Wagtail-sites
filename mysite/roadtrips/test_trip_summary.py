@@ -168,6 +168,55 @@ class TripSummaryTests(TestCase):
         self.assertContains(response, "425,5 <span>km</span>")
         self.assertContains(response, "Celkem najeto · k 2. dni")
 
+    def test_manual_places_override_days_and_are_not_changed_by_new_days(self):
+        summary_block = self.trip.content.stream_block.child_blocks["trip_summary"]
+        self.trip.content[1].value["countries"] = summary_block.child_blocks[
+            "countries"
+        ].to_python(["Česko", "Norsko"])
+        self.trip.content[1].value["seas"] = summary_block.child_blocks[
+            "seas"
+        ].to_python(["Severní moře", "Norské moře"])
+        self.trip.save_revision().publish()
+        self.draft.save_revision().publish()
+        response = self.client.get(self.trip.url)
+        for place in ("Česko", "Norsko", "Severní moře", "Norské moře"):
+            with self.subTest(place=place):
+                self.assertContains(response, f"<li>{place}</li>", html=True)
+        self.assertNotContains(response, "<li>Německo</li>", html=True)
+        self.assertNotContains(response, "<li>Dánsko</li>", html=True)
+        self.assertNotContains(response, "<li>Baltské moře</li>", html=True)
+
+    def test_manual_countries_and_seas_override_independently(self):
+        block = RoadTripSummaryBlock()
+        html = block.render(
+            block.to_python({"heading": "Přehled", "countries": ["Norsko"]}),
+            context={"page": self.trip},
+        )
+        self.assertIn("<li>Norsko</li>", html)
+        self.assertNotIn("<li>Česko</li>", html)
+        self.assertIn("<li>Baltské moře</li>", html)
+
+    def test_clearing_manual_places_restores_automatic_places(self):
+        summary_block = self.trip.content.stream_block.child_blocks["trip_summary"]
+        self.trip.content[1].value["countries"] = summary_block.child_blocks[
+            "countries"
+        ].to_python(["Norsko"])
+        self.trip.content[1].value["seas"] = summary_block.child_blocks[
+            "seas"
+        ].to_python(["Norské moře"])
+        self.trip.save_revision().publish()
+        self.trip.content[1].value["countries"] = summary_block.child_blocks[
+            "countries"
+        ].to_python([])
+        self.trip.content[1].value["seas"] = summary_block.child_blocks[
+            "seas"
+        ].to_python([])
+        self.trip.save_revision().publish()
+        response = self.client.get(self.trip.url)
+        self.assertContains(response, "<li>Česko</li>", html=True)
+        self.assertContains(response, "<li>Baltské moře</li>", html=True)
+        self.assertNotContains(response, "<li>Norsko</li>", html=True)
+
     def test_zero_total_is_visible(self):
         self.second.unpublish()
         self.first.content[0].value["total_distance_km"] = Decimal("0")
@@ -244,6 +293,14 @@ class TripSummaryTests(TestCase):
                 "content-0-deleted": "",
                 "content-0-value-heading": "Naše cesta v číslech",
                 "content-0-value-total_distance_km": "2500.5",
+                "content-0-value-countries-count": "1",
+                "content-0-value-countries-0-deleted": "",
+                "content-0-value-countries-0-order": "0",
+                "content-0-value-countries-0-value": "Norsko",
+                "content-0-value-seas-count": "1",
+                "content-0-value-seas-0-deleted": "",
+                "content-0-value-seas-0-order": "0",
+                "content-0-value-seas-0-value": "Norské moře",
                 "content-0-value-route": "Praha → Oslo",
                 "content-0-value-extra_items-count": "0",
                 "comments-TOTAL_FORMS": "0",
@@ -261,8 +318,11 @@ class TripSummaryTests(TestCase):
         self.assertEqual(
             restored.content[0].value["total_distance_km"], Decimal("2500.5")
         )
+        self.assertEqual(list(restored.content[0].value["countries"]), ["Norsko"])
+        self.assertEqual(list(restored.content[0].value["seas"]), ["Norské moře"])
         self.assertContains(self.client.get(page.url), "Naše cesta v číslech")
         self.assertContains(self.client.get(page.url), "2500,5 <span>km</span>")
+        self.assertContains(self.client.get(page.url), "<li>Norsko</li>", html=True)
 
     def test_manual_text_is_escaped(self):
         block = RoadTripSummaryBlock()
