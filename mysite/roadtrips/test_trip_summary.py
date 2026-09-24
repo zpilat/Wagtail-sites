@@ -110,6 +110,7 @@ class TripSummaryTests(TestCase):
         self.assertNotContains(response, "Norské moře")
         self.assertNotContains(response, "999 <span>km</span>")
         html = response.content.decode()
+        self.assertLess(html.index("<dt>Trasa</dt>"), html.index("<dt>Navštívené země</dt>"))
         self.assertLess(
             html.index("Příběh celé výpravy."),
             html.index('class="roadtrip-day-summary"'),

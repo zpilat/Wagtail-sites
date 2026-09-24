@@ -23,6 +23,12 @@
                 <dd>{{ trip_summary.total_distance_km|floatformat:"-1" }} <span>km</span></dd>
             </div>
         {% endif %}
+        {% if value.route %}
+            <div class="roadtrip-day-summary__item">
+                <dt>Trasa</dt>
+                <dd>{% road_trip_route value.route %}</dd>
+            </div>
+        {% endif %}
         {% if trip_summary.countries %}
             <div class="roadtrip-day-summary__item">
                 <dt>Navštívené země</dt>
@@ -41,12 +47,6 @@
                         {% for sea in trip_summary.seas %}<li>{{ sea }}</li>{% endfor %}
                     </ul>
                 </dd>
-            </div>
-        {% endif %}
-        {% if value.route %}
-            <div class="roadtrip-day-summary__item">
-                <dt>Trasa</dt>
-                <dd>{% road_trip_route value.route %}</dd>
             </div>
         {% endif %}
         {% if value.driving_time %}

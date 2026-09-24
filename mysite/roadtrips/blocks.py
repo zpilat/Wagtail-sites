@@ -157,6 +157,14 @@ class RoadTripSummaryBlock(blocks.StructBlock):
             "ze zveřejněných dnů."
         ),
     )
+    route = blocks.CharBlock(
+        required=False,
+        label="Trasa",
+        help_text=(
+            "Například :home: → Oslo → :home:. "
+            "Zápis :home: zobrazí ikonu domova."
+        ),
+    )
     countries = blocks.ListBlock(
         blocks.CharBlock(label="Země"),
         required=False,
@@ -175,14 +183,6 @@ class RoadTripSummaryBlock(blocks.StructBlock):
         help_text=(
             "Úplný seznam moří celé cesty v pořadí návštěvy. Nechte prázdné "
             "pro automatické doplnění ze zveřejněných dnů."
-        ),
-    )
-    route = blocks.CharBlock(
-        required=False,
-        label="Trasa",
-        help_text=(
-            "Například :home: → Oslo → :home:. "
-            "Zápis :home: zobrazí ikonu domova."
         ),
     )
     driving_time = blocks.CharBlock(
