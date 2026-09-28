@@ -5,6 +5,13 @@ Připraveno 28. 9. 2026: Wagtail 7.4.3, Django 5.2.17, Python 3.11.10.
 Gunicornu. `requirements.in` obsahuje přímé závislosti a povolené řady verzí;
 pro nasazení používejte `requirements.txt`.
 
+Produkce na Roští používá Python 3.13.13 a Gunicorn 26.2.0. Pin Gunicornu byl
+po zjištění produkčního stavu upraven na 26.2.0, aby nasazení nesnižovalo jeho
+verzi. Python 3.13 je podporovaný Django 5.2 i Wagtail 7.4; před přepnutím
+ověřte závislosti a aplikaci také v novém produkčním prostředí na tomto Pythonu.
+Lokálně s Gunicornem 26.2.0 prošlo `pip check`, ověření konfigurace a skutečné
+spuštění serveru s HTTP 200 pro veřejnou stránku i přihlášení do administrace.
+
 ## Místní prostředí
 
 Z kořene repozitáře:
@@ -93,7 +100,7 @@ Produkční cesty nejsou v repozitáři doložené; následující příklady p�
 `/srv/app/manage.py` a standardní proces `app`. Přizpůsobte je skutečnému stavu.
 
 1. Zaznamenejte původní commit, verze závislostí a konfiguraci Supervisoru.
-   Zálohujte média a nastavení. Připravte nové virtuální prostředí na Pythonu 3.11
+   Zálohujte média a nastavení. Připravte nové virtuální prostředí na produkčním Pythonu 3.13
    na jeho konečné cestě, například `/srv/venv-wagtail74`, a nainstalujte do něj
    nové `requirements.txt`. Prostředí po vytvoření nepřesouvejte.
 2. Připravte krátkou odstávku a pozastavte úpravy obsahu. Zastavte aplikaci
