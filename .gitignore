@@ -9,6 +9,8 @@ __pycache__/
 venv/
 ENV/
 env/
+.upgrade/
+.upgrade-backups/
 
 # Ignorování nastavení editorů
 .vscode/
@@ -33,5 +35,4 @@ db.sqlite3
 # Ignorování souboru s vývojovým nastavením
 dev.py
 
-# Ignorování Django migrací
-*/migrations/*.py
+# Django migrace patří do verzovaného zdrojového kódu.

@@ -1,0 +1,5 @@
+# Direct dependencies. Install requirements.txt for the tested, pinned versions.
+Django>=5.2,<5.3
+wagtail>=7.4,<7.5
+python-decouple==3.8
+gunicorn>=23,<24

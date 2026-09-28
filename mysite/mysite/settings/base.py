@@ -166,6 +166,9 @@ STORAGES = {
 
 WAGTAIL_SITE_NAME = "mysite"
 
+# Large StreamField forms can exceed Django's default limit of 1000 fields.
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10_000
+
 WAGTAIL_I18N_ENABLED = True
 
 # Search

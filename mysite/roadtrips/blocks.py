@@ -34,6 +34,10 @@ class RoadTripVideoBlock(blocks.StructBlock):
 
     def clean(self, value):
         result = super().clean(value)
+        # Drafts may contain a video block before a file has been selected.
+        # Publishing still enforces the chooser's required-field validation.
+        if self.is_deferred_validation and result["video"] is None:
+            return result
         extension = Path(result["video"].file.name).suffix.lower()
         if extension not in self.allowed_extensions:
             raise blocks.StructBlockValidationError(

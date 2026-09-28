@@ -14,6 +14,11 @@ Testovací nastavení nepoužívá místní `dev.py`, `.env` ani produkční kon
 Databáze SQLite, nahrané obrázky a e-maily zůstávají v paměti; testy nepracují
 s obsahem místního webu. Migrace se při přípravě testovací databáze normálně spouštějí.
 
+Běžný místní `venv` již obsahuje ověřené závislosti po upgradu. Pro novou
+instalaci použijte Python 3.11 a připnuté verze z `requirements.txt`; přímé
+závislosti pro budoucí aktualizace jsou v `requirements.in`. Postup nasazení
+a zálohy jsou popsané v [UPGRADE.md](UPGRADE.md).
+
 ## Pokrytí
 
 - Blog a programování: publikované články, řazení, tagy, číslování, galerie,
@@ -21,7 +26,9 @@ s obsahem místního webu. Migrace se při přípravě testovací databáze norm
 - Recepty: kategorie, tagy, řazení, kruhová navigace, náhled konceptu,
   obrázky a obsah receptu.
 - Autovandry: seznam cest a dnů, navigace, validace modelů i skutečného
-  redakčního formuláře, videa, mapy a převod staršího obsahu včetně revizí.
+  redakčního formuláře, videa, mapy a převod staršího obsahu včetně revizí;
+  uložení a autosave nedokončeného videobloku, jeho odmítnutí při publikování
+  a zachování veřejného obsahu při ukládání konceptu.
 - Domovská stránka a společné části: viditelnost položek menu, patička,
   výběr webu, počítání potomků a validace obsahových bloků.
 - Vyhledávání: skutečný databázový index, koncepty, stránkování, prázdné

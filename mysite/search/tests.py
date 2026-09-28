@@ -8,27 +8,30 @@ from blog.models import BlogIndexPage, BlogPage
 class SearchTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.index = add_page(home_page(), BlogIndexPage, title="Blog", slug="blog")
-        cls.articles = [
-            add_page(
+        # Wagtail may schedule indexing after the transaction commits.
+        # TestCase keeps its transaction open, so execute those callbacks here.
+        with cls.captureOnCommitCallbacks(execute=True):
+            cls.index = add_page(home_page(), BlogIndexPage, title="Blog", slug="blog")
+            cls.articles = [
+                add_page(
+                    cls.index,
+                    BlogPage,
+                    title=f"Hledatelny článek {number}",
+                    slug=f"clanek-{number}",
+                    intro="Úvod",
+                    body="Obsah",
+                )
+                for number in range(12)
+            ]
+            cls.draft = add_page(
                 cls.index,
                 BlogPage,
-                title=f"Hledatelny článek {number}",
-                slug=f"clanek-{number}",
+                title="Hledatelny tajný koncept",
+                slug="koncept",
+                live=False,
                 intro="Úvod",
                 body="Obsah",
             )
-            for number in range(12)
-        ]
-        cls.draft = add_page(
-            cls.index,
-            BlogPage,
-            title="Hledatelny tajný koncept",
-            slug="koncept",
-            live=False,
-            intro="Úvod",
-            body="Obsah",
-        )
 
     def test_missing_and_empty_queries_show_empty_search(self):
         for params in ({}, {"query": ""}):
