@@ -34,21 +34,38 @@ class RecipeIndexPage(Page):
     """
     max_count = 1
 
-    subtitle = models.CharField(help_text="Podtitulek zobrazující se v menu", max_length=20, default="Recepty")
+    subtitle = models.CharField(
+        max_length=20,
+        default="Recepty",
+        help_text=(
+            "Krátký název kuchařky v hlavním menu, např. Recepty (max. 20 znaků). "
+            "Hlavní nadpis stránky určuje Název stránky."
+        ),
+    )
     image = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
         related_name="+",
-        help_text="Pouze režim na šířku; šířka mezi 1000px a 3000px",
+        help_text=(
+            "Společný titulní obrázek kuchařky nad obsahem přehledu, kategorií i jednotlivých receptů. "
+            "Použijte obrázek na šířku, široký 1000 až 3000 px. Fotku konkrétního jídla vložte do Příběhu receptu."
+        ),
     )
-    intro = RichTextField(help_text="Úvodní text popisující stránku", blank=True)
+    intro = RichTextField(
+        blank=True,
+        help_text="Volitelný úvod pod hlavním nadpisem kuchařky, nad filtry a seznamem receptů.",
+    )
 
-    content_panels = Page.content_panels + [
-        FieldPanel("subtitle"),
-        FieldPanel("image"),
-        FieldPanel('intro'),
+    content_panels = [
+        FieldPanel(
+            "title",
+            help_text="Hlavní nadpis přehledu kuchařky a název v administraci. Krátký název do menu vyplňte níže.",
+        ),
+        FieldPanel("subtitle", heading="Název v menu"),
+        FieldPanel("image", heading="Titulní obrázek kuchařky"),
+        FieldPanel('intro', heading="Úvod kuchařky"),
     ]
 
     parent_page_types = ["home.HomePage"]
@@ -84,10 +101,20 @@ class RecipeCategoryPage(Page):
     """
     Stránky pro jednotlivé kategorie receptů - např. Polévky, Hlavní jídla, Pomazánky ...
     """
-    intro = RichTextField(help_text="Úvodní text popisující kategorii", blank=True)
+    intro = RichTextField(
+        blank=True,
+        help_text="Volitelný popis kategorie pod jejím nadpisem, nad filtry a seznamem receptů této kategorie.",
+    )
 
-    content_panels = Page.content_panels + [
-        FieldPanel('intro'),
+    content_panels = [
+        FieldPanel(
+            "title",
+            help_text=(
+                "Název kategorie, např. Polévky. Zobrazuje se jako hlavní nadpis kategorie, "
+                "v menu a u receptů zařazených pod tuto stránku."
+            ),
+        ),
+        FieldPanel('intro', heading="Úvod kategorie"),
     ]
 
     parent_page_types = ["RecipeIndexPage"]
@@ -131,9 +158,32 @@ class RecipePage(Page):
     parent_page_types = ["RecipeCategoryPage"]
     subpage_types = []
 
-    date_published = models.DateField("Datum publikace receptu", default=date.today)
-    subtitle = models.CharField("Podtitul receptu, zobrazí se na stránce s receptem", blank=True, max_length=255)
-    introduction = models.TextField("Úvod", blank=True, max_length=300)
+    date_published = models.DateField(
+        "Datum publikace receptu",
+        default=date.today,
+        help_text=(
+            "Datum zobrazené u nadpisu receptu a na jeho kartě v přehledech. "
+            "Nenastavuje plánované zveřejnění ani pořadí v přehledech; ty se řadí podle skutečného prvního zveřejnění."
+        ),
+    )
+    subtitle = models.CharField(
+        "Podtitul receptu",
+        blank=True,
+        max_length=255,
+        help_text=(
+            "Volitelný doplňující nadpis přímo pod Názvem stránky na detailu receptu, "
+            "např. Rychlá večeře z jedné pánve. V přehledech receptů se nezobrazuje; název jídla patří do Názvu stránky."
+        ),
+    )
+    introduction = models.TextField(
+        "Úvod",
+        blank=True,
+        max_length=300,
+        help_text=(
+            "Krátké představení jídla (max. 300 znaků). Zobrazí se pod názvem a případným podtitulem "
+            "na detailu i jako popis na kartách receptu v přehledech a odkazech na přílohy."
+        ),
+    )
     backstory = StreamField(
         BaseStreamBlock(),
         block_counts={
@@ -143,21 +193,41 @@ class RecipePage(Page):
         },
         blank=True,
         use_json_field=True,
-        help_text="Lze použít maximálně jeden nadpis, obrázek a médium.",
+        help_text=(
+            "Volitelný příběh nebo tipy před samotným receptem. Obrázek z tohoto pole se zobrazí "
+            "jako hlavní fotka pod úvodem a jako náhled v přehledech. Jeho popisek se zobrazí pod hlavní fotkou "
+            "a slouží i jako její alternativní text; zdroj se u této fotky nezobrazuje. "
+            "Ostatní bloky se zobrazí v části Příběh. Lze vložit nejvýše jeden nadpis, jeden obrázek a jedno médium."
+        ),
     )
     recipe_headline = RichTextField(
         blank=True,
         max_length=120,
         features=["bold", "italic", "link"],
-        help_text="Dodržujte maximálně jeden řádek",
+        help_text=(
+            "Volitelný krátký text v části Recept, pod nadpisem Recept a před bloky Těla receptu. "
+            "Název stránky je hlavní název jídla; toto pole využijte např. pro Na 4 porce. "
+            "Pokud další text nepotřebujete, nechte pole prázdné. Pište nejvýše jeden řádek."
+        ),
     )
     body = StreamField(
         RecipeStreamBlock(),
         blank=True,
         use_json_field=True,
-        help_text="Pokyny k receptu krok za krokem a další důležité informace.",
+        help_text=(
+            "Samotný recept pod nadpisem Recept a případným Titulkem receptu. "
+            "Přidejte např. obtížnost, seznam ingrediencí a kroky přípravy. Bloky se na webu zobrazí "
+            "v pořadí, v jakém je zde uspořádáte. Fotky v tomto poli zůstanou součástí postupu; titulní fotku vložte do Příběhu."
+        ),
     )
-    tags = ClusterTaggableManager(through=RecipePageTag, blank=True)
+    tags = ClusterTaggableManager(
+        through=RecipePageTag,
+        blank=True,
+        help_text=(
+            "Volitelné štítky, např. Bez masa nebo Česnek. Zobrazí se jako odkazy pod receptem "
+            "a umožní filtrovat přehled kuchařky i kategorie. Kategorii určuje nadřazená stránka receptu."
+        ),
+    )
 
     def get_main_image(self):
         for block in self.backstory:
@@ -168,13 +238,22 @@ class RecipePage(Page):
     def has_backstory_content(self):
         return any(block.block_type != "image_block" for block in self.backstory)
     
-    content_panels = Page.content_panels + [
-        FieldPanel("date_published", heading="Datum publikace článku"),
-        FieldPanel("subtitle", classname="title", heading="Podtitul článku"),
+    content_panels = [
+        FieldPanel(
+            "title",
+            help_text=(
+                "Hlavní název jídla, např. Česnečka. Zobrazí se jako hlavní nadpis detailu, "
+                "na kartách v přehledech, v odkazech mezi recepty a v administraci. "
+                "Použije se i jako titulek záložky prohlížeče, pokud v záložce Propagace nevyplníte SEO titulek."
+            ),
+        ),
+        FieldPanel("date_published", heading="Datum publikace receptu"),
+        FieldPanel("subtitle", classname="title", heading="Podtitul receptu"),
         MultiFieldPanel(
             [
                 HelpPanel(
-                    "Pro nejlepší úvodní příběh a titulek použijte analýzu klíčových slov a správné názvy ingrediencí..."
+                    "Úvod stručně představuje jídlo i v přehledech. Příběh obsahuje titulní fotku a případné vyprávění. "
+                    "Titulek receptu doplňuje až část se surovinami a postupem. Všechna tato pole jsou volitelná."
                 ),
                 FieldPanel("introduction", heading="Úvod"),
                 FieldPanel("backstory", heading="Příběh"),
@@ -184,7 +263,14 @@ class RecipePage(Page):
         ),
         FieldPanel("body", heading="Tělo receptu"),
         FieldPanel("tags", heading="Tagy"),
-        InlinePanel('gallery_images', label="Galerie obrázků"), 
+        InlinePanel(
+            'gallery_images',
+            label="Galerie obrázků",
+            help_text=(
+                "Volitelné další fotky v části Galerie pod tělem receptu. Po kliknutí se zvětší. "
+                "Zobrazují se v pořadí, v jakém je zde uspořádáte; hlavní fotku vložte do Příběhu."
+            ),
+        ),
     ]
 
     search_fields = Page.search_fields + [
@@ -226,9 +312,19 @@ class RecipePage(Page):
 class BlogPageGalleryImage(Orderable):
     page = ParentalKey(RecipePage, on_delete=models.CASCADE, related_name='gallery_images')
     image = models.ForeignKey(
-        'wagtailimages.Image', on_delete=models.CASCADE, related_name='+'
+        'wagtailimages.Image',
+        on_delete=models.CASCADE,
+        related_name='+',
+        help_text="Fotka do galerie pod receptem. Na webu se zobrazí jako náhled s možností zvětšení.",
     )
-    caption = models.CharField(blank=True, max_length=250)
+    caption = models.CharField(
+        blank=True,
+        max_length=250,
+        help_text=(
+            "Volitelný popis fotky pod náhledem i při zvětšení. Slouží také jako alternativní text "
+            "pro čtečky obrazovky, proto stručně popište, co na fotce je."
+        ),
+    )
 
     panels = [
         FieldPanel('image', heading="Obrázek"),
